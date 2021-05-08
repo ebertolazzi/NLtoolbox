@@ -1,0 +1,38 @@
+/*
+ *    N. de Villiers and D. Glasser, 
+ *    A continuation method for nonlinear regression, 
+ *    SIAM Journal of Numerical Analysis, 
+ *    Volume 18, 1981, pages 1139-1154.
+ *
+ *    C. Fraley, 
+ *    Solution of nonlinear least-squares problems, 
+ *    Technical Report STAN-CS-1165, 
+ *    Computer Science Department,
+ *    Stanford University, 1987.
+ *
+ *    C. Fraley, 
+ *    Software performance on nonlinear least-squares problems,
+ *    Technical Report SOL 88-17, 
+ *    Systems Optimization Laboratory,
+ *    Department of Operations Research, 
+ *    Stanford University, 1988.
+ *
+ *    J. J. McKeown, 
+ *    Specialized versus general-purpose algorithms for functions
+ *    that are sums of squared terms, 
+ *    Math. Prog., 
+ *    Volume 9, 1975, pages 57-68.
+ *
+ *    J. J. McKeown, 
+ *    On algorithms for sums of squares problems, 
+ *    in Towards Global Optimization, 
+ *    L. C. W. Dixon and G. Szego (editors),
+ *    North-Holland (1975b), pages 229-257.
+ *
+ *
+ *    D. E. Salane, 
+ *    A continuation approach for solving large residual
+ *    nonlinear least squares problems, 
+ *    SIAM Journal of Scientific and Statistical Computing, 
+ *    Volume 8, 1987, pages 655-671.
+ */

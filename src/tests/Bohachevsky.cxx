@@ -37,7 +37,6 @@ public:
   : nonlinearSystem("BohachevskyN1",Bohachevsky_BIBTEX,2)
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -45,7 +44,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type x1 = x(0);
@@ -54,12 +52,10 @@ public:
     f(1) = 4.0 * x2 + 1.6 * m_pi * sin( 4.0 * m_pi * x2 );
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 4; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     ii(0) = 0; jj(0) = 0;
@@ -68,7 +64,6 @@ public:
     ii(3) = 1; jj(3) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type x1 = x(0);
@@ -81,31 +76,26 @@ public:
     jac(3) = 4.0 + 6.4 * (m_pi*m_pi) * cos ( 4.0 * m_pi * x2 );
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 0.5;
     x(1) = 1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
   }
@@ -123,7 +113,6 @@ public:
   : nonlinearSystem("BohachevskyN2",Bohachevsky_BIBTEX,2)
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -131,7 +120,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type x1 = x(0);
@@ -140,12 +128,10 @@ public:
     f(1) = 4 * x2 + 1.2*m_pi*cos(3*m_pi*x1)*sin(4*m_pi*x2);
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 4; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     ii(0) = 0; jj(0) = 0;
@@ -154,7 +140,6 @@ public:
     ii(3) = 1; jj(3) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type x1  = x(0);
@@ -167,31 +152,26 @@ public:
     jac(3) = 4 + 4.8*B;
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type idx ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 0.6;
     x(1) = 1.3;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   { }
@@ -209,7 +189,6 @@ public:
   : nonlinearSystem("BohachevskyN3",Bohachevsky_BIBTEX,2)
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -217,7 +196,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type x1 = x(0);
@@ -226,19 +204,16 @@ public:
     f(1) = 4.0 * x2 - 4.0 * m_pi * sin( 4*m_pi*x2 );
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 2; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     ii(0) = 0; jj(0) = 0;
     ii(1) = 1; jj(1) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type x1 = x(0);
@@ -248,31 +223,26 @@ public:
     jac(1) = 4.0 - 16.0 * pi2*cos(4*m_pi*x2);
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 0.5;
     x(1) = 1.0;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   { }

@@ -91,7 +91,6 @@ public:
     return x(1) > 0;
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -99,7 +98,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     if ( check_x(x) ) {
@@ -115,12 +113,10 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -129,7 +125,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
@@ -146,17 +141,14 @@ public:
     }
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 1;
@@ -165,12 +157,10 @@ public:
     x(3) = 4.412;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
-  
-  virtual
+
   void
   checkIfAdmissible ( dvec_t const & x ) const override {
     NONLIN_ASSERT(
@@ -195,7 +185,6 @@ public:
     );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     L[0] = -500; U[0] = 500;
@@ -239,8 +228,8 @@ public:
   
   void
   f_grad( dvec_t const & x, int_type k, dvec_t & g ) const {
-    real_type PW   = pow(std::abs(x(1)),t_vec[k]);
-    real_type PW1  = pow(std::abs(x(1)),t_vec[k]-1);
+    real_type PW   = pow(abs(x(1)),t_vec[k]);
+    real_type PW1  = pow(abs(x(1)),t_vec[k]-1);
     real_type TANH = tanh(x(2)*t_vec[k]+sin(x(3)*t_vec[k]));
     real_type COSH = cosh(x(2)*t_vec[k]+sin(x(3)*t_vec[k]));
     real_type COS  = cos(t_vec[k]*exp(x(4)));
@@ -256,9 +245,9 @@ public:
 
   void
   f_hess( dvec_t const & x, int_type k, dmat_t & h ) const {
-    real_type PW   = pow(std::abs(x(1)),t_vec[k]);
-    real_type PW1  = pow(std::abs(x(1)),t_vec[k]-1);
-    real_type PW2  = pow(std::abs(x(1)),t_vec[k]-2);
+    real_type PW   = pow(abs(x(1)),t_vec[k]);
+    real_type PW1  = pow(abs(x(1)),t_vec[k]-1);
+    real_type PW2  = pow(abs(x(1)),t_vec[k]-2);
     real_type TANH = tanh(x(2)*t_vec[k]+sin(x(3)*t_vec[k]));
     real_type COSH = cosh(x(2)*t_vec[k]+sin(x(3)*t_vec[k]));
     real_type SINH = sinh(x(2)*t_vec[k]+sin(x(3)*t_vec[k]));
@@ -325,7 +314,6 @@ public:
     return x(1) > 0;
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     if ( check_x( x ) ) {
@@ -337,7 +325,6 @@ public:
     }
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     if ( check_x( x ) ) {
@@ -353,12 +340,10 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -367,7 +352,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
@@ -384,17 +368,14 @@ public:
     }
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override
   { }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 45;
@@ -404,11 +385,9 @@ public:
     x(4) = 0.9;
   }
 
-  virtual
   int_type
   numInitialPoint() const override { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     NONLIN_ASSERT(
@@ -437,7 +416,6 @@ public:
     );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     L[0] = -500; U[0] = 500;

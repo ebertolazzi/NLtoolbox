@@ -56,25 +56,23 @@ public:
     real_type _x4,
     real_type _x5
   )
-  : nonlinearSystem( n, DENNIS_AND_GAY_BIBTEX, 6 ),
-    summx(_summx),
-    summy(_summy),
-    suma(_suma),
-    sumb(_sumb),
-    sumc(_sumc),
-    sumd(_sumd),
-    sume(_sume),
-    sumf(_sumf),
-    x0(_x0),
-    x1(_x1),
-    x2(_x2),
-    x3(_x3),
-    x4(_x4),
-    x5(_x5)
-    {}
+  : nonlinearSystem( n, DENNIS_AND_GAY_BIBTEX, 6 )
+  , summx(_summx)
+  , summy(_summy)
+  , suma(_suma)
+  , sumb(_sumb)
+  , sumc(_sumc)
+  , sumd(_sumd)
+  , sume(_sume)
+  , sumf(_sumf)
+  , x0(_x0)
+  , x1(_x1)
+  , x2(_x2)
+  , x3(_x3)
+  , x4(_x4)
+  , x5(_x5)
+  {}
 
-
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     real_type a = x(0);
@@ -109,7 +107,6 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type a = x(0);
@@ -142,12 +139,10 @@ public:
     f(5) = c*t*ts3vs - a*v*vs3ts + d*u*us3ws - b*w*ws3us - sumf;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -156,7 +151,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type a = x(0);
@@ -226,17 +220,14 @@ public:
     jac(kk++) =  3*(b*usws - 2*d*uw);
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = x0;
@@ -247,19 +238,16 @@ public:
     x(5) = x5;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( std::abs(x(i)) < 100, "Bad range" );
+      NONLIN_ASSERT( abs(x(i)) < 100, "Bad range" );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     U.fill(100);
@@ -389,26 +377,25 @@ public:
                     real_type _x5,
                     real_type _x6,
                     real_type _x7)
-  : nonlinearSystem( n, DENNIS_AND_GAY_BIBTEX, 8 ),
-    summx(_summx),
-    summy(_summy),
-    suma(_suma),
-    sumb(_sumb),
-    sumc(_sumc),
-    sumd(_sumd),
-    sume(_sume),
-    sumf(_sumf),
-    x0(_x0),
-    x1(_x1),
-    x2(_x2),
-    x3(_x3),
-    x4(_x4),
-    x5(_x5),
-    x6(_x6),
-    x7(_x7)
-    {}
+  : nonlinearSystem( n, DENNIS_AND_GAY_BIBTEX, 8 )
+  , summx(_summx)
+  , summy(_summy)
+  , suma(_suma)
+  , sumb(_sumb)
+  , sumc(_sumc)
+  , sumd(_sumd)
+  , sume(_sume)
+  , sumf(_sumf)
+  , x0(_x0)
+  , x1(_x1)
+  , x2(_x2)
+  , x3(_x3)
+  , x4(_x4)
+  , x5(_x5)
+  , x6(_x6)
+  , x7(_x7)
+  {}
   
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     real_type a = x(0);
@@ -445,7 +432,6 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type a = x(0);
@@ -480,12 +466,10 @@ public:
     f(7) = c*t*ts3vs - a*v*vs3ts + d*u*us3ws - b*w*ws3us - sumf;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -494,7 +478,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type a = x(0);
@@ -595,17 +578,14 @@ public:
 
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = x0;
@@ -618,12 +598,10 @@ public:
     x(7) = x7;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

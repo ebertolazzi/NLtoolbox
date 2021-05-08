@@ -1,0 +1,323 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Class nonlinearSystem &#8212; NLtoolbox v</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/table_styling.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+    <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+    <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class nonlinearSystemFromMultivariateFunction" href="class_a00035.html" />
+    <link rel="prev" title="Class nonlinearLeastSquares" href="class_a00027.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Table Of Contents"
+             accesskey="C">toc</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="class_a00035.html" title="Class nonlinearSystemFromMultivariateFunction"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="class_a00027.html" title="Class nonlinearLeastSquares"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">NLtoolbox</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../C%2B%2Bdoc.html" >C++ usage</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="root.html" accesskey="U">C++ API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Class nonlinearSystem</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="class-nonlinearsystem">
+<span id="exhale-class-a00031"></span><h1>Class nonlinearSystem<a class="headerlink" href="#class-nonlinearsystem" title="Permalink to this headline">¶</a>
+</h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_testsNonlin.hh.html#file-testsnonlin-hh"><span class="std std-ref">File testsNonlin.hh</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a>
+</h2>
+<div class="section" id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a>
+</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">NLproblem::nonlinearBase</span></code> (<a class="reference internal" href="class_a00019.html#exhale-class-a00019"><span class="std std-ref">Class nonlinearBase</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="derived-type">
+<h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a>
+</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">NLproblem::nonlinearSystemFromMultivariateFunction</span></code> (<a class="reference internal" href="class_a00035.html#exhale-class-a00035"><span class="std std-ref">Class nonlinearSystemFromMultivariateFunction</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a>
+</h2>
+<dl class="cpp class">
+<dt id="_CPPv4N9NLproblem15nonlinearSystemE">
+<span id="_CPPv3N9NLproblem15nonlinearSystemE"></span><span id="_CPPv2N9NLproblem15nonlinearSystemE"></span><span id="NLproblem::nonlinearSystem"></span><span class="target" id="a00031"></span><em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">NLproblem</span><code class="sig-prename descclassname"><span class="pre">::</span></code></code><code class="sig-name descname"><span class="pre">nonlinearSystem</span></code> <span class="pre">:</span> <em class="property"><span class="pre">public</span></em> <span class="pre">NLproblem</span><span class="pre">::</span><a class="reference internal" href="class_a00019.html#_CPPv4N9NLproblem13nonlinearBaseE" title="NLproblem::nonlinearBase"><span class="pre">nonlinearBase</span></a><a class="headerlink" href="#_CPPv4N9NLproblem15nonlinearSystemE" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd>
+<p>Subclassed by <a class="reference internal" href="class_a00035.html#a00035"><span class="std std-ref">NLproblem::nonlinearSystemFromMultivariateFunction</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N9NLproblem15nonlinearSystem15nonlinearSystemERK6stringRK6string8int_type">
+<span id="_CPPv3N9NLproblem15nonlinearSystem15nonlinearSystemERK6stringRK6string8int_type"></span><span id="_CPPv2N9NLproblem15nonlinearSystem15nonlinearSystemERK6stringRK6string8int_type"></span><span id="NLproblem::nonlinearSystem::nonlinearSystem__stringCR.stringCR.int_type"></span><span class="target" id="a00031_1a6560000af47cd72ce598b7810834cba6"></span><em class="property"><span class="pre">inline</span></em> <code class="sig-name descname"><span class="pre">nonlinearSystem</span></code><span class="sig-paren">(</span><span class="pre">string</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">t</span></em>, <span class="pre">string</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">b</span></em>, <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <em><span class="pre">_n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9NLproblem15nonlinearSystem15nonlinearSystemERK6stringRK6string8int_type" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N9NLproblem15nonlinearSystemD0Ev">
+<span id="_CPPv3N9NLproblem15nonlinearSystemD0Ev"></span><span id="_CPPv2N9NLproblem15nonlinearSystemD0Ev"></span><span id="NLproblem::nonlinearSystem::~nonlinearSystem"></span><span class="target" id="a00031_1ac2ffed164a2603c63de28a8ab15a4668"></span><em class="property"><span class="pre">inline</span></em> <em class="property"><span class="pre">virtual</span></em> <code class="sig-name descname"><span class="pre">~nonlinearSystem</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9NLproblem15nonlinearSystemD0Ev" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem6evalFkERK6dvec_t8int_type">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem6evalFkERK6dvec_t8int_type"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem6evalFkERK6dvec_t8int_type"></span><span id="NLproblem::nonlinearSystem::evalFk__dvec_tCR.int_typeC"></span><span class="target" id="a00031_1af20625edb28f0643b2bfa17d42556dcf"></span><em class="property"><span class="pre">virtual</span></em> <a class="reference internal" href="typedef_a00011_1a4edee8c0d451a1e86d232af718130564.html#_CPPv4N9NLproblem9real_typeE" title="NLproblem::real_type"><span class="pre">real_type</span></a> <code class="sig-name descname"><span class="pre">evalFk</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">x</span></em>, <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <em><span class="pre">k</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem6evalFkERK6dvec_t8int_type" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem5evalFERK6dvec_tR6dvec_t">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem5evalFERK6dvec_tR6dvec_t"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem5evalFERK6dvec_tR6dvec_t"></span><span id="NLproblem::nonlinearSystem::evalF__dvec_tCR.dvec_tRC"></span><span class="target" id="a00031_1a0d49662126804da113f8aeb0115d5fb8"></span><em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">evalF</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">x</span></em>, <a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">f</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem5evalFERK6dvec_tR6dvec_t" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem11jacobianNnzEv">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem11jacobianNnzEv"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem11jacobianNnzEv"></span><span id="NLproblem::nonlinearSystem::jacobianNnzC"></span><span class="target" id="a00031_1a7ea61a886fc4df30d4aa2a9d609aa506"></span><em class="property"><span class="pre">virtual</span></em> <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <code class="sig-name descname"><span class="pre">jacobianNnz</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem11jacobianNnzEv" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem8jacobianERK6dvec_tR6dvec_t">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem8jacobianERK6dvec_tR6dvec_t"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem8jacobianERK6dvec_tR6dvec_t"></span><span id="NLproblem::nonlinearSystem::jacobian__dvec_tCR.dvec_tRC"></span><span class="target" id="a00031_1a3ffa925451b84a4a5406ebd7105f7669"></span><em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">jacobian</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">x</span></em>, <a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">jac</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem8jacobianERK6dvec_tR6dvec_t" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem15jacobianPatternER6ivec_tR6ivec_t">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem15jacobianPatternER6ivec_tR6ivec_t"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem15jacobianPatternER6ivec_tR6ivec_t"></span><span id="NLproblem::nonlinearSystem::jacobianPattern__ivec_tR.ivec_tRC"></span><span class="target" id="a00031_1a1104caa5aa2be99055412811ebf7ebc6"></span><em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">jacobianPattern</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ad5e85b58231ddbb1b711f93383e1e016.html#_CPPv4N9NLproblem6ivec_tE" title="NLproblem::ivec_t"><span class="pre">ivec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">i</span></em>, <a class="reference internal" href="typedef_a00011_1ad5e85b58231ddbb1b711f93383e1e016.html#_CPPv4N9NLproblem6ivec_tE" title="NLproblem::ivec_t"><span class="pre">ivec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">j</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem15jacobianPatternER6ivec_tR6ivec_t" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem16numExactSolutionEv">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem16numExactSolutionEv"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem16numExactSolutionEv"></span><span id="NLproblem::nonlinearSystem::numExactSolutionC"></span><span class="target" id="a00031_1a16b12a4be41430857edaf111ff5ffc66"></span><em class="property"><span class="pre">virtual</span></em> <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <code class="sig-name descname"><span class="pre">numExactSolution</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem16numExactSolutionEv" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem16getExactSolutionER6dvec_t8int_type">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem16getExactSolutionER6dvec_t8int_type"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem16getExactSolutionER6dvec_t8int_type"></span><span id="NLproblem::nonlinearSystem::getExactSolution__dvec_tR.int_typeC"></span><span class="target" id="a00031_1a5e15b71e26999bf410d4e8d127f78867"></span><em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">getExactSolution</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">x</span></em>, <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <em><span class="pre">idx</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem16getExactSolutionER6dvec_t8int_type" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem15numInitialPointEv">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem15numInitialPointEv"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem15numInitialPointEv"></span><span id="NLproblem::nonlinearSystem::numInitialPointC"></span><span class="target" id="a00031_1a2ecfb668c4d4602332e746c04b5750c8"></span><em class="property"><span class="pre">virtual</span></em> <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <code class="sig-name descname"><span class="pre">numInitialPoint</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem15numInitialPointEv" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem15getInitialPointER6dvec_t8int_type">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem15getInitialPointER6dvec_t8int_type"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem15getInitialPointER6dvec_t8int_type"></span><span id="NLproblem::nonlinearSystem::getInitialPoint__dvec_tR.int_typeC"></span><span class="target" id="a00031_1a6f5da0aae6674a2c59cd50ef50b5b419"></span><em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">getInitialPoint</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">x</span></em>, <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <em><span class="pre">idx</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem15getInitialPointER6dvec_t8int_type" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem17checkIfAdmissibleERK6dvec_t">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem17checkIfAdmissibleERK6dvec_t"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem17checkIfAdmissibleERK6dvec_t"></span><span id="NLproblem::nonlinearSystem::checkIfAdmissible__dvec_tCRC"></span><span class="target" id="a00031_1a80b1fe47e3532e5a0f8b2a2cbd86e799"></span><em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">checkIfAdmissible</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">x</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em> <span class="pre">=</span> <span class="pre">0</span><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem17checkIfAdmissibleERK6dvec_t" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem11boundingBoxER6dvec_tR6dvec_t">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem11boundingBoxER6dvec_tR6dvec_t"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem11boundingBoxER6dvec_tR6dvec_t"></span><span id="NLproblem::nonlinearSystem::boundingBox__dvec_tR.dvec_tRC"></span><span class="target" id="a00031_1a2d85e2289b908e13480cca9c2fa598e1"></span><em class="property"><span class="pre">inline</span></em> <em class="property"><span class="pre">virtual</span></em> <span class="pre">void</span> <code class="sig-name descname"><span class="pre">boundingBox</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">L</span></em>, <a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">U</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem11boundingBoxER6dvec_tR6dvec_t" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem7numEqnsEv">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem7numEqnsEv"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem7numEqnsEv"></span><span id="NLproblem::nonlinearSystem::numEqns__voidC"></span><span class="target" id="a00031_1ab90554284a305d984732d0fcb30efb72"></span><em class="property"><span class="pre">inline</span></em> <a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <code class="sig-name descname"><span class="pre">numEqns</span></code><span class="sig-paren">(</span><span class="pre">void</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem7numEqnsEv" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem8fill_CSRERK6dvec_tR6ivec_tR6ivec_tR6dvec_t">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem8fill_CSRERK6dvec_tR6ivec_tR6ivec_tR6dvec_t"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem8fill_CSRERK6dvec_tR6ivec_tR6ivec_tR6dvec_t"></span><span id="NLproblem::nonlinearSystem::fill_CSR__dvec_tCR.ivec_tR.ivec_tR.dvec_tRC"></span><span class="target" id="a00031_1a21f6d78580dca9cac9bf9767a554d4c9"></span><a class="reference internal" href="typedef_a00011_1a5db9f25a718ee71c51fdd0e6f29bfa0c.html#_CPPv4N9NLproblem8int_typeE" title="NLproblem::int_type"><span class="pre">int_type</span></a> <code class="sig-name descname"><span class="pre">fill_CSR</span></code><span class="sig-paren">(</span><a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><em><span class="pre">x</span></em>, <a class="reference internal" href="typedef_a00011_1ad5e85b58231ddbb1b711f93383e1e016.html#_CPPv4N9NLproblem6ivec_tE" title="NLproblem::ivec_t"><span class="pre">ivec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">R</span></em>, <a class="reference internal" href="typedef_a00011_1ad5e85b58231ddbb1b711f93383e1e016.html#_CPPv4N9NLproblem6ivec_tE" title="NLproblem::ivec_t"><span class="pre">ivec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">J</span></em>, <a class="reference internal" href="typedef_a00011_1ac8e1685166b4771c324ac69734aa291f.html#_CPPv4N9NLproblem6dvec_tE" title="NLproblem::dvec_t"><span class="pre">dvec_t</span></a> <span class="pre">&amp;</span><em><span class="pre">values</span></em><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem8fill_CSRERK6dvec_tR6ivec_tR6ivec_tR6dvec_t" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem6bibtexEv">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem6bibtexEv"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem6bibtexEv"></span><span id="NLproblem::nonlinearSystem::bibtexC"></span><span class="target" id="a00019_1a6515cd5c9435014fb51502621497fd3c"></span><em class="property"><span class="pre">inline</span></em> <span class="pre">string</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><code class="sig-name descname"><span class="pre">bibtex</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem6bibtexEv" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK9NLproblem15nonlinearSystem5titleEv">
+<span id="_CPPv3NK9NLproblem15nonlinearSystem5titleEv"></span><span id="_CPPv2NK9NLproblem15nonlinearSystem5titleEv"></span><span id="NLproblem::nonlinearSystem::titleC"></span><span class="target" id="a00019_1ad5a6a4a63a04b74a039ba74ca053be79"></span><em class="property"><span class="pre">inline</span></em> <span class="pre">string</span> <em class="property"><span class="pre">const</span></em> <span class="pre">&amp;</span><code class="sig-name descname"><span class="pre">title</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property"><span class="pre">const</span></em><a class="headerlink" href="#_CPPv4NK9NLproblem15nonlinearSystem5titleEv" title="Permalink to this definition">¶</a><br>
+</dt>
+<dd></dd>
+</dl>
+
+</div>
+</dd>
+</dl>
+
+</div>
+</div>
+
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="../index.html" title="index">
+          <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+        </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+<div class="sphinx-toc sphinxglobaltoc">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Matlab-doc.html">MATLAB toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../C%2B%2Bdoc.html">C++ usage</a></li>
+</ul>
+</div>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Table Of Contents"
+             >toc</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="class_a00035.html" title="Class nonlinearSystemFromMultivariateFunction"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="class_a00027.html" title="Class nonlinearLeastSquares"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">NLtoolbox</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../C%2B%2Bdoc.html" >C++ usage</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="root.html" >C++ API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Class nonlinearSystem</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Enrico Bertolazzi.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

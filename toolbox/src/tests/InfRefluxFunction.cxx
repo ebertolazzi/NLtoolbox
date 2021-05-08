@@ -32,7 +32,6 @@ public:
     )
   { }
 
-  virtual
   real_type
   evalFk( dvec_t const & x_in, int_type k ) const override {
     real_type x    = x_in[0];
@@ -43,7 +42,6 @@ public:
     return nan("InfRefluxFunction");
   }
 
-  virtual
   void
   evalF( dvec_t const & x_in, dvec_t & f ) const override {
     real_type x    = x_in[0];
@@ -55,18 +53,15 @@ public:
       f(0) = nan("InfRefluxFunction");
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 1; }
 
-  virtual
   void
   jacobianPattern( ivec_t & i, ivec_t & j ) const override {
     i(0) = 0; j(0) = 0;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x_in, dvec_t & jac ) const override {
     real_type x    = x_in[0];
@@ -78,17 +73,14 @@ public:
       jac(0) = nan("InfRefluxFunction");
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type idx ) const override {
     switch ( idx ) {
@@ -99,19 +91,16 @@ public:
     }
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 4; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x_in ) const override {
     real_type x = x_in[0];
     NONLIN_ASSERT( x > 0 && x < 0.95, "ARGUMENT ERROR" );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     U[0] = 0.95; L[0] = 0;

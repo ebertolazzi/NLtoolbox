@@ -40,7 +40,6 @@ public:
   : nonlinearSystem( "Penalty I", PENALTY_FUNCTION_BIBTEX, neq )
   { checkMinEquations(n,2); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     if ( k == n-1 ) {
@@ -52,7 +51,6 @@ public:
     }
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type sum = 0;
@@ -61,14 +59,11 @@ public:
     f(n-1) = (sum/n-1)/4;
   }
 
-
-  virtual
   int_type
   jacobianNnz() const override {
     return 2*n-1;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -78,7 +73,6 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     int_type kk = 0;
@@ -86,28 +80,23 @@ public:
     for ( int_type i = 0; i < n;   ++i ) jac(kk++) = 0.5*x(i)/n;
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = 1.0/3.0;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}
@@ -145,7 +134,6 @@ public:
     return 4*t1 - 1;
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     real_type ap = 2*epsilon;
@@ -153,7 +141,6 @@ public:
     return (ap+t1)*x(k)-ap;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type ap = 2*epsilon;
@@ -162,12 +149,10 @@ public:
       f(i) = (ap+t1)*x(i)-ap;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -176,7 +161,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type ap = 2*epsilon;
@@ -191,28 +175,23 @@ public:
     }
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = i+1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}
@@ -243,7 +222,6 @@ public:
   , epsilon(0.00001)
   { checkMinEquations(n,2); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -251,7 +229,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type ap = epsilon;
@@ -277,12 +254,10 @@ public:
     f(0) += 2.0 * ( x(0) - 0.2 );
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0; // fortran storage
@@ -291,7 +266,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
@@ -331,28 +305,23 @@ public:
         jac[caddr(i,j)] = jac[caddr(j,i)];
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = 0.5;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

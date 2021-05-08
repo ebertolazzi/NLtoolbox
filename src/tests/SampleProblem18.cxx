@@ -28,19 +28,18 @@ public:
   real_type
   fun( real_type x ) const {
     real_type x2 = x*x;
-    if ( std::abs(x2) > epsi ) return (1-exp(-x2))/x;
-    else                       return x*(1+x2*(x2/6.0-0.5));
+    if ( abs(x2) > epsi ) return (1-exp(-x2))/x;
+    else                  return x*(1+x2*(x2/6.0-0.5));
   }
 
   real_type
   fun_1( real_type x ) const {
     real_type x2    = x*x;
     real_type expx2 = exp(-x2);
-    if ( std::abs(x2) > epsi ) return 2*expx2-(1-expx2)/x2;
-    else                       return 1+x2*((5.0/6.0)*x2-1.5);
+    if ( abs(x2) > epsi ) return 2*expx2-(1-expx2)/x2;
+    else                  return 1+x2*((5.0/6.0)*x2-1.5);
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     switch ( k ) {
@@ -50,19 +49,16 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = power2(x(1))*fun(x(0));
     f(1) = x(0)*fun(x(1));
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 4; }
 
-  virtual
   void
   jacobianPattern( ivec_t & i, ivec_t & j ) const override {
     i(0) = 0; j(0) = 0;
@@ -71,7 +67,6 @@ public:
     i(3) = 1; j(3) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac(0) = power2(x(1))*fun_1(x(0));
@@ -80,38 +75,32 @@ public:
     jac(3) = x(0)*fun_1(x(1));
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type idx ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
-  
-  virtual
+
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 2;
     x(1) = 2;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( std::abs(x(i)) < 4, "Bad range" );
+      NONLIN_ASSERT( abs(x(i)) < 4, "Bad range" );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     U.fill(4);

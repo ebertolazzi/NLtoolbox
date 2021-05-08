@@ -17,31 +17,30 @@ public:
 
   Beale()
   : nonlinearSystem(
-      "Beale",
-      "@book{beale1958,\n"
-      "  title    = {On an Iterative Method for Finding a Local Minimum\n"
-      "              of a Function of More Than One Variable},\n"
-      "  author    = {Beale, E.M.L.},\n"
-      "  series    = {Technical report\n"
-      "               (Princeton University. Statistical Techniques Research Group)},\n"
-      "  year      = {1958},\n"
-      "  publisher = {Statistical Techniques Research Group,\n"
-      "               Section of Mathematical Statistics,\n"
-      "               Department of Mathematics, Princeton University}\n"
-      "}\n\n"
-      "@book{brent2013,\n"
-      "  author    = {Brent, R.P.},\n"
-      "  title     = {Algorithms for Minimization Without Derivatives},\n"
-      "  isbn      = {9780486143682},\n"
-      "  series    = {Dover Books on Mathematics},\n"
-      "  year      = {2013},\n"
-      "  publisher = {Dover Publications}\n"
-      "}\n",
-      2
-    )
+    "Beale",
+    "@book{beale1958,\n"
+    "  title    = {On an Iterative Method for Finding a Local Minimum\n"
+    "              of a Function of More Than One Variable},\n"
+    "  author    = {Beale, E.M.L.},\n"
+    "  series    = {Technical report\n"
+    "               (Princeton University. Statistical Techniques Research Group)},\n"
+    "  year      = {1958},\n"
+    "  publisher = {Statistical Techniques Research Group,\n"
+    "               Section of Mathematical Statistics,\n"
+    "               Department of Mathematics, Princeton University}\n"
+    "}\n\n"
+    "@book{brent2013,\n"
+    "  author    = {Brent, R.P.},\n"
+    "  title     = {Algorithms for Minimization Without Derivatives},\n"
+    "  isbn      = {9780486143682},\n"
+    "  series    = {Dover Books on Mathematics},\n"
+    "  year      = {2013},\n"
+    "  publisher = {Dover Publications}\n"
+    "}\n",
+    2
+  )
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -49,7 +48,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type x1 = x(0);
@@ -70,12 +68,10 @@ public:
     f(1) = 2.0 * ( f1 * df1dx2 + f2 * df2dx2 + f3 * df3dx2 );
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 4; }
 
-  virtual
   void
   jacobianPattern( ivec_t & i, ivec_t & j ) const override {
     i(0) = 0; j(0) = 0;
@@ -84,7 +80,6 @@ public:
     i(3) = 1; j(3) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & vals ) const override {
     real_type x1 = x(0);
@@ -129,31 +124,26 @@ public:
                     + df3dx2 * df3dx2 + f3 * d2f3dx22 );
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type idx ) const override {
     x(0) = 3;
     x(1) = 0.5;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 1;
     x(1) = 1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   { }

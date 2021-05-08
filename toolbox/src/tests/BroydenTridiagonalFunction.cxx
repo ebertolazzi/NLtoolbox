@@ -49,7 +49,6 @@ public:
   , beta(_beta)
   { checkMinEquations(n,1); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
   	real_type f = (3-alpha*x(k))*x(k)+beta;
@@ -57,8 +56,7 @@ public:
     if ( k < n-1 ) f -= 2*x(k+1);
     return f;
   }
-  
-  virtual
+
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type k = 0; k < n; ++k ) {
@@ -68,13 +66,11 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const override {
     return 3*n-2;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -85,7 +81,6 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     int_type kk = 0;
@@ -94,28 +89,23 @@ public:
     for ( int_type k = 0; k < n-1; ++k ) jac(kk++) = -2;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
-  
-  virtual
+
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type k = 0; k < n; ++k ) x(k) = -1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

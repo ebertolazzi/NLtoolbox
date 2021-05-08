@@ -48,7 +48,6 @@ public:
   , theta(4.0)
   { checkMinEquations(neq,4); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const {
     dvec_t f(n);
@@ -56,7 +55,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const {
     for ( int_type i = 0; i < n; i += 2 ) {
@@ -82,7 +80,6 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const {
     int_type kk = 0;
@@ -94,7 +91,6 @@ public:
     return kk;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const {
     int_type kk = 0;
@@ -114,7 +110,6 @@ public:
     }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const {
     int_type kk = 0;
@@ -136,16 +131,13 @@ public:
     }
   }
 
-  virtual
   int_type
   numExactSolution() const { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const {
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type istart ) const {
     for ( int_type i = 0; i < n; ++i ) {
@@ -163,16 +155,14 @@ public:
     }
   }
 
-  virtual
   int_type
   numInitialPoint() const
   { return 3; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( std::abs(x(i)) < 1000000, "x range" );
+    //  NONLIN_ASSERT( abs(x(i)) < 1000000, "x range" );
   }
 
 };
@@ -197,7 +187,6 @@ public:
   , theta(4)
   { checkMinEquations(neq,6); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -205,7 +194,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = A0*x(0) - (1-x(0))*x(2) - A1 - theta*A1*x(1);
@@ -220,7 +208,6 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const override {
     int_type kk = 10;
@@ -231,7 +218,6 @@ public:
     return kk;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -260,7 +246,6 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
 
@@ -291,17 +276,14 @@ public:
     }
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override
   { }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type istart ) const override {
     for ( int_type i = 0; i < n; ++i ) {
@@ -322,16 +304,14 @@ public:
     }
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 3; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( std::abs(x(i)) < 10000, "x range" );
+    //  NONLIN_ASSERT( abs(x(i)) < 10000, "x range" );
   }
 
 };

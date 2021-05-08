@@ -5,3 +5,11 @@ lib/lib
 *.obj
 
 toolbox/bin
+docs_build/sphinx/_build
+docs_build/sphinx/_doxygen
+docs_build/sphinx/api-cpp
+docs_build/sphinx/api-matlab
+build
+src/tests/.vscode
+src/.vscode
+NLtoolbox.mltbx

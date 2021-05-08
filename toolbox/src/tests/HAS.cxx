@@ -84,7 +84,6 @@ public:
 
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -92,7 +91,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type x0 = x(0);
@@ -141,12 +139,10 @@ public:
     f(2) -= 144000/x2x2;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return int_type(jac_idx_vals.size()); }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     map<pair<int_type,int_type>,real_type>::const_iterator it = jac_idx_vals.begin();
@@ -158,7 +154,6 @@ public:
     }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     map<pair<int_type,int_type>,real_type>::iterator it = jac_idx_vals.begin();
@@ -240,7 +235,6 @@ public:
       jac(kk++) = it->second;
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
     if ( tau == 1e2 ) {
@@ -256,14 +250,12 @@ public:
     }
   }
 
-  virtual
   int_type
   numExactSolution() const override {
     if ( tau == 1e2 || tau == 1e4 || tau == 1e6 || tau == 1e8 || tau == 1e10 ) return 1;
     return 0;
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 1;
@@ -275,12 +267,10 @@ public:
     x(6) = -10;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     NONLIN_ASSERT( x(0) > 0, "checkIfAdmissible x(0) = " << x(0) << " must be > 0" );
@@ -292,7 +282,6 @@ public:
     // NONLIN_ASSERT( x(6) < 0, "Bad range" );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     U.fill(real_max);
@@ -324,7 +313,6 @@ public:
   , tau(tau_in)
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -332,7 +320,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
    {
@@ -389,12 +376,10 @@ public:
     f(5) += 0.874E-1*t13*t36*x(5);
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0; // fortran address
@@ -403,7 +388,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
@@ -681,17 +665,14 @@ public:
     }
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x.fill(1);
@@ -703,12 +684,10 @@ public:
     x(5) = 0.852;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}
@@ -760,7 +739,6 @@ public:
     c[9] = -22.179;
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     dvec_t f(n);
@@ -768,7 +746,6 @@ public:
     return f(k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type ex0 = exp(x(0));
@@ -808,12 +785,10 @@ public:
     f(9) = ex9*(c[9]+x(9)-logss) + fact*f(9);
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0; // fortran addressing
@@ -822,7 +797,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type ex0 = exp(x(0));
@@ -1021,17 +995,14 @@ public:
 
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override
   { }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type idx ) const override {
     switch ( idx ) {
@@ -1044,12 +1015,10 @@ public:
     }
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 2; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     // funziona solo con questo limite

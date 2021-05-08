@@ -33,14 +33,12 @@ public:
     )
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     if ( k == n-1 ) return x(n-1) - 3*cos(x(0));
     return x(k) - cos(x(k+1));
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type i = 0; i < n-1; ++i )
@@ -48,13 +46,11 @@ public:
     f(n-1) = x(n-1) - 3*cos(x(0));
   }
 
-  virtual
   int_type
   jacobianNnz() const override {
     return 2*n;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -68,7 +64,6 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     int_type kk = 0;
@@ -80,36 +75,30 @@ public:
     jac(kk++) = 3*sin(x(0));
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     if ( n == 2 ) x.fill(-2.0);
     else          x.fill(3.0);
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     for ( int_type i = 0; i < n; ++i )
       NONLIN_ASSERT( x(i) > -5 && x(i) < 5, "Bad range" );
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     U.fill(5);

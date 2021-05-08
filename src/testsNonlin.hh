@@ -64,7 +64,7 @@
           << MSG << "\nline: " << __LINE__          \
           << "\nfile: " << __FILE__ << "\n"         \
           << "\n*****************\n";               \
-      throw runtime_error(ost.str());               \
+      throw std::runtime_error(ost.str());          \
     }
 #endif
 
@@ -72,15 +72,14 @@ namespace NLproblem {
 
   typedef std::basic_ostream<char> ostream_type;
 
-  void
-  printTrace(
-    int                 line,
-    char        const   file[],
-    std::string const & reason,
-    ostream_type      & stream
-  );
+  using std::string;
+  using std::map;
+  using std::vector;
+  using std::pair;
+  using std::max;
+  using std::min;
 
-  using namespace ::std;
+  using std::numeric_limits;
 
   typedef double  real_type;
   typedef int32_t int_type;
@@ -558,8 +557,8 @@ namespace NLproblem {
   };
 #endif
 
-  extern std::vector<nonlinearSystem*> theProblems;
-  extern std::map<string,int_type>     theProblemsMap;
+  extern vector<nonlinearSystem*> theProblems;
+  extern map<string,int_type>     theProblemsMap;
   void initProblems();
 
 }

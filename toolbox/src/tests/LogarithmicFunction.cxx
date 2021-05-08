@@ -33,59 +33,49 @@ public:
     )
   { checkMinEquations(n,1); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type i ) const override {
     return log(x(i)+1)-x(i)/n;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type i = 0; i < n; ++i )
       f(i) = log(x(i)+1)-x(i)/n;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     for ( int_type i = 0; i < n; ++i ) ii(i) = jj(i) = i;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     for ( int_type i = 0; i < n; ++i )
       jac(i) = 1.0/(x(i)+1)-1.0/n;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override
   { }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = n+1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

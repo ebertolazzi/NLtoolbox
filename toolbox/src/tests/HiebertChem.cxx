@@ -33,7 +33,6 @@ public:
   : nonlinearSystem( "Hiebert Chem 2x2", HIEBERT_BIBTEX, 2 )
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     switch ( k ) {
@@ -43,19 +42,16 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = x(1) - 10;
     f(1) = x(0)*x(1) -5E4;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 4; }
 
-  virtual
   void
   jacobianPattern( ivec_t & i, ivec_t & j ) const override {
     i(0) = 0; j(0) = 0;
@@ -64,7 +60,6 @@ public:
     i(3) = 1; j(3) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac(0) = 0;
@@ -73,31 +68,26 @@ public:
     jac(3) = x(0);
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
     x(0) = 5000;
     x(1) = 10;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = 1;
     x(1) = 1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}
@@ -116,7 +106,6 @@ public:
   : nonlinearSystem( "Hiebert Chem 6x6", HIEBERT_BIBTEX, 6 )
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     switch ( k ) {
@@ -130,7 +119,6 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = x(0) + x(1) + x(3) - 0.001;
@@ -141,13 +129,11 @@ public:
     f(5) = x(3) - 55E14 * x(2) * x(5);
   }
 
-  virtual
   int_type
   jacobianNnz() const override {
     return 18;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -179,7 +165,6 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac(0) = 1;
@@ -207,12 +192,10 @@ public:
     jac(17) = - 55E14 * x(2);
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 3; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type idx ) const override {
     switch ( idx ) {
@@ -243,22 +226,19 @@ public:
     }
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = 1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
    { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( std::abs(x(i)) <= 100, "Bad range" );
+    //  NONLIN_ASSERT( abs(x(i)) <= 100, "Bad range" );
   }
 };
 
@@ -276,7 +256,6 @@ public:
   , R(10000)
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     real_type TOT = x(0)+x(1)+x(2)+x(3)+x(4)+x(5)+x(6)+x(7)+x(8)+x(9);
@@ -295,7 +274,6 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type TOT = x(0)+x(1)+x(2)+x(3)+x(4)+x(5)+x(6)+x(7)+x(8)+x(9);
@@ -311,12 +289,10 @@ public:
     f(9) = x(9)*x(3)*x(3)-1923.0/50000000.0*x(3)*x(3)*TOT;
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0; // fortran addressing
@@ -325,7 +301,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type t3 = x(1)*x(3);
@@ -457,29 +432,24 @@ public:
     jac[caddr(9,9)] = 49998077.0/50000000.0*t73;
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
     x.setZero();
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 3; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x.fill( 1 );
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

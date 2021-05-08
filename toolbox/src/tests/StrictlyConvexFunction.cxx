@@ -47,26 +47,22 @@ public:
     )
   { checkMinEquations(n,1); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type i ) const override {
     return exp(x(i))-1;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type i = 0; i < n; ++i )
       f(i) = exp(x(i))-1;
   }
 
-  virtual
   int_type
   jacobianNnz() const override {
     return n;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -75,34 +71,28 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     for ( int_type i = 0; i < n; ++i ) jac(i) = exp(x(i));
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = (i+1.0)/n;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}
@@ -124,26 +114,22 @@ public:
     )
   { checkMinEquations(n,1); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type i ) const override {
     return ((i+1.0)/10.0)*(exp(x(i))-1);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type i = 0; i < n; ++i )
       f(i) = ((i+1.0)/10.0)*(exp(x(i))-1);
   }
 
-  virtual
   int_type
   jacobianNnz() const override {
     return n;
   }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -152,35 +138,29 @@ public:
     #undef SETIJ
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     for ( int_type i = 0; i < n; ++i )
       jac(i) = ((i+1.0)/10.0)*exp(x(i));
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     for ( int_type i = 0; i < n; ++i ) x(i) = 1;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

@@ -17,20 +17,20 @@
 "n" \
 "  - Methods:\n" \
 "    NLtestMexWrapper( 'select', name_or_number );\n" \
-"    n     = NLtestMexWrapper( 'numTest' );\n" \
-"    names = NLtestMexWrapper( 'listall' );\n" \
-"    F     = NLtestMexWrapper( 'evalF', ntest, x [,k] );\n" \
-"    JF    = NLtestMexWrapper( 'evalJF', ntest, x );\n" \
-"    P     = NLtestMexWrapper( 'pettern', ntest );\n" \
-"    n     = NLtestMexWrapper( 'neq', ntest );\n" \
-"    ng    = NLtestMexWrapper( 'numGuess', ntest );\n" \
-"    g     = NLtestMexWrapper( 'guess', ntest, n );\n" \
-"    ne    = NLtestMexWrapper( 'numExact', ntest );\n" \
-"    e     = NLtestMexWrapper( 'exact', ntest, n );\n" \
-"    ok    = NLtestMexWrapper( 'check', ntest, x );\n" \
-"    [L,U] = NLtestMexWrapper( 'bbox', ntest );\n" \
-"    name  = NLtestMexWrapper( 'name', ntest );\n" \
-"    info  = NLtestMexWrapper( 'info', ntest );\n" \
+"    n      = NLtestMexWrapper( 'numTest' );\n" \
+"    names  = NLtestMexWrapper( 'listall' );\n" \
+"    F      = NLtestMexWrapper( 'evalF', ntest, x [,k] );\n" \
+"    JF     = NLtestMexWrapper( 'evalJF', ntest, x );\n" \
+"    P      = NLtestMexWrapper( 'pettern', ntest );\n" \
+"    n      = NLtestMexWrapper( 'neq', ntest );\n" \
+"    ng     = NLtestMexWrapper( 'numGuess', ntest );\n" \
+"    g      = NLtestMexWrapper( 'guess', ntest, n );\n" \
+"    ne     = NLtestMexWrapper( 'numExact', ntest );\n" \
+"    e      = NLtestMexWrapper( 'exact', ntest, n );\n" \
+"    ok     = NLtestMexWrapper( 'check', ntest, x );\n" \
+"    [L,U]  = NLtestMexWrapper( 'bbox', ntest );\n" \
+"    name   = NLtestMexWrapper( 'name', ntest );\n" \
+"    bibtex = NLtestMexWrapper( 'bibtex', ntest );\n" \
 "\n" \
 "===================================================================\n"
 
@@ -568,11 +568,11 @@ namespace NLproblem {
 
   static
   void
-  do_info(
+  do_bibtex(
     int nlhs, mxArray       *plhs[],
     int nrhs, mxArray const *prhs[]
   ) {
-    #define CMD "NLtestMexWrapper('info',ntest): "
+    #define CMD "NLtestMexWrapper('bibtex',ntest): "
     int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
@@ -611,7 +611,7 @@ namespace NLproblem {
     {"bbox",do_bbox},
     {"check",do_check},
     {"name",do_name},
-    {"info",do_info}
+    {"bibtex",do_bibtex}
   };
 
   extern "C"

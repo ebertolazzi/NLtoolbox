@@ -41,7 +41,6 @@ public:
     )
   {}
 
-  virtual
   real_type
   evalFk( dvec_t const & xx, int_type k ) const override {
     real_type x  = xx(0);
@@ -54,7 +53,6 @@ public:
     return 0;
   }
 
-  virtual
   void
   evalF( dvec_t const & xx, dvec_t & f ) const override {
     real_type x  = xx(0);
@@ -64,12 +62,10 @@ public:
     f(1) = 200*(y-x3);
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return 4; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     ii(0) = 0; jj(0) = 0;
@@ -78,7 +74,6 @@ public:
     ii(3) = 1; jj(3) = 1;
   }
 
-  virtual
   void
   jacobian( dvec_t const & xx, dvec_t & jac ) const override {
     real_type x  = xx(0);
@@ -90,30 +85,25 @@ public:
     jac(3) = 200;
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 1; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
     x(0) = x(1) = 1;
   }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x(0) = -1.2;
     x(1) = -1;
   }
 
-  virtual
   int_type
   numInitialPoint( ) const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override
   {}

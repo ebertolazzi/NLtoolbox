@@ -46,7 +46,6 @@ public:
   real_type cot( real_type x ) const { return 1/tan(x); }
   real_type csc2( real_type x ) const { return 1/power2(sin(x)); }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type i ) const override {
     real_type f = 0;
@@ -55,7 +54,6 @@ public:
     return f;
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type i = 0; i < n; ++i ) {
@@ -65,12 +63,10 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*(n-1); }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -80,7 +76,6 @@ public:
           { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     int_type kk = 0;
@@ -91,21 +86,17 @@ public:
     }
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numInitialPoint() const override { return 1; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     x.fill(75);

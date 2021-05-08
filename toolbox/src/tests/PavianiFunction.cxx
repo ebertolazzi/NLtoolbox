@@ -53,7 +53,7 @@ public:
   mul( dvec_t const & x ) const {
     real_type res = 1;
     for ( int_type i = 0; i < 10; ++i )
-      res *= power2(std::abs(x(i)));
+      res *= power2(abs(x(i)));
     return res;
   }
 
@@ -86,13 +86,11 @@ public:
     return res;
   }
 
-  virtual
   real_type
   evalFk( dvec_t const & x, int_type k ) const override {
     return loglog_D(x(k)) - mul_D(x,k);
   }
 
-  virtual
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     for ( int_type i = 0; i < 10; ++i ) {
@@ -103,12 +101,10 @@ public:
     }
   }
 
-  virtual
   int_type
   jacobianNnz() const override
   { return n*n; }
 
-  virtual
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
     int_type kk = 0;
@@ -117,7 +113,6 @@ public:
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
-  virtual
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     int_type kk = 0;
@@ -130,17 +125,14 @@ public:
     }
   }
 
-  virtual
   void
   getExactSolution( dvec_t & x, int_type ) const override {
   }
 
-  virtual
   int_type
   numExactSolution() const override
   { return 0; }
 
-  virtual
   void
   getInitialPoint( dvec_t & x, int_type ) const override {
     /*x(0) = 2.001;
@@ -166,12 +158,10 @@ public:
     x(9) = 9.9;
   }
 
-  virtual
   int_type
   numInitialPoint() const override
   { return 1; }
 
-  virtual
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     for ( int_type i = 0; i < 10; ++i ) {
@@ -182,7 +172,6 @@ public:
     }
   }
 
-  virtual
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
     U.fill(10);
