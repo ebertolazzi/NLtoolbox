@@ -1,0 +1,7 @@
+lib/include
+lib/lib
+*.pdf
+*.o
+*.obj
+
+toolbox/bin
