@@ -1,0 +1,1333 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>test_fsolve</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-05-09"><meta name="DC.source" content="test_fsolve.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+<span class="keyword">global</span> nl;
+
+nl = NLtest();
+
+<span class="comment">%res = nl.listall()</span>
+<span class="comment">%options = optimoptions(@fsolve,'Display','none','SpecifyObjectiveGradient',true,'PlotFcn',@optimplotfirstorderopt);</span>
+algo = {<span class="string">'trust-region-dogleg'</span>, <span class="string">'trust-region'</span>,<span class="string">'levenberg-marquardt'</span>};
+
+
+stat = {};
+kkk  = 0 ;
+
+<span class="keyword">for</span> ntest=1:nl.numTest()
+  nl.select(ntest) ;
+  options = optimoptions( @fsolve,<span class="keyword">...</span>
+    <span class="string">'Display'</span>,                  <span class="string">'none'</span>,<span class="keyword">...</span>
+    <span class="string">'Algorithm'</span>,                algo{3}, <span class="keyword">...</span>
+    <span class="string">'SpecifyObjectiveGradient'</span>, true, <span class="keyword">...</span>
+    <span class="string">'FunctionTolerance'</span>,        1e-10, <span class="keyword">...</span>
+    <span class="string">'MaxIterations'</span>,            100,<span class="keyword">...</span>
+    <span class="string">'OptimalityTolerance'</span>,      1e-10, <span class="keyword">...</span>
+    <span class="string">'CheckGradients'</span>,           false,<span class="keyword">...</span>
+    <span class="string">'JacobPattern'</span>,             nl.pattern(), <span class="keyword">...</span>
+    <span class="string">'FiniteDifferenceType'</span>,     <span class="string">'central'</span>, <span class="keyword">...</span>
+    <span class="string">'FiniteDifferenceStepSize'</span>, eps^(1/3.5) <span class="keyword">...</span>
+  );
+  <span class="keyword">for</span> ng=1:nl.numGuess()
+
+    fprintf(<span class="string">'test N.%4d GUESS N.%2d PROBLEM = %s\n'</span>,ntest,ng,nl.name());
+
+    x0 = nl.guess(ng);
+    [x,F,exitflag,output,JAC] = fsolve(@fun,x0,options);
+    kkk = kkk+1 ;
+    stat{kkk}.exitflag   = exitflag;
+    stat{kkk}.title      = nl.name();
+    stat{kkk}.iterations = output.iterations;
+    stat{kkk}.x          = x;
+    stat{kkk}.nguess     = ng;
+    stat{kkk}.n          = nl.numActive();
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+ok  = 0;
+qok = 0;
+<span class="keyword">for</span> k=1:kkk
+  conv = <span class="string">'DIVERGE'</span>;
+  <span class="keyword">if</span> stat{k}.exitflag == 1
+    conv = <span class="string">'YES    '</span>;
+    ok = ok+1;
+  <span class="keyword">end</span>
+  <span class="keyword">if</span> stat{k}.exitflag == 4
+    conv = <span class="string">'NO     '</span>;
+    qok = qok+1;
+  <span class="keyword">end</span>
+
+  fprintf(<span class="string">'%4d Conv:%7s Test N:%4d Guess:%2d IT:%4d [%s]\n'</span>, <span class="keyword">...</span>
+           k, <span class="keyword">...</span>
+           conv, <span class="keyword">...</span>
+           stat{k}.n, <span class="keyword">...</span>
+           stat{k}.nguess, <span class="keyword">...</span>
+           stat{k}.iterations, <span class="keyword">...</span>
+           stat{k}.title);
+  <span class="comment">% disp(stat{k}.x.');</span>
+<span class="keyword">end</span>
+
+fprintf(<span class="string">'ntest = %d\n'</span>,kkk);
+fprintf(<span class="string">'ok   = %d\n'</span>,ok);
+fprintf(<span class="string">'qok  = %d\n'</span>,qok);
+fprintf(<span class="string">'fail = %d\n'</span>,kkk-qok-ok);
+
+fprintf(<span class="string">'\n\nAll done folks\n\n'</span>);
+
+<span class="keyword">function</span> [F,J] = fun(x)
+  <span class="keyword">global</span> nl ;
+  F = nl.evalF(x);
+  J = nl.evalJF(x);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">test N.   1 GUESS N. 1 PROBLEM = Artificial Test of Nowak and Weimann neq = 2
+test N.   2 GUESS N. 1 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 3
+test N.   2 GUESS N. 2 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 3
+test N.   3 GUESS N. 1 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 30
+test N.   3 GUESS N. 2 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 30
+test N.   4 GUESS N. 1 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 300
+test N.   4 GUESS N. 2 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 300
+test N.   5 GUESS N. 1 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 3000
+test N.   5 GUESS N. 2 PROBLEM = Badly scaled augmented Powell&#8217;s function neq = 3000
+test N.   6 GUESS N. 1 PROBLEM = Beale neq = 2
+test N.   7 GUESS N. 1 PROBLEM = Bertolazzi: root+square. neq = 2
+test N.   8 GUESS N. 1 PROBLEM = Bertolazzi: atan+quadratic neq = 2
+test N.   9 GUESS N. 1 PROBLEM = Bertolazzi Hard. neq = 2
+test N.  10 GUESS N. 1 PROBLEM = Bertolazzi Single EQ. neq = 1
+test N.  11 GUESS N. 1 PROBLEM = Biggs EXP2 function neq = 2
+test N.  12 GUESS N. 1 PROBLEM = Biggs EXP3 function neq = 3
+test N.  13 GUESS N. 1 PROBLEM = Biggs EXP4 function neq = 4
+test N.  14 GUESS N. 1 PROBLEM = Biggs EXP5 function neq = 5
+test N.  15 GUESS N. 1 PROBLEM = Biggs EXP6 function neq = 6
+test N.  16 GUESS N. 1 PROBLEM = Boggs function neq = 2
+test N.  17 GUESS N. 1 PROBLEM = BohachevskyN1 neq = 2
+test N.  18 GUESS N. 1 PROBLEM = BohachevskyN2 neq = 2
+test N.  19 GUESS N. 1 PROBLEM = BohachevskyN3 neq = 2
+test N.  20 GUESS N. 1 PROBLEM = Box and Betts exponential quadratic sum neq = 3
+test N.  21 GUESS N. 1 PROBLEM = Box Problem neq = 3
+test N.  22 GUESS N. 1 PROBLEM = Box3 neq = 3
+test N.  23 GUESS N. 1 PROBLEM = BraninRCOS neq = 2
+test N.  24 GUESS N. 1 PROBLEM = Brown almost linear function neq = 5
+test N.  25 GUESS N. 1 PROBLEM = Brown almost linear function neq = 15
+test N.  26 GUESS N. 1 PROBLEM = Brown almost linear function neq = 25
+test N.  27 GUESS N. 1 PROBLEM = Brown and Conte function neq = 2
+test N.  28 GUESS N. 1 PROBLEM = Brown and Dennis Function neq = 4
+test N.  29 GUESS N. 1 PROBLEM = Brown and Gearhart function neq = 3
+test N.  30 GUESS N. 1 PROBLEM = Brown Badly Scaled Function neq = 2
+test N.  31 GUESS N. 1 PROBLEM = Brown function neq = 2
+test N.  32 GUESS N. 1 PROBLEM = Broyden Banded Function neq = 10
+test N.  33 GUESS N. 1 PROBLEM = Broyden tridiagonal function neq = 5
+test N.  34 GUESS N. 1 PROBLEM = Broyden tridiagonal function neq = 10
+test N.  35 GUESS N. 1 PROBLEM = Broyden tridiagonal function neq = 500
+test N.  36 GUESS N. 1 PROBLEM = Broyden tridiagonal function neq = 5
+test N.  37 GUESS N. 1 PROBLEM = Broyden tridiagonal function neq = 10
+test N.  38 GUESS N. 1 PROBLEM = Broyden tridiagonal function neq = 500
+test N.  39 GUESS N. 1 PROBLEM = BUNLSI example 5 neq = 8
+test N.  40 GUESS N. 1 PROBLEM = BUNLSI example 6 neq = 30
+test N.  41 GUESS N. 1 PROBLEM = Burden and Faires example 1 neq = 3
+test N.  42 GUESS N. 1 PROBLEM = Chandrasekhar function neq = 10
+test N.  43 GUESS N. 1 PROBLEM = Chandrasekhar function neq = 50
+test N.  44 GUESS N. 1 PROBLEM = Chandrasekhar function neq = 10
+test N.  45 GUESS N. 1 PROBLEM = Chandrasekhar function neq = 50
+test N.  46 GUESS N. 1 PROBLEM = Chebyquad function neq = 1
+test N.  47 GUESS N. 1 PROBLEM = Chebyquad function neq = 2
+test N.  48 GUESS N. 1 PROBLEM = Chebyquad function neq = 3
+test N.  49 GUESS N. 1 PROBLEM = Chebyquad function neq = 4
+test N.  50 GUESS N. 1 PROBLEM = Chebyquad function neq = 5
+test N.  51 GUESS N. 1 PROBLEM = Chebyquad function neq = 6
+test N.  52 GUESS N. 1 PROBLEM = Chebyquad function neq = 7
+test N.  53 GUESS N. 1 PROBLEM = Chebyquad function neq = 8
+test N.  54 GUESS N. 1 PROBLEM = Chebyquad function neq = 9
+test N.  55 GUESS N. 1 PROBLEM = Chemical Equilibrium Application neq = 5
+test N.  56 GUESS N. 1 PROBLEM = Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7
+test N.  56 GUESS N. 2 PROBLEM = Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7
+test N.  56 GUESS N. 3 PROBLEM = Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7
+test N.  56 GUESS N. 4 PROBLEM = Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7
+test N.  56 GUESS N. 5 PROBLEM = Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7
+test N.  57 GUESS N. 1 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 2 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 3 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 4 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 5 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 6 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 7 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  57 GUESS N. 8 PROBLEM = Chemical Reactor Equilibrium Conversion neq = 2
+test N.  58 GUESS N. 1 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 2 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 3 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 4 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 5 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 6 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 7 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 8 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  58 GUESS N. 9 PROBLEM = Chemical Reactor Steady State neq = 2
+test N.  59 GUESS N. 1 PROBLEM = Cliff Function neq = 2
+test N.  60 GUESS N. 1 PROBLEM = Colville Polynomial neq = 4
+test N.  61 GUESS N. 1 PROBLEM = Combustion Application neq = 10
+test N.  62 GUESS N. 1 PROBLEM = Complementary Function neq = 2
+test N.  63 GUESS N. 1 PROBLEM = Complementary Function neq = 16
+test N.  64 GUESS N. 1 PROBLEM = Complementary Function neq = 128
+test N.  65 GUESS N. 1 PROBLEM = Compressibility factor from the RK equation neq = 1
+test N.  65 GUESS N. 2 PROBLEM = Compressibility factor from the RK equation neq = 1
+test N.  65 GUESS N. 3 PROBLEM = Compressibility factor from the RK equation neq = 1
+test N.  65 GUESS N. 4 PROBLEM = Compressibility factor from the RK equation neq = 1
+test N.  66 GUESS N. 1 PROBLEM = Countercurrent Reactors Problem N.1 neq = 6
+test N.  66 GUESS N. 2 PROBLEM = Countercurrent Reactors Problem N.1 neq = 6
+test N.  66 GUESS N. 3 PROBLEM = Countercurrent Reactors Problem N.1 neq = 6
+test N.  67 GUESS N. 1 PROBLEM = Countercurrent Reactors Problem N.1 neq = 12
+test N.  67 GUESS N. 2 PROBLEM = Countercurrent Reactors Problem N.1 neq = 12
+test N.  67 GUESS N. 3 PROBLEM = Countercurrent Reactors Problem N.1 neq = 12
+test N.  68 GUESS N. 1 PROBLEM = Countercurrent Reactors Problem N.1 neq = 50
+test N.  68 GUESS N. 2 PROBLEM = Countercurrent Reactors Problem N.1 neq = 50
+test N.  68 GUESS N. 3 PROBLEM = Countercurrent Reactors Problem N.1 neq = 50
+test N.  69 GUESS N. 1 PROBLEM = Countercurrent Reactors Problem N.2 neq = 6
+test N.  69 GUESS N. 2 PROBLEM = Countercurrent Reactors Problem N.2 neq = 6
+test N.  69 GUESS N. 3 PROBLEM = Countercurrent Reactors Problem N.2 neq = 6
+test N.  70 GUESS N. 1 PROBLEM = Countercurrent Reactors Problem N.2 neq = 12
+test N.  70 GUESS N. 2 PROBLEM = Countercurrent Reactors Problem N.2 neq = 12
+test N.  70 GUESS N. 3 PROBLEM = Countercurrent Reactors Problem N.2 neq = 12
+test N.  71 GUESS N. 1 PROBLEM = Countercurrent Reactors Problem N.2 neq = 50
+test N.  71 GUESS N. 2 PROBLEM = Countercurrent Reactors Problem N.2 neq = 50
+test N.  71 GUESS N. 3 PROBLEM = Countercurrent Reactors Problem N.2 neq = 50
+test N.  72 GUESS N. 1 PROBLEM = Cragg and Levy Problem neq = 4
+test N.  73 GUESS N. 1 PROBLEM = Cube Function neq = 2
+test N.  74 GUESS N. 1 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  74 GUESS N. 2 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  74 GUESS N. 3 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  74 GUESS N. 4 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  74 GUESS N. 5 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  74 GUESS N. 6 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  74 GUESS N. 7 PROBLEM = Cutlips steady state for reaction rate equations, k set N.0 neq = 6
+test N.  75 GUESS N. 1 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  75 GUESS N. 2 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  75 GUESS N. 3 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  75 GUESS N. 4 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  75 GUESS N. 5 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  75 GUESS N. 6 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  75 GUESS N. 7 PROBLEM = Cutlips steady state for reaction rate equations, k set N.1 neq = 6
+test N.  76 GUESS N. 1 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  76 GUESS N. 2 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  76 GUESS N. 3 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  76 GUESS N. 4 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  76 GUESS N. 5 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  76 GUESS N. 6 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  76 GUESS N. 7 PROBLEM = Cutlips steady state for reaction rate equations, k set N.2 neq = 6
+test N.  77 GUESS N. 1 PROBLEM = DarvishiBarati neq = 2
+test N.  78 GUESS N. 1 PROBLEM = Dennis and Gay 6 eq N 1 neq = 6
+test N.  79 GUESS N. 1 PROBLEM = Dennis and Gay 6 eq N 2 neq = 6
+test N.  80 GUESS N. 1 PROBLEM = Dennis and Gay 6 eq N 3 neq = 6
+test N.  81 GUESS N. 1 PROBLEM = Dennis and Gay 6 eq N 4 neq = 6
+test N.  82 GUESS N. 1 PROBLEM = Dennis and Gay 6 eq N 5 neq = 6
+test N.  83 GUESS N. 1 PROBLEM = Dennis and Gay 8 eq N 1 neq = 8
+test N.  84 GUESS N. 1 PROBLEM = Dennis and Gay 8 eq N 2 neq = 8
+test N.  85 GUESS N. 1 PROBLEM = Dennis and Gay 8 eq N 3 neq = 8
+test N.  86 GUESS N. 1 PROBLEM = Dennis and Gay 8 eq N 4 neq = 8
+test N.  87 GUESS N. 1 PROBLEM = Dennis and Gay 8 eq N 5 neq = 8
+test N.  88 GUESS N. 1 PROBLEM = Dennis and Schnabel 2 by 2 example neq = 2
+test N.  89 GUESS N. 1 PROBLEM = De Villiers Glasser Problem #1 neq = 4
+test N.  90 GUESS N. 1 PROBLEM = De Villiers Glasser Problem #2 neq = 5
+test N.  91 GUESS N. 1 PROBLEM = Diagonal Functions Multiplied by quasi-orthogonal matrix neq = 9
+test N.  92 GUESS N. 1 PROBLEM = Diagonal Functions Multiplied by quasi-orthogonal matrix neq = 27
+test N.  93 GUESS N. 1 PROBLEM = Discrete boundary value function neq = 10
+test N.  94 GUESS N. 1 PROBLEM = Discrete boundary value function neq = 50
+test N.  95 GUESS N. 1 PROBLEM = Discrete boundary value function neq = 100
+test N.  96 GUESS N. 1 PROBLEM = Discrete boundary value function neq = 500
+test N.  97 GUESS N. 1 PROBLEM = Discrete boundary value function neq = 5000
+test N.  98 GUESS N. 1 PROBLEM = Discrete integral equation function neq = 2
+test N.  99 GUESS N. 1 PROBLEM = Discrete integral equation function neq = 5
+test N. 100 GUESS N. 1 PROBLEM = Discrete integral equation function neq = 10
+test N. 101 GUESS N. 1 PROBLEM = Discrete integral equation function neq = 100
+test N. 102 GUESS N. 1 PROBLEM = Dixon Function neq = 80
+test N. 103 GUESS N. 1 PROBLEM = Dixon Function neq = 2000
+test N. 104 GUESS N. 1 PROBLEM = Dixon Function neq = 5000
+test N. 105 GUESS N. 1 PROBLEM = Easom Function neq = 2
+test N. 106 GUESS N. 1 PROBLEM = EsterificReaction (example 4) neq = 2
+test N. 107 GUESS N. 1 PROBLEM = Exponential Function N.1 neq = 2
+test N. 108 GUESS N. 1 PROBLEM = Exponential Function N.1 neq = 10
+test N. 109 GUESS N. 1 PROBLEM = Exponential Function N.1 neq = 50
+test N. 110 GUESS N. 1 PROBLEM = Exponential Function N.1 neq = 500
+test N. 111 GUESS N. 1 PROBLEM = Exponential Function N.1 neq = 5000
+test N. 112 GUESS N. 1 PROBLEM = Exponential Function N.2 neq = 2
+test N. 113 GUESS N. 1 PROBLEM = Exponential Function N.2 neq = 10
+test N. 114 GUESS N. 1 PROBLEM = Exponential Function N.2 neq = 50
+test N. 115 GUESS N. 1 PROBLEM = Exponential Function N.2 neq = 500
+test N. 116 GUESS N. 1 PROBLEM = Exponential Function N.2 neq = 5000
+test N. 117 GUESS N. 1 PROBLEM = Exponential Function N.3 neq = 2
+test N. 118 GUESS N. 1 PROBLEM = Exponential Function N.3 neq = 10
+test N. 119 GUESS N. 1 PROBLEM = Exponential Function N.3 neq = 50
+test N. 120 GUESS N. 1 PROBLEM = Exponential Function N.3 neq = 500
+test N. 121 GUESS N. 1 PROBLEM = Exponential Function N.3 neq = 5000
+test N. 122 GUESS N. 1 PROBLEM = Exponential sine neq = 2
+test N. 122 GUESS N. 2 PROBLEM = Exponential sine neq = 2
+test N. 122 GUESS N. 3 PROBLEM = Exponential sine neq = 2
+test N. 122 GUESS N. 4 PROBLEM = Exponential sine neq = 2
+test N. 122 GUESS N. 5 PROBLEM = Exponential sine neq = 2
+test N. 123 GUESS N. 1 PROBLEM = Extended Eiger-Sikorski-Stenger Function neq = 9
+test N. 124 GUESS N. 1 PROBLEM = Extended Kearfott Function neq = 7
+test N. 125 GUESS N. 1 PROBLEM = Extended Powell singular function neq = 4
+test N. 126 GUESS N. 1 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 2 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 3 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 4 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 5 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 6 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 7 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 126 GUESS N. 8 PROBLEM = Fractional conversion in a chemical reactor neq = 1
+test N. 127 GUESS N. 1 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 2 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 3 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 4 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 5 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 6 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 7 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 127 GUESS N. 8 PROBLEM = Fractional conversion in a chemical reactor (ver 2) neq = 3
+test N. 128 GUESS N. 1 PROBLEM = Freudenstein-Roth function neq = 2
+test N. 129 GUESS N. 1 PROBLEM = Function 15 neq = 10
+test N. 130 GUESS N. 1 PROBLEM = Function 15 neq = 50
+test N. 131 GUESS N. 1 PROBLEM = Function 15 neq = 100
+test N. 132 GUESS N. 1 PROBLEM = Function 18 neq = 3
+test N. 133 GUESS N. 1 PROBLEM = Function 18 neq = 9
+test N. 134 GUESS N. 1 PROBLEM = Function 18 neq = 27
+test N. 135 GUESS N. 1 PROBLEM = Function 21 neq = 3
+test N. 136 GUESS N. 1 PROBLEM = Function 21 neq = 6
+test N. 137 GUESS N. 1 PROBLEM = Function 21 neq = 36
+test N. 138 GUESS N. 1 PROBLEM = Function 27 neq = 2
+test N. 139 GUESS N. 1 PROBLEM = Function 27 neq = 10
+test N. 140 GUESS N. 1 PROBLEM = Function 27 neq = 100
+test N. 141 GUESS N. 1 PROBLEM = Gaussian function neq = 3
+test N. 142 GUESS N. 1 PROBLEM = Generalized Rosenbrock function neq = 2
+test N. 143 GUESS N. 1 PROBLEM = Generalized Rosenbrock function neq = 10
+test N. 144 GUESS N. 1 PROBLEM = Generalized Rosenbrock function neq = 50
+test N. 145 GUESS N. 1 PROBLEM = Generalized Rosenbrock function neq = 500
+test N. 146 GUESS N. 1 PROBLEM = Geometric Programming Function neq = 5
+test N. 147 GUESS N. 1 PROBLEM = Geometric Programming Function neq = 10
+test N. 148 GUESS N. 1 PROBLEM = Geometric Programming Function neq = 50
+test N. 149 GUESS N. 1 PROBLEM = Geometric Programming Function neq = 100
+test N. 150 GUESS N. 1 PROBLEM = Gheri-Mancino function neq = 10
+test N. 151 GUESS N. 1 PROBLEM = Gheri-Mancino function neq = 30
+test N. 152 GUESS N. 1 PROBLEM = Gheri-Mancino function neq = 100
+test N. 153 GUESS N. 1 PROBLEM = Goldstein Price Polynomial neq = 2
+test N. 154 GUESS N. 1 PROBLEM = Gregory and Karney Tridiagonal Matrix Function neq = 10
+test N. 155 GUESS N. 1 PROBLEM = Gregory and Karney Tridiagonal Matrix Function neq = 20
+test N. 156 GUESS N. 1 PROBLEM = Gregory and Karney Tridiagonal Matrix Function neq = 100
+test N. 157 GUESS N. 1 PROBLEM = Griewank function neq = 2
+test N. 157 GUESS N. 2 PROBLEM = Griewank function neq = 2
+test N. 158 GUESS N. 1 PROBLEM = Griewank function neq = 5
+test N. 158 GUESS N. 2 PROBLEM = Griewank function neq = 5
+test N. 159 GUESS N. 1 PROBLEM = Griewank function neq = 10
+test N. 159 GUESS N. 2 PROBLEM = Griewank function neq = 10
+test N. 160 GUESS N. 1 PROBLEM = Gulf R&amp;D Function neq = 3
+test N. 161 GUESS N. 1 PROBLEM = Hammarling 2 by 2 matrix square root problem neq = 4
+test N. 162 GUESS N. 1 PROBLEM = Hammarling 3 by 3 matrix square root problem N.1 neq = 9
+test N. 163 GUESS N. 1 PROBLEM = Hammarling 3 by 3 matrix square root problem N.2 neq = 9
+test N. 164 GUESS N. 1 PROBLEM = Hammarling 3 by 3 matrix square root problem N.3 neq = 9
+test N. 165 GUESS N. 1 PROBLEM = Hanbook Function neq = 2
+test N. 166 GUESS N. 1 PROBLEM = Hanbook Function neq = 10
+test N. 167 GUESS N. 1 PROBLEM = Hanbook Function neq = 50
+test N. 168 GUESS N. 1 PROBLEM = Han-Sun-Han-SAMPAJO 2005 function test neq = 2
+test N. 169 GUESS N. 1 PROBLEM = HAS 64, tau = 100 neq = 7
+test N. 170 GUESS N. 1 PROBLEM = HAS 64, tau = 10000 neq = 7
+test N. 171 GUESS N. 1 PROBLEM = HAS 64, tau = 1e+06 neq = 7
+test N. 172 GUESS N. 1 PROBLEM = HAS 64, tau = 1e+08 neq = 7
+test N. 173 GUESS N. 1 PROBLEM = HAS 64, tau = 1e+10 neq = 7
+test N. 174 GUESS N. 1 PROBLEM = HAS 93, tau = 100 neq = 14
+test N. 175 GUESS N. 1 PROBLEM = HAS 93, tau = 10000 neq = 14
+test N. 176 GUESS N. 1 PROBLEM = HAS 93, tau = 1e+06 neq = 14
+test N. 177 GUESS N. 1 PROBLEM = HAS 93, tau = 1e+08 neq = 14
+test N. 178 GUESS N. 1 PROBLEM = HAS 93, tau = 1e+10 neq = 14
+test N. 179 GUESS N. 1 PROBLEM = HAS111 function neq = 10
+test N. 179 GUESS N. 2 PROBLEM = HAS111 function neq = 10
+test N. 180 GUESS N. 1 PROBLEM = Helical valley function neq = 3
+test N. 181 GUESS N. 1 PROBLEM = Hiebert Chem 10x10 neq = 10
+test N. 182 GUESS N. 1 PROBLEM = Hiebert Chem 2x2 neq = 2
+test N. 183 GUESS N. 1 PROBLEM = Hiebert Chem 6x6 neq = 6
+test N. 184 GUESS N. 1 PROBLEM = Hiebert's 3rd Chemical Equilibrium Problem, R=10.000000 neq = 10
+test N. 185 GUESS N. 1 PROBLEM = Hiebert's 3rd Chemical Equilibrium Problem, R=40.000000 neq = 10
+test N. 186 GUESS N. 1 PROBLEM = Hilbert Matrix Function F = x'Ax neq = 4
+test N. 187 GUESS N. 1 PROBLEM = Hilbert Matrix Function F = x'Ax neq = 8
+test N. 188 GUESS N. 1 PROBLEM = Hilbert Matrix Function F = x'Ax neq = 32
+test N. 189 GUESS N. 1 PROBLEM = Hilbert Matrix Function F = x'Ax neq = 64
+test N. 190 GUESS N. 1 PROBLEM = Hilbert Matrix Function F = x'Ax neq = 256
+test N. 191 GUESS N. 1 PROBLEM = Himmelblau function neq = 2
+test N. 192 GUESS N. 1 PROBLEM = InfReflux function neq = 1
+test N. 192 GUESS N. 2 PROBLEM = InfReflux function neq = 1
+test N. 192 GUESS N. 3 PROBLEM = InfReflux function neq = 1
+test N. 192 GUESS N. 4 PROBLEM = InfReflux function neq = 1
+test N. 193 GUESS N. 1 PROBLEM = Interval Arithmetic Benchmarks neq = 10
+test N. 194 GUESS N. 1 PROBLEM = Jennrich and Sampson function neq = 2
+test N. 195 GUESS N. 1 PROBLEM = Kelley Function neq = 2
+test N. 196 GUESS N. 1 PROBLEM = Kinematic Application neq = 8
+test N. 197 GUESS N. 1 PROBLEM = Leon cubic valley function neq = 2
+test N. 198 GUESS N. 1 PROBLEM = Linear function - full rank neq = 10
+test N. 199 GUESS N. 1 PROBLEM = Linear function - rank 1 with zero columns and rows neq = 10
+test N. 200 GUESS N. 1 PROBLEM = Logarithmic Function neq = 2
+test N. 201 GUESS N. 1 PROBLEM = Logarithmic Function neq = 10
+test N. 202 GUESS N. 1 PROBLEM = Logarithmic Function neq = 50
+test N. 203 GUESS N. 1 PROBLEM = Logarithmic Function neq = 500
+test N. 204 GUESS N. 1 PROBLEM = Logarithmic Function neq = 5000
+test N. 205 GUESS N. 1 PROBLEM = McCormic function neq = 2
+test N. 205 GUESS N. 2 PROBLEM = McCormic function neq = 2
+test N. 206 GUESS N. 1 PROBLEM = McKinnon function neq = 2
+test N. 207 GUESS N. 1 PROBLEM = Mexican Hat Function, tau = 100 neq = 2
+test N. 207 GUESS N. 2 PROBLEM = Mexican Hat Function, tau = 100 neq = 2
+test N. 207 GUESS N. 3 PROBLEM = Mexican Hat Function, tau = 100 neq = 2
+test N. 208 GUESS N. 1 PROBLEM = Mexican Hat Function, tau = 10000 neq = 2
+test N. 208 GUESS N. 2 PROBLEM = Mexican Hat Function, tau = 10000 neq = 2
+test N. 208 GUESS N. 3 PROBLEM = Mexican Hat Function, tau = 10000 neq = 2
+test N. 209 GUESS N. 1 PROBLEM = Mexican Hat Function, tau = 1e+06 neq = 2
+test N. 209 GUESS N. 2 PROBLEM = Mexican Hat Function, tau = 1e+06 neq = 2
+test N. 209 GUESS N. 3 PROBLEM = Mexican Hat Function, tau = 1e+06 neq = 2
+test N. 210 GUESS N. 1 PROBLEM = Mexican Hat Function, tau = 1e+08 neq = 2
+test N. 210 GUESS N. 2 PROBLEM = Mexican Hat Function, tau = 1e+08 neq = 2
+test N. 210 GUESS N. 3 PROBLEM = Mexican Hat Function, tau = 1e+08 neq = 2
+test N. 211 GUESS N. 1 PROBLEM = Miele and Cantrell function neq = 4
+test N. 211 GUESS N. 2 PROBLEM = Miele and Cantrell function neq = 4
+test N. 212 GUESS N. 1 PROBLEM = Model equations for the CSTR neq = 15
+test N. 213 GUESS N. 1 PROBLEM = Model equations for combustion of propane, R=10.000000 neq = 10
+test N. 214 GUESS N. 1 PROBLEM = Model equations for combustion of propane, R=5.000000 neq = 10
+test N. 215 GUESS N. 1 PROBLEM = Nonlinear Integral Equations neq = 100
+test N. 216 GUESS N. 1 PROBLEM = Order10to11 function neq = 1
+test N. 217 GUESS N. 1 PROBLEM = Paviani function neq = 10
+test N. 218 GUESS N. 1 PROBLEM = Penalty I neq = 10
+test N. 219 GUESS N. 1 PROBLEM = Penalty I neq = 50
+test N. 220 GUESS N. 1 PROBLEM = Penalty Function #1 neq = 2
+test N. 221 GUESS N. 1 PROBLEM = Penalty Function #1 neq = 10
+test N. 222 GUESS N. 1 PROBLEM = Penalty Function #1 neq = 50
+test N. 223 GUESS N. 1 PROBLEM = Penalty Function #1 neq = 200
+test N. 224 GUESS N. 1 PROBLEM = Penalty Function #2 neq = 2
+test N. 225 GUESS N. 1 PROBLEM = Penalty Function #2 neq = 10
+test N. 226 GUESS N. 1 PROBLEM = Penalty Function #2 neq = 50
+test N. 227 GUESS N. 1 PROBLEM = Penalty Function #2 neq = 200
+test N. 228 GUESS N. 1 PROBLEM = Pipeline Network Problem (partial oxydation of methane) neq = 7
+test N. 229 GUESS N. 1 PROBLEM = Pipeline Network Problem version 2 (partial oxydation of methane) neq = 9
+test N. 230 GUESS N. 1 PROBLEM = Powell badly scaled function neq = 2
+test N. 231 GUESS N. 1 PROBLEM = Powell's quartic function neq = 4
+test N. 232 GUESS N. 1 PROBLEM = Powell 3D Function neq = 3
+test N. 233 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.129 neq = 3
+test N. 234 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.201 neq = 10
+test N. 235 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.201 neq = 100
+test N. 236 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.201 neq = 500
+test N. 237 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.202 neq = 10
+test N. 238 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.202 neq = 100
+test N. 239 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 2
+test N. 240 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 5
+test N. 241 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 7
+test N. 242 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 10
+test N. 243 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 15
+test N. 244 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 20
+test N. 245 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 30
+test N. 246 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.203 neq = 50
+test N. 247 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.204 neq = 10
+test N. 248 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.204 neq = 100
+test N. 249 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.204 neq = 500
+test N. 250 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.205 neq = 2
+test N. 251 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.205 neq = 5
+test N. 252 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.205 neq = 10
+test N. 253 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.205 neq = 20
+test N. 254 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.205 neq = 30
+test N. 255 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.206 neq = 2
+test N. 256 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.206 neq = 5
+test N. 257 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.206 neq = 10
+test N. 258 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.206 neq = 20
+test N. 259 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.206 neq = 30
+test N. 260 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.207 neq = 2
+test N. 261 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.207 neq = 5
+test N. 262 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.207 neq = 10
+test N. 263 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.207 neq = 20
+test N. 264 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.207 neq = 30
+test N. 265 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.208 neq = 2
+test N. 266 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.208 neq = 5
+test N. 267 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.208 neq = 10
+test N. 268 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.208 neq = 20
+test N. 269 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.208 neq = 30
+test N. 270 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.209 neq = 10
+test N. 271 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.209 neq = 100
+test N. 272 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.209 neq = 500
+test N. 273 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.210 neq = 10
+test N. 274 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.211 neq = 10
+test N. 275 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.212 neq = 10
+test N. 276 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.212 neq = 100
+test N. 277 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.212 neq = 500
+test N. 278 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.213 neq = 2
+test N. 279 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.213 neq = 5
+test N. 280 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.213 neq = 10
+test N. 281 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.213 neq = 20
+test N. 282 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.213 neq = 30
+test N. 283 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.214 neq = 2
+test N. 284 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.214 neq = 5
+test N. 285 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.214 neq = 10
+test N. 286 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.214 neq = 20
+test N. 287 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.214 neq = 30
+test N. 288 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.215 neq = 2
+test N. 289 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.215 neq = 5
+test N. 290 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.215 neq = 6
+test N. 291 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.215 neq = 10
+test N. 292 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.215 neq = 20
+test N. 293 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.215 neq = 30
+test N. 294 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.216 neq = 2
+test N. 295 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.216 neq = 5
+test N. 296 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.216 neq = 7
+test N. 297 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.216 neq = 9
+test N. 298 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.217 neq = 2
+test N. 299 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.217 neq = 5
+test N. 300 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.217 neq = 10
+test N. 301 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.217 neq = 20
+test N. 302 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.217 neq = 30
+test N. 303 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.218 neq = 2
+test N. 304 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.218 neq = 5
+test N. 305 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.218 neq = 10
+test N. 306 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.218 neq = 20
+test N. 307 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.218 neq = 30
+test N. 308 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.219 neq = 2
+test N. 309 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.219 neq = 5
+test N. 310 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.219 neq = 10
+test N. 311 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.219 neq = 20
+test N. 312 GUESS N. 1 PROBLEM = Roose Kulla Lomb Meressoo N.219 neq = 30
+test N. 313 GUESS N. 1 PROBLEM = Sample problem 18 neq = 2
+test N. 314 GUESS N. 1 PROBLEM = Sample problem 19 neq = 2
+test N. 315 GUESS N. 1 PROBLEM = Scalar problem f(x) = x * ( x - 5 )**2 neq = 1
+test N. 316 GUESS N. 1 PROBLEM = Schaffer Function F6 neq = 2
+test N. 317 GUESS N. 1 PROBLEM = Schaffer Function F7 neq = 2
+test N. 318 GUESS N. 1 PROBLEM = Schubert Broyden function neq = 10
+test N. 319 GUESS N. 1 PROBLEM = Schubert Broyden function neq = 100
+test N. 320 GUESS N. 1 PROBLEM = Schubert Broyden function neq = 1000
+test N. 321 GUESS N. 1 PROBLEM = Schubert Broyden function neq = 5000
+test N. 322 GUESS N. 1 PROBLEM = 2D semiconductor neq = 6
+test N. 323 GUESS N. 1 PROBLEM = Shekel SQRN5 Function neq = 4
+test N. 324 GUESS N. 1 PROBLEM = Shekel SQRN7 Function neq = 4
+test N. 325 GUESS N. 1 PROBLEM = Shekel SQRN10 Function neq = 4
+test N. 326 GUESS N. 1 PROBLEM = Shen-Ypma Example N.5 neq = 2
+test N. 326 GUESS N. 2 PROBLEM = Shen-Ypma Example N.5 neq = 2
+test N. 327 GUESS N. 1 PROBLEM = Shen-Ypma Example N.7 neq = 2
+test N. 327 GUESS N. 2 PROBLEM = Shen-Ypma Example N.7 neq = 2
+test N. 328 GUESS N. 1 PROBLEM = Shen-Ypma Example N.8 neq = 5
+test N. 329 GUESS N. 1 PROBLEM = Shubert Function neq = 2
+test N. 330 GUESS N. 1 PROBLEM = Singular Function neq = 2
+test N. 331 GUESS N. 1 PROBLEM = Singular Function neq = 10
+test N. 332 GUESS N. 1 PROBLEM = Singular Function neq = 50
+test N. 333 GUESS N. 1 PROBLEM = Singular Function neq = 500
+test N. 334 GUESS N. 1 PROBLEM = Singular Function neq = 5000
+test N. 335 GUESS N. 1 PROBLEM = Singular System A neq = 2
+test N. 335 GUESS N. 2 PROBLEM = Singular System A neq = 2
+test N. 335 GUESS N. 3 PROBLEM = Singular System A neq = 2
+test N. 335 GUESS N. 4 PROBLEM = Singular System A neq = 2
+test N. 336 GUESS N. 1 PROBLEM = Singular System B neq = 3
+test N. 336 GUESS N. 2 PROBLEM = Singular System B neq = 3
+test N. 337 GUESS N. 1 PROBLEM = Singular System C neq = 2
+test N. 337 GUESS N. 2 PROBLEM = Singular System C neq = 2
+test N. 338 GUESS N. 1 PROBLEM = Singular System D neq = 2
+test N. 338 GUESS N. 2 PROBLEM = Singular System D neq = 2
+test N. 339 GUESS N. 1 PROBLEM = Singular System E neq = 3
+test N. 339 GUESS N. 2 PROBLEM = Singular System E neq = 3
+test N. 340 GUESS N. 1 PROBLEM = Singular System F neq = 3
+test N. 340 GUESS N. 2 PROBLEM = Singular System F neq = 3
+test N. 341 GUESS N. 1 PROBLEM = Singular System Problem 2 (Ishihara, K. 2001) neq = 3
+test N. 341 GUESS N. 2 PROBLEM = Singular System Problem 2 (Ishihara, K. 2001) neq = 3
+test N. 341 GUESS N. 3 PROBLEM = Singular System Problem 2 (Ishihara, K. 2001) neq = 3
+test N. 341 GUESS N. 4 PROBLEM = Singular System Problem 2 (Ishihara, K. 2001) neq = 3
+test N. 341 GUESS N. 5 PROBLEM = Singular System Problem 2 (Ishihara, K. 2001) neq = 3
+test N. 342 GUESS N. 1 PROBLEM = Singular System Problem 3 neq = 2
+test N. 342 GUESS N. 2 PROBLEM = Singular System Problem 3 neq = 2
+test N. 342 GUESS N. 3 PROBLEM = Singular System Problem 3 neq = 2
+test N. 343 GUESS N. 1 PROBLEM = Singular System Problem 4 neq = 2
+test N. 343 GUESS N. 2 PROBLEM = Singular System Problem 4 neq = 2
+test N. 343 GUESS N. 3 PROBLEM = Singular System Problem 4 neq = 2
+test N. 344 GUESS N. 1 PROBLEM = Singular System Problem 5 neq = 2
+test N. 345 GUESS N. 1 PROBLEM = Singular System Problem 6 neq = 3
+test N. 345 GUESS N. 2 PROBLEM = Singular System Problem 6 neq = 3
+test N. 345 GUESS N. 3 PROBLEM = Singular System Problem 6 neq = 3
+test N. 345 GUESS N. 4 PROBLEM = Singular System Problem 6 neq = 3
+test N. 346 GUESS N. 1 PROBLEM = Singular System Problem 7 (Ishihara, K. 2001) neq = 2
+test N. 346 GUESS N. 2 PROBLEM = Singular System Problem 7 (Ishihara, K. 2001) neq = 2
+test N. 346 GUESS N. 3 PROBLEM = Singular System Problem 7 (Ishihara, K. 2001) neq = 2
+test N. 346 GUESS N. 4 PROBLEM = Singular System Problem 7 (Ishihara, K. 2001) neq = 2
+test N. 347 GUESS N. 1 PROBLEM = Singular System Problem 8 neq = 2
+test N. 348 GUESS N. 1 PROBLEM = Singular System Problem 9 neq = 2
+test N. 348 GUESS N. 2 PROBLEM = Singular System Problem 9 neq = 2
+test N. 348 GUESS N. 3 PROBLEM = Singular System Problem 9 neq = 2
+test N. 348 GUESS N. 4 PROBLEM = Singular System Problem 9 neq = 2
+test N. 349 GUESS N. 1 PROBLEM = Semi-implicit approach Example 5 neq = 2
+test N. 350 GUESS N. 1 PROBLEM = Semi-implicit approach Example 5 neq = 20
+test N. 351 GUESS N. 1 PROBLEM = Semi-implicit approach Example 5 neq = 100
+test N. 352 GUESS N. 1 PROBLEM = Six Hump Camel Back function neq = 2
+test N. 353 GUESS N. 1 PROBLEM = Sonia Krzyworzcka example 2 neq = 6
+test N. 354 GUESS N. 1 PROBLEM = Sonia Krzyworzcka example 3 neq = 10
+test N. 355 GUESS N. 1 PROBLEM = Spedicato N.17 neq = 10
+test N. 356 GUESS N. 1 PROBLEM = Spedicato N.17 neq = 50
+test N. 357 GUESS N. 1 PROBLEM = Spedicato N.17 neq = 100
+test N. 358 GUESS N. 1 PROBLEM = Spedicato N.17 neq = 500
+test N. 359 GUESS N. 1 PROBLEM = SST nonlinearity term, N.0 neq = 4
+test N. 360 GUESS N. 1 PROBLEM = SST nonlinearity term, N.1 neq = 4
+test N. 361 GUESS N. 1 PROBLEM = Strictly Convex Function 1 neq = 2
+test N. 362 GUESS N. 1 PROBLEM = Strictly Convex Function 1 neq = 10
+test N. 363 GUESS N. 1 PROBLEM = Strictly Convex Function 1 neq = 50
+test N. 364 GUESS N. 1 PROBLEM = Strictly Convex Function 1 neq = 500
+test N. 365 GUESS N. 1 PROBLEM = Strictly Convex Function 1 neq = 5000
+test N. 366 GUESS N. 1 PROBLEM = Strictly Convex Function 2 neq = 2
+test N. 367 GUESS N. 1 PROBLEM = Strictly Convex Function 2 neq = 10
+test N. 368 GUESS N. 1 PROBLEM = Strictly Convex Function 2 neq = 50
+test N. 369 GUESS N. 1 PROBLEM = Strictly Convex Function 2 neq = 500
+test N. 370 GUESS N. 1 PROBLEM = Strictly Convex Function 2 neq = 5000
+test N. 371 GUESS N. 1 PROBLEM = Toint N.225 neq = 10
+test N. 372 GUESS N. 1 PROBLEM = Toint N.225 neq = 100
+test N. 373 GUESS N. 1 PROBLEM = Toint N.225 neq = 500
+test N. 374 GUESS N. 1 PROBLEM = Tridimensional valley. neq = 3
+test N. 375 GUESS N. 1 PROBLEM = Trigonometric Exponential System prob 1 neq = 10
+test N. 376 GUESS N. 1 PROBLEM = Trigonometric Exponential System prob 1 neq = 50
+test N. 377 GUESS N. 1 PROBLEM = Trigonometric Exponential System prob 1 neq = 500
+test N. 378 GUESS N. 1 PROBLEM = Trigonometric Exponential System prob 2 neq = 9
+test N. 379 GUESS N. 1 PROBLEM = Trigonometric Exponential System prob 2 neq = 27
+test N. 380 GUESS N. 1 PROBLEM = Trigonometric Exponential System prob 2 neq = 81
+test N. 381 GUESS N. 1 PROBLEM = TrigExp neq = 10
+test N. 381 GUESS N. 2 PROBLEM = TrigExp neq = 10
+test N. 381 GUESS N. 3 PROBLEM = TrigExp neq = 10
+test N. 382 GUESS N. 1 PROBLEM = TrigExp neq = 100
+test N. 382 GUESS N. 2 PROBLEM = TrigExp neq = 100
+test N. 382 GUESS N. 3 PROBLEM = TrigExp neq = 100
+test N. 383 GUESS N. 1 PROBLEM = Trigonometric function neq = 2
+test N. 384 GUESS N. 1 PROBLEM = Trigonometric function neq = 10
+test N. 385 GUESS N. 1 PROBLEM = Trigonometric function neq = 50
+test N. 386 GUESS N. 1 PROBLEM = Troesch Function neq = 2
+test N. 387 GUESS N. 1 PROBLEM = Troesch Function neq = 10
+test N. 388 GUESS N. 1 PROBLEM = Troesch Function neq = 50
+test N. 389 GUESS N. 1 PROBLEM = Troesch Function neq = 500
+test N. 390 GUESS N. 1 PROBLEM = Troesch Function neq = 5000
+test N. 391 GUESS N. 1 PROBLEM = Two-Point Boundary Value Problem neq = 10
+test N. 392 GUESS N. 1 PROBLEM = Two-Point Boundary Value Problem neq = 100
+test N. 393 GUESS N. 1 PROBLEM = Two-Point Boundary Value Problem neq = 1000
+test N. 394 GUESS N. 1 PROBLEM = Two-Point Boundary Value Problem neq = 5000
+test N. 395 GUESS N. 1 PROBLEM = Variably dimensioned function neq = 5
+test N. 396 GUESS N. 1 PROBLEM = Variably dimensioned function neq = 10
+test N. 397 GUESS N. 1 PROBLEM = Variably dimensioned function neq = 50
+test N. 398 GUESS N. 1 PROBLEM = Watson function neq = 31
+test N. 399 GUESS N. 1 PROBLEM = Weibull function neq = 3
+test N. 400 GUESS N. 1 PROBLEM = Wood function neq = 4
+test N. 401 GUESS N. 1 PROBLEM = XiaoYin example 3 neq = 8
+test N. 402 GUESS N. 1 PROBLEM = XiaoYin example 4 neq = 16
+test N. 403 GUESS N. 1 PROBLEM = XiaoYin example 5 neq = 35
+test N. 404 GUESS N. 1 PROBLEM = Shi, Yixun Problem N.3 neq = 3
+test N. 404 GUESS N. 2 PROBLEM = Shi, Yixun Problem N.3 neq = 3
+test N. 404 GUESS N. 3 PROBLEM = Shi, Yixun Problem N.3 neq = 3
+test N. 405 GUESS N. 1 PROBLEM = Shi, Yixun Problem N.4 neq = 100
+test N. 405 GUESS N. 2 PROBLEM = Shi, Yixun Problem N.4 neq = 100
+test N. 405 GUESS N. 3 PROBLEM = Shi, Yixun Problem N.4 neq = 100
+test N. 405 GUESS N. 4 PROBLEM = Shi, Yixun Problem N.4 neq = 100
+test N. 406 GUESS N. 1 PROBLEM = Shi, Yixun Problem N.5 neq = 100
+test N. 406 GUESS N. 2 PROBLEM = Shi, Yixun Problem N.5 neq = 100
+test N. 406 GUESS N. 3 PROBLEM = Shi, Yixun Problem N.5 neq = 100
+test N. 406 GUESS N. 4 PROBLEM = Shi, Yixun Problem N.5 neq = 100
+test N. 407 GUESS N. 1 PROBLEM = Shi, Yixun Problem N.6 (Singular Broyden) neq = 100
+test N. 407 GUESS N. 2 PROBLEM = Shi, Yixun Problem N.6 (Singular Broyden) neq = 100
+test N. 407 GUESS N. 3 PROBLEM = Shi, Yixun Problem N.6 (Singular Broyden) neq = 100
+test N. 407 GUESS N. 4 PROBLEM = Shi, Yixun Problem N.6 (Singular Broyden) neq = 100
+test N. 407 GUESS N. 5 PROBLEM = Shi, Yixun Problem N.6 (Singular Broyden) neq = 100
+test N. 407 GUESS N. 6 PROBLEM = Shi, Yixun Problem N.6 (Singular Broyden) neq = 100
+test N. 408 GUESS N. 1 PROBLEM = Zero Jacobian Function (same as function 27) neq = 10
+test N. 409 GUESS N. 1 PROBLEM = Zero Jacobian Function (same as function 27) neq = 50
+test N. 410 GUESS N. 1 PROBLEM = Zero Jacobian Function (same as function 27) neq = 101
+   1 Conv:NO      Test N:   1 Guess: 1 IT:   7 [Artificial Test of Nowak and Weimann neq = 2]
+   2 Conv:DIVERGE Test N:   2 Guess: 1 IT: 100 [Badly scaled augmented Powell&#8217;s function neq = 3]
+   3 Conv:YES     Test N:   2 Guess: 2 IT:   3 [Badly scaled augmented Powell&#8217;s function neq = 3]
+   4 Conv:DIVERGE Test N:   3 Guess: 1 IT: 100 [Badly scaled augmented Powell&#8217;s function neq = 30]
+   5 Conv:YES     Test N:   3 Guess: 2 IT:   3 [Badly scaled augmented Powell&#8217;s function neq = 30]
+   6 Conv:DIVERGE Test N:   4 Guess: 1 IT: 100 [Badly scaled augmented Powell&#8217;s function neq = 300]
+   7 Conv:YES     Test N:   4 Guess: 2 IT:   3 [Badly scaled augmented Powell&#8217;s function neq = 300]
+   8 Conv:DIVERGE Test N:   5 Guess: 1 IT: 100 [Badly scaled augmented Powell&#8217;s function neq = 3000]
+   9 Conv:DIVERGE Test N:   5 Guess: 2 IT:   3 [Badly scaled augmented Powell&#8217;s function neq = 3000]
+  10 Conv:YES     Test N:   6 Guess: 1 IT:   3 [Beale neq = 2]
+  11 Conv:DIVERGE Test N:   7 Guess: 1 IT:  39 [Bertolazzi: root+square. neq = 2]
+  12 Conv:DIVERGE Test N:   8 Guess: 1 IT:  21 [Bertolazzi: atan+quadratic neq = 2]
+  13 Conv:DIVERGE Test N:   9 Guess: 1 IT:  24 [Bertolazzi Hard. neq = 2]
+  14 Conv:DIVERGE Test N:  10 Guess: 1 IT:  15 [Bertolazzi Single EQ. neq = 1]
+  15 Conv:YES     Test N:  11 Guess: 1 IT:  12 [Biggs EXP2 function neq = 2]
+  16 Conv:YES     Test N:  12 Guess: 1 IT:  13 [Biggs EXP3 function neq = 3]
+  17 Conv:DIVERGE Test N:  13 Guess: 1 IT: 100 [Biggs EXP4 function neq = 4]
+  18 Conv:YES     Test N:  14 Guess: 1 IT:  29 [Biggs EXP5 function neq = 5]
+  19 Conv:DIVERGE Test N:  15 Guess: 1 IT: 100 [Biggs EXP6 function neq = 6]
+  20 Conv:YES     Test N:  16 Guess: 1 IT:  10 [Boggs function neq = 2]
+  21 Conv:NO      Test N:  17 Guess: 1 IT:   5 [BohachevskyN1 neq = 2]
+  22 Conv:DIVERGE Test N:  18 Guess: 1 IT:  26 [BohachevskyN2 neq = 2]
+  23 Conv:YES     Test N:  19 Guess: 1 IT:   5 [BohachevskyN3 neq = 2]
+  24 Conv:YES     Test N:  20 Guess: 1 IT:   9 [Box and Betts exponential quadratic sum neq = 3]
+  25 Conv:NO      Test N:  21 Guess: 1 IT:   5 [Box Problem neq = 3]
+  26 Conv:YES     Test N:  22 Guess: 1 IT:  10 [Box3 neq = 3]
+  27 Conv:YES     Test N:  23 Guess: 1 IT:   5 [BraninRCOS neq = 2]
+  28 Conv:YES     Test N:  24 Guess: 1 IT:   6 [Brown almost linear function neq = 5]
+  29 Conv:YES     Test N:  25 Guess: 1 IT:   6 [Brown almost linear function neq = 15]
+  30 Conv:YES     Test N:  26 Guess: 1 IT:   6 [Brown almost linear function neq = 25]
+  31 Conv:NO      Test N:  27 Guess: 1 IT:   5 [Brown and Conte function neq = 2]
+  32 Conv:YES     Test N:  28 Guess: 1 IT:   8 [Brown and Dennis Function neq = 4]
+  33 Conv:NO      Test N:  29 Guess: 1 IT:   8 [Brown and Gearhart function neq = 3]
+  34 Conv:DIVERGE Test N:  30 Guess: 1 IT: 100 [Brown Badly Scaled Function neq = 2]
+  35 Conv:YES     Test N:  31 Guess: 1 IT:   7 [Brown function neq = 2]
+  36 Conv:YES     Test N:  32 Guess: 1 IT:   6 [Broyden Banded Function neq = 10]
+  37 Conv:NO      Test N:  33 Guess: 1 IT:   4 [Broyden tridiagonal function neq = 5]
+  38 Conv:YES     Test N:  34 Guess: 1 IT:   5 [Broyden tridiagonal function neq = 10]
+  39 Conv:NO      Test N:  35 Guess: 1 IT:   5 [Broyden tridiagonal function neq = 500]
+  40 Conv:NO      Test N:  36 Guess: 1 IT:   4 [Broyden tridiagonal function neq = 5]
+  41 Conv:NO      Test N:  37 Guess: 1 IT:   4 [Broyden tridiagonal function neq = 10]
+  42 Conv:YES     Test N:  38 Guess: 1 IT:   5 [Broyden tridiagonal function neq = 500]
+  43 Conv:DIVERGE Test N:  39 Guess: 1 IT: 100 [BUNLSI example 5 neq = 8]
+  44 Conv:DIVERGE Test N:  40 Guess: 1 IT:  12 [BUNLSI example 6 neq = 30]
+  45 Conv:YES     Test N:  41 Guess: 1 IT:   5 [Burden and Faires example 1 neq = 3]
+  46 Conv:YES     Test N:  42 Guess: 1 IT:  11 [Chandrasekhar function neq = 10]
+  47 Conv:YES     Test N:  43 Guess: 1 IT:  11 [Chandrasekhar function neq = 50]
+  48 Conv:YES     Test N:  44 Guess: 1 IT:   7 [Chandrasekhar function neq = 10]
+  49 Conv:YES     Test N:  45 Guess: 1 IT:   7 [Chandrasekhar function neq = 50]
+  50 Conv:YES     Test N:  46 Guess: 1 IT:   0 [Chebyquad function neq = 1]
+  51 Conv:NO      Test N:  47 Guess: 1 IT:   5 [Chebyquad function neq = 2]
+  52 Conv:YES     Test N:  48 Guess: 1 IT:   7 [Chebyquad function neq = 3]
+  53 Conv:NO      Test N:  49 Guess: 1 IT:  16 [Chebyquad function neq = 4]
+  54 Conv:DIVERGE Test N:  50 Guess: 1 IT:  36 [Chebyquad function neq = 5]
+  55 Conv:DIVERGE Test N:  51 Guess: 1 IT:  35 [Chebyquad function neq = 6]
+  56 Conv:DIVERGE Test N:  52 Guess: 1 IT:  38 [Chebyquad function neq = 7]
+  57 Conv:DIVERGE Test N:  53 Guess: 1 IT:  47 [Chebyquad function neq = 8]
+  58 Conv:DIVERGE Test N:  54 Guess: 1 IT:  56 [Chebyquad function neq = 9]
+  59 Conv:DIVERGE Test N:  55 Guess: 1 IT: 100 [Chemical Equilibrium Application neq = 5]
+  60 Conv:DIVERGE Test N:  56 Guess: 1 IT: 100 [Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7]
+  61 Conv:DIVERGE Test N:  56 Guess: 2 IT: 100 [Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7]
+  62 Conv:NO      Test N:  56 Guess: 3 IT:   4 [Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7]
+  63 Conv:NO      Test N:  56 Guess: 4 IT:   4 [Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7]
+  64 Conv:DIVERGE Test N:  56 Guess: 5 IT: 100 [Chemical equilibrium resulting from a Partial Methane Oxidation neq = 7]
+  65 Conv:YES     Test N:  57 Guess: 1 IT:   9 [Chemical Reactor Equilibrium Conversion neq = 2]
+  66 Conv:DIVERGE Test N:  57 Guess: 2 IT: 100 [Chemical Reactor Equilibrium Conversion neq = 2]
+  67 Conv:DIVERGE Test N:  57 Guess: 3 IT: 100 [Chemical Reactor Equilibrium Conversion neq = 2]
+  68 Conv:YES     Test N:  57 Guess: 4 IT:   8 [Chemical Reactor Equilibrium Conversion neq = 2]
+  69 Conv:YES     Test N:  57 Guess: 5 IT:  14 [Chemical Reactor Equilibrium Conversion neq = 2]
+  70 Conv:NO      Test N:  57 Guess: 6 IT:   1 [Chemical Reactor Equilibrium Conversion neq = 2]
+  71 Conv:YES     Test N:  57 Guess: 7 IT:   2 [Chemical Reactor Equilibrium Conversion neq = 2]
+  72 Conv:YES     Test N:  57 Guess: 8 IT:   8 [Chemical Reactor Equilibrium Conversion neq = 2]
+  73 Conv:DIVERGE Test N:  58 Guess: 1 IT:  35 [Chemical Reactor Steady State neq = 2]
+  74 Conv:DIVERGE Test N:  58 Guess: 2 IT:  32 [Chemical Reactor Steady State neq = 2]
+  75 Conv:NO      Test N:  58 Guess: 3 IT:   6 [Chemical Reactor Steady State neq = 2]
+  76 Conv:YES     Test N:  58 Guess: 4 IT:   5 [Chemical Reactor Steady State neq = 2]
+  77 Conv:YES     Test N:  58 Guess: 5 IT:   5 [Chemical Reactor Steady State neq = 2]
+  78 Conv:NO      Test N:  58 Guess: 6 IT:   5 [Chemical Reactor Steady State neq = 2]
+  79 Conv:DIVERGE Test N:  58 Guess: 7 IT:  36 [Chemical Reactor Steady State neq = 2]
+  80 Conv:DIVERGE Test N:  58 Guess: 8 IT:  37 [Chemical Reactor Steady State neq = 2]
+  81 Conv:DIVERGE Test N:  58 Guess: 9 IT:  23 [Chemical Reactor Steady State neq = 2]
+  82 Conv:DIVERGE Test N:  59 Guess: 1 IT:  17 [Cliff Function neq = 2]
+  83 Conv:YES     Test N:  60 Guess: 1 IT:   9 [Colville Polynomial neq = 4]
+  84 Conv:YES     Test N:  61 Guess: 1 IT:  17 [Combustion Application neq = 10]
+  85 Conv:YES     Test N:  62 Guess: 1 IT:   5 [Complementary Function neq = 2]
+  86 Conv:YES     Test N:  63 Guess: 1 IT:   6 [Complementary Function neq = 16]
+  87 Conv:YES     Test N:  64 Guess: 1 IT:   6 [Complementary Function neq = 128]
+  88 Conv:YES     Test N:  65 Guess: 1 IT:  10 [Compressibility factor from the RK equation neq = 1]
+  89 Conv:YES     Test N:  65 Guess: 2 IT:  10 [Compressibility factor from the RK equation neq = 1]
+  90 Conv:NO      Test N:  65 Guess: 3 IT:   4 [Compressibility factor from the RK equation neq = 1]
+  91 Conv:NO      Test N:  65 Guess: 4 IT:   7 [Compressibility factor from the RK equation neq = 1]
+  92 Conv:YES     Test N:  66 Guess: 1 IT:  15 [Countercurrent Reactors Problem N.1 neq = 6]
+  93 Conv:DIVERGE Test N:  66 Guess: 2 IT:  88 [Countercurrent Reactors Problem N.1 neq = 6]
+  94 Conv:YES     Test N:  66 Guess: 3 IT:  11 [Countercurrent Reactors Problem N.1 neq = 6]
+  95 Conv:DIVERGE Test N:  67 Guess: 1 IT:  30 [Countercurrent Reactors Problem N.1 neq = 12]
+  96 Conv:YES     Test N:  67 Guess: 2 IT:  10 [Countercurrent Reactors Problem N.1 neq = 12]
+  97 Conv:YES     Test N:  67 Guess: 3 IT:  12 [Countercurrent Reactors Problem N.1 neq = 12]
+  98 Conv:DIVERGE Test N:  68 Guess: 1 IT: 100 [Countercurrent Reactors Problem N.1 neq = 50]
+  99 Conv:YES     Test N:  68 Guess: 2 IT:  12 [Countercurrent Reactors Problem N.1 neq = 50]
+ 100 Conv:DIVERGE Test N:  68 Guess: 3 IT: 100 [Countercurrent Reactors Problem N.1 neq = 50]
+ 101 Conv:DIVERGE Test N:  69 Guess: 1 IT:  73 [Countercurrent Reactors Problem N.2 neq = 6]
+ 102 Conv:DIVERGE Test N:  69 Guess: 2 IT:  62 [Countercurrent Reactors Problem N.2 neq = 6]
+ 103 Conv:YES     Test N:  69 Guess: 3 IT:   9 [Countercurrent Reactors Problem N.2 neq = 6]
+ 104 Conv:DIVERGE Test N:  70 Guess: 1 IT:  18 [Countercurrent Reactors Problem N.2 neq = 12]
+ 105 Conv:DIVERGE Test N:  70 Guess: 2 IT:  43 [Countercurrent Reactors Problem N.2 neq = 12]
+ 106 Conv:YES     Test N:  70 Guess: 3 IT:  12 [Countercurrent Reactors Problem N.2 neq = 12]
+ 107 Conv:DIVERGE Test N:  71 Guess: 1 IT:  77 [Countercurrent Reactors Problem N.2 neq = 50]
+ 108 Conv:YES     Test N:  71 Guess: 2 IT:  18 [Countercurrent Reactors Problem N.2 neq = 50]
+ 109 Conv:DIVERGE Test N:  71 Guess: 3 IT: 100 [Countercurrent Reactors Problem N.2 neq = 50]
+ 110 Conv:YES     Test N:  72 Guess: 1 IT:  17 [Cragg and Levy Problem neq = 4]
+ 111 Conv:DIVERGE Test N:  73 Guess: 1 IT: 100 [Cube Function neq = 2]
+ 112 Conv:YES     Test N:  74 Guess: 1 IT:   4 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 113 Conv:YES     Test N:  74 Guess: 2 IT:   4 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 114 Conv:YES     Test N:  74 Guess: 3 IT:   4 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 115 Conv:DIVERGE Test N:  74 Guess: 4 IT:  25 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 116 Conv:DIVERGE Test N:  74 Guess: 5 IT:  22 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 117 Conv:NO      Test N:  74 Guess: 6 IT:   3 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 118 Conv:DIVERGE Test N:  74 Guess: 7 IT: 100 [Cutlips steady state for reaction rate equations, k set N.0 neq = 6]
+ 119 Conv:YES     Test N:  75 Guess: 1 IT:   4 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 120 Conv:NO      Test N:  75 Guess: 2 IT:   4 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 121 Conv:YES     Test N:  75 Guess: 3 IT:   4 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 122 Conv:YES     Test N:  75 Guess: 4 IT:  47 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 123 Conv:YES     Test N:  75 Guess: 5 IT:  39 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 124 Conv:YES     Test N:  75 Guess: 6 IT:   4 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 125 Conv:DIVERGE Test N:  75 Guess: 7 IT: 100 [Cutlips steady state for reaction rate equations, k set N.1 neq = 6]
+ 126 Conv:YES     Test N:  76 Guess: 1 IT:   5 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 127 Conv:YES     Test N:  76 Guess: 2 IT:   7 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 128 Conv:YES     Test N:  76 Guess: 3 IT:   4 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 129 Conv:YES     Test N:  76 Guess: 4 IT:   8 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 130 Conv:YES     Test N:  76 Guess: 5 IT:  10 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 131 Conv:YES     Test N:  76 Guess: 6 IT:  15 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 132 Conv:DIVERGE Test N:  76 Guess: 7 IT: 100 [Cutlips steady state for reaction rate equations, k set N.2 neq = 6]
+ 133 Conv:NO      Test N:  77 Guess: 1 IT:   3 [DarvishiBarati neq = 2]
+ 134 Conv:DIVERGE Test N:  78 Guess: 1 IT: 100 [Dennis and Gay 6 eq N 1 neq = 6]
+ 135 Conv:YES     Test N:  79 Guess: 1 IT:   4 [Dennis and Gay 6 eq N 2 neq = 6]
+ 136 Conv:DIVERGE Test N:  80 Guess: 1 IT: 100 [Dennis and Gay 6 eq N 3 neq = 6]
+ 137 Conv:DIVERGE Test N:  81 Guess: 1 IT: 100 [Dennis and Gay 6 eq N 4 neq = 6]
+ 138 Conv:NO      Test N:  82 Guess: 1 IT:  85 [Dennis and Gay 6 eq N 5 neq = 6]
+ 139 Conv:DIVERGE Test N:  83 Guess: 1 IT: 100 [Dennis and Gay 8 eq N 1 neq = 8]
+ 140 Conv:YES     Test N:  84 Guess: 1 IT:   4 [Dennis and Gay 8 eq N 2 neq = 8]
+ 141 Conv:DIVERGE Test N:  85 Guess: 1 IT: 100 [Dennis and Gay 8 eq N 3 neq = 8]
+ 142 Conv:DIVERGE Test N:  86 Guess: 1 IT: 100 [Dennis and Gay 8 eq N 4 neq = 8]
+ 143 Conv:DIVERGE Test N:  87 Guess: 1 IT: 100 [Dennis and Gay 8 eq N 5 neq = 8]
+ 144 Conv:NO      Test N:  88 Guess: 1 IT:   5 [Dennis and Schnabel 2 by 2 example neq = 2]
+ 145 Conv:DIVERGE Test N:  89 Guess: 1 IT: 100 [De Villiers Glasser Problem #1 neq = 4]
+ 146 Conv:YES     Test N:  90 Guess: 1 IT:   8 [De Villiers Glasser Problem #2 neq = 5]
+ 147 Conv:DIVERGE Test N:  91 Guess: 1 IT:  29 [Diagonal Functions Multiplied by quasi-orthogonal matrix neq = 9]
+ 148 Conv:DIVERGE Test N:  92 Guess: 1 IT:  29 [Diagonal Functions Multiplied by quasi-orthogonal matrix neq = 27]
+ 149 Conv:NO      Test N:  93 Guess: 1 IT:   5 [Discrete boundary value function neq = 10]
+ 150 Conv:NO      Test N:  94 Guess: 1 IT:   8 [Discrete boundary value function neq = 50]
+ 151 Conv:NO      Test N:  95 Guess: 1 IT:   9 [Discrete boundary value function neq = 100]
+ 152 Conv:NO      Test N:  96 Guess: 1 IT:  12 [Discrete boundary value function neq = 500]
+ 153 Conv:NO      Test N:  97 Guess: 1 IT:   1 [Discrete boundary value function neq = 5000]
+ 154 Conv:YES     Test N:  98 Guess: 1 IT:   4 [Discrete integral equation function neq = 2]
+ 155 Conv:YES     Test N:  99 Guess: 1 IT:   4 [Discrete integral equation function neq = 5]
+ 156 Conv:YES     Test N: 100 Guess: 1 IT:   4 [Discrete integral equation function neq = 10]
+ 157 Conv:YES     Test N: 101 Guess: 1 IT:   4 [Discrete integral equation function neq = 100]
+ 158 Conv:NO      Test N: 102 Guess: 1 IT:   6 [Dixon Function neq = 80]
+ 159 Conv:NO      Test N: 103 Guess: 1 IT:   6 [Dixon Function neq = 2000]
+ 160 Conv:NO      Test N: 104 Guess: 1 IT:   6 [Dixon Function neq = 5000]
+ 161 Conv:NO      Test N: 105 Guess: 1 IT:   1 [Easom Function neq = 2]
+ 162 Conv:DIVERGE Test N: 106 Guess: 1 IT:  31 [EsterificReaction (example 4) neq = 2]
+ 163 Conv:YES     Test N: 107 Guess: 1 IT:  16 [Exponential Function N.1 neq = 2]
+ 164 Conv:YES     Test N: 108 Guess: 1 IT:  16 [Exponential Function N.1 neq = 10]
+ 165 Conv:NO      Test N: 109 Guess: 1 IT:  15 [Exponential Function N.1 neq = 50]
+ 166 Conv:NO      Test N: 110 Guess: 1 IT:  12 [Exponential Function N.1 neq = 500]
+ 167 Conv:NO      Test N: 111 Guess: 1 IT:   9 [Exponential Function N.1 neq = 5000]
+ 168 Conv:YES     Test N: 112 Guess: 1 IT:   5 [Exponential Function N.2 neq = 2]
+ 169 Conv:YES     Test N: 113 Guess: 1 IT:   6 [Exponential Function N.2 neq = 10]
+ 170 Conv:NO      Test N: 114 Guess: 1 IT:   8 [Exponential Function N.2 neq = 50]
+ 171 Conv:NO      Test N: 115 Guess: 1 IT:  10 [Exponential Function N.2 neq = 500]
+ 172 Conv:NO      Test N: 116 Guess: 1 IT:   7 [Exponential Function N.2 neq = 5000]
+ 173 Conv:YES     Test N: 117 Guess: 1 IT:  17 [Exponential Function N.3 neq = 2]
+ 174 Conv:YES     Test N: 118 Guess: 1 IT:  17 [Exponential Function N.3 neq = 10]
+ 175 Conv:YES     Test N: 119 Guess: 1 IT:  17 [Exponential Function N.3 neq = 50]
+ 176 Conv:YES     Test N: 120 Guess: 1 IT:  17 [Exponential Function N.3 neq = 500]
+ 177 Conv:YES     Test N: 121 Guess: 1 IT:  15 [Exponential Function N.3 neq = 5000]
+ 178 Conv:NO      Test N: 122 Guess: 1 IT:   7 [Exponential sine neq = 2]
+ 179 Conv:DIVERGE Test N: 122 Guess: 2 IT:  17 [Exponential sine neq = 2]
+ 180 Conv:YES     Test N: 122 Guess: 3 IT:  15 [Exponential sine neq = 2]
+ 181 Conv:DIVERGE Test N: 122 Guess: 4 IT:  16 [Exponential sine neq = 2]
+ 182 Conv:YES     Test N: 122 Guess: 5 IT:  18 [Exponential sine neq = 2]
+ 183 Conv:YES     Test N: 123 Guess: 1 IT:  15 [Extended Eiger-Sikorski-Stenger Function neq = 9]
+ 184 Conv:YES     Test N: 124 Guess: 1 IT:   5 [Extended Kearfott Function neq = 7]
+ 185 Conv:YES     Test N: 125 Guess: 1 IT:  16 [Extended Powell singular function neq = 4]
+ 186 Conv:NO      Test N: 126 Guess: 1 IT:   9 [Fractional conversion in a chemical reactor neq = 1]
+ 187 Conv:NO      Test N: 126 Guess: 2 IT:   9 [Fractional conversion in a chemical reactor neq = 1]
+ 188 Conv:NO      Test N: 126 Guess: 3 IT:   9 [Fractional conversion in a chemical reactor neq = 1]
+ 189 Conv:NO      Test N: 126 Guess: 4 IT:   9 [Fractional conversion in a chemical reactor neq = 1]
+ 190 Conv:NO      Test N: 126 Guess: 5 IT:  10 [Fractional conversion in a chemical reactor neq = 1]
+ 191 Conv:NO      Test N: 126 Guess: 6 IT:   6 [Fractional conversion in a chemical reactor neq = 1]
+ 192 Conv:NO      Test N: 126 Guess: 7 IT:   5 [Fractional conversion in a chemical reactor neq = 1]
+ 193 Conv:NO      Test N: 126 Guess: 8 IT:   5 [Fractional conversion in a chemical reactor neq = 1]
+ 194 Conv:NO      Test N: 127 Guess: 1 IT:  16 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 195 Conv:NO      Test N: 127 Guess: 2 IT:  16 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 196 Conv:NO      Test N: 127 Guess: 3 IT:  14 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 197 Conv:NO      Test N: 127 Guess: 4 IT:  14 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 198 Conv:YES     Test N: 127 Guess: 5 IT:   7 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 199 Conv:NO      Test N: 127 Guess: 6 IT:  13 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 200 Conv:NO      Test N: 127 Guess: 7 IT:   6 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 201 Conv:NO      Test N: 127 Guess: 8 IT:   6 [Fractional conversion in a chemical reactor (ver 2) neq = 3]
+ 202 Conv:DIVERGE Test N: 128 Guess: 1 IT:  19 [Freudenstein-Roth function neq = 2]
+ 203 Conv:NO      Test N: 129 Guess: 1 IT:   7 [Function 15 neq = 10]
+ 204 Conv:NO      Test N: 130 Guess: 1 IT:   8 [Function 15 neq = 50]
+ 205 Conv:NO      Test N: 131 Guess: 1 IT:   8 [Function 15 neq = 100]
+ 206 Conv:DIVERGE Test N: 132 Guess: 1 IT:   0 [Function 18 neq = 3]
+ 207 Conv:DIVERGE Test N: 133 Guess: 1 IT:   0 [Function 18 neq = 9]
+ 208 Conv:DIVERGE Test N: 134 Guess: 1 IT:   0 [Function 18 neq = 27]
+ 209 Conv:YES     Test N: 135 Guess: 1 IT:   5 [Function 21 neq = 3]
+ 210 Conv:YES     Test N: 136 Guess: 1 IT:   5 [Function 21 neq = 6]
+ 211 Conv:YES     Test N: 137 Guess: 1 IT:   5 [Function 21 neq = 36]
+ 212 Conv:YES     Test N: 138 Guess: 1 IT:  16 [Function 27 neq = 2]
+ 213 Conv:YES     Test N: 139 Guess: 1 IT:  16 [Function 27 neq = 10]
+ 214 Conv:YES     Test N: 140 Guess: 1 IT:  16 [Function 27 neq = 100]
+ 215 Conv:DIVERGE Test N: 141 Guess: 1 IT: 100 [Gaussian function neq = 3]
+ 216 Conv:DIVERGE Test N: 142 Guess: 1 IT: 100 [Generalized Rosenbrock function neq = 2]
+ 217 Conv:YES     Test N: 143 Guess: 1 IT:   9 [Generalized Rosenbrock function neq = 10]
+ 218 Conv:YES     Test N: 144 Guess: 1 IT:  14 [Generalized Rosenbrock function neq = 50]
+ 219 Conv:YES     Test N: 145 Guess: 1 IT:  14 [Generalized Rosenbrock function neq = 500]
+ 220 Conv:YES     Test N: 146 Guess: 1 IT:   6 [Geometric Programming Function neq = 5]
+ 221 Conv:YES     Test N: 147 Guess: 1 IT:   6 [Geometric Programming Function neq = 10]
+ 222 Conv:NO      Test N: 148 Guess: 1 IT:   5 [Geometric Programming Function neq = 50]
+ 223 Conv:NO      Test N: 149 Guess: 1 IT:   5 [Geometric Programming Function neq = 100]
+ 224 Conv:YES     Test N: 150 Guess: 1 IT:   5 [Gheri-Mancino function neq = 10]
+ 225 Conv:YES     Test N: 151 Guess: 1 IT:   4 [Gheri-Mancino function neq = 30]
+ 226 Conv:YES     Test N: 152 Guess: 1 IT:   4 [Gheri-Mancino function neq = 100]
+ 227 Conv:YES     Test N: 153 Guess: 1 IT:   9 [Goldstein Price Polynomial neq = 2]
+ 228 Conv:YES     Test N: 154 Guess: 1 IT:   7 [Gregory and Karney Tridiagonal Matrix Function neq = 10]
+ 229 Conv:NO      Test N: 155 Guess: 1 IT:   8 [Gregory and Karney Tridiagonal Matrix Function neq = 20]
+ 230 Conv:NO      Test N: 156 Guess: 1 IT:  11 [Gregory and Karney Tridiagonal Matrix Function neq = 100]
+ 231 Conv:NO      Test N: 157 Guess: 1 IT:   4 [Griewank function neq = 2]
+ 232 Conv:NO      Test N: 157 Guess: 2 IT:   5 [Griewank function neq = 2]
+ 233 Conv:NO      Test N: 158 Guess: 1 IT:  15 [Griewank function neq = 5]
+ 234 Conv:DIVERGE Test N: 158 Guess: 2 IT:  21 [Griewank function neq = 5]
+ 235 Conv:NO      Test N: 159 Guess: 1 IT:  16 [Griewank function neq = 10]
+ 236 Conv:DIVERGE Test N: 159 Guess: 2 IT:  20 [Griewank function neq = 10]
+ 237 Conv:DIVERGE Test N: 160 Guess: 1 IT: 100 [Gulf R&amp;D Function neq = 3]
+ 238 Conv:DIVERGE Test N: 161 Guess: 1 IT: 100 [Hammarling 2 by 2 matrix square root problem neq = 4]
+ 239 Conv:DIVERGE Test N: 162 Guess: 1 IT: 100 [Hammarling 3 by 3 matrix square root problem N.1 neq = 9]
+ 240 Conv:NO      Test N: 163 Guess: 1 IT:   8 [Hammarling 3 by 3 matrix square root problem N.2 neq = 9]
+ 241 Conv:NO      Test N: 164 Guess: 1 IT:  21 [Hammarling 3 by 3 matrix square root problem N.3 neq = 9]
+ 242 Conv:NO      Test N: 165 Guess: 1 IT:   4 [Hanbook Function neq = 2]
+ 243 Conv:NO      Test N: 166 Guess: 1 IT:   5 [Hanbook Function neq = 10]
+ 244 Conv:NO      Test N: 167 Guess: 1 IT:   4 [Hanbook Function neq = 50]
+ 245 Conv:YES     Test N: 168 Guess: 1 IT:  15 [Han-Sun-Han-SAMPAJO 2005 function test neq = 2]
+ 246 Conv:DIVERGE Test N: 169 Guess: 1 IT: 100 [HAS 64, tau = 100 neq = 7]
+ 247 Conv:DIVERGE Test N: 170 Guess: 1 IT: 100 [HAS 64, tau = 10000 neq = 7]
+ 248 Conv:DIVERGE Test N: 171 Guess: 1 IT: 100 [HAS 64, tau = 1e+06 neq = 7]
+ 249 Conv:DIVERGE Test N: 172 Guess: 1 IT: 100 [HAS 64, tau = 1e+08 neq = 7]
+ 250 Conv:DIVERGE Test N: 173 Guess: 1 IT: 100 [HAS 64, tau = 1e+10 neq = 7]
+ 251 Conv:NO      Test N: 174 Guess: 1 IT:   9 [HAS 93, tau = 100 neq = 14]
+ 252 Conv:DIVERGE Test N: 175 Guess: 1 IT: 100 [HAS 93, tau = 10000 neq = 14]
+ 253 Conv:DIVERGE Test N: 176 Guess: 1 IT: 100 [HAS 93, tau = 1e+06 neq = 14]
+ 254 Conv:DIVERGE Test N: 177 Guess: 1 IT: 100 [HAS 93, tau = 1e+08 neq = 14]
+ 255 Conv:DIVERGE Test N: 178 Guess: 1 IT:   9 [HAS 93, tau = 1e+10 neq = 14]
+ 256 Conv:DIVERGE Test N: 179 Guess: 1 IT: 100 [HAS111 function neq = 10]
+ 257 Conv:DIVERGE Test N: 179 Guess: 2 IT: 100 [HAS111 function neq = 10]
+ 258 Conv:YES     Test N: 180 Guess: 1 IT:   8 [Helical valley function neq = 3]
+ 259 Conv:DIVERGE Test N: 181 Guess: 1 IT:  40 [Hiebert Chem 10x10 neq = 10]
+ 260 Conv:DIVERGE Test N: 182 Guess: 1 IT: 100 [Hiebert Chem 2x2 neq = 2]
+ 261 Conv:DIVERGE Test N: 183 Guess: 1 IT:   1 [Hiebert Chem 6x6 neq = 6]
+ 262 Conv:NO      Test N: 184 Guess: 1 IT:   9 [Hiebert's 3rd Chemical Equilibrium Problem, R=10.000000 neq = 10]
+ 263 Conv:DIVERGE Test N: 185 Guess: 1 IT:  37 [Hiebert's 3rd Chemical Equilibrium Problem, R=40.000000 neq = 10]
+ 264 Conv:YES     Test N: 186 Guess: 1 IT:   9 [Hilbert Matrix Function F = x'Ax neq = 4]
+ 265 Conv:YES     Test N: 187 Guess: 1 IT:   9 [Hilbert Matrix Function F = x'Ax neq = 8]
+ 266 Conv:YES     Test N: 188 Guess: 1 IT:   9 [Hilbert Matrix Function F = x'Ax neq = 32]
+ 267 Conv:YES     Test N: 189 Guess: 1 IT:   9 [Hilbert Matrix Function F = x'Ax neq = 64]
+ 268 Conv:YES     Test N: 190 Guess: 1 IT:   9 [Hilbert Matrix Function F = x'Ax neq = 256]
+ 269 Conv:NO      Test N: 191 Guess: 1 IT:   9 [Himmelblau function neq = 2]
+ 270 Conv:NO      Test N: 192 Guess: 1 IT:   7 [InfReflux function neq = 1]
+ 271 Conv:NO      Test N: 192 Guess: 2 IT:   7 [InfReflux function neq = 1]
+ 272 Conv:NO      Test N: 192 Guess: 3 IT:   5 [InfReflux function neq = 1]
+ 273 Conv:YES     Test N: 192 Guess: 4 IT:   6 [InfReflux function neq = 1]
+ 274 Conv:NO      Test N: 193 Guess: 1 IT:   4 [Interval Arithmetic Benchmarks neq = 10]
+ 275 Conv:YES     Test N: 194 Guess: 1 IT:  11 [Jennrich and Sampson function neq = 2]
+ 276 Conv:YES     Test N: 195 Guess: 1 IT:  12 [Kelley Function neq = 2]
+ 277 Conv:YES     Test N: 196 Guess: 1 IT:   8 [Kinematic Application neq = 8]
+ 278 Conv:DIVERGE Test N: 197 Guess: 1 IT: 100 [Leon cubic valley function neq = 2]
+ 279 Conv:YES     Test N: 198 Guess: 1 IT:   0 [Linear function - full rank neq = 10]
+ 280 Conv:YES     Test N: 199 Guess: 1 IT:   2 [Linear function - rank 1 with zero columns and rows neq = 10]
+ 281 Conv:NO      Test N: 200 Guess: 1 IT:   5 [Logarithmic Function neq = 2]
+ 282 Conv:NO      Test N: 201 Guess: 1 IT:   5 [Logarithmic Function neq = 10]
+ 283 Conv:NO      Test N: 202 Guess: 1 IT:   8 [Logarithmic Function neq = 50]
+ 284 Conv:NO      Test N: 203 Guess: 1 IT:  11 [Logarithmic Function neq = 500]
+ 285 Conv:DIVERGE Test N: 204 Guess: 1 IT:   1 [Logarithmic Function neq = 5000]
+ 286 Conv:NO      Test N: 205 Guess: 1 IT:   4 [McCormic function neq = 2]
+ 287 Conv:YES     Test N: 205 Guess: 2 IT:   5 [McCormic function neq = 2]
+ 288 Conv:YES     Test N: 206 Guess: 1 IT:   4 [McKinnon function neq = 2]
+ 289 Conv:YES     Test N: 207 Guess: 1 IT:  21 [Mexican Hat Function, tau = 100 neq = 2]
+ 290 Conv:NO      Test N: 207 Guess: 2 IT:  98 [Mexican Hat Function, tau = 100 neq = 2]
+ 291 Conv:DIVERGE Test N: 207 Guess: 3 IT: 100 [Mexican Hat Function, tau = 100 neq = 2]
+ 292 Conv:DIVERGE Test N: 208 Guess: 1 IT:  17 [Mexican Hat Function, tau = 10000 neq = 2]
+ 293 Conv:NO      Test N: 208 Guess: 2 IT:   8 [Mexican Hat Function, tau = 10000 neq = 2]
+ 294 Conv:NO      Test N: 208 Guess: 3 IT:   9 [Mexican Hat Function, tau = 10000 neq = 2]
+ 295 Conv:DIVERGE Test N: 209 Guess: 1 IT:  19 [Mexican Hat Function, tau = 1e+06 neq = 2]
+ 296 Conv:DIVERGE Test N: 209 Guess: 2 IT:   2 [Mexican Hat Function, tau = 1e+06 neq = 2]
+ 297 Conv:DIVERGE Test N: 209 Guess: 3 IT:   2 [Mexican Hat Function, tau = 1e+06 neq = 2]
+ 298 Conv:DIVERGE Test N: 210 Guess: 1 IT:  14 [Mexican Hat Function, tau = 1e+08 neq = 2]
+ 299 Conv:DIVERGE Test N: 210 Guess: 2 IT:   1 [Mexican Hat Function, tau = 1e+08 neq = 2]
+ 300 Conv:DIVERGE Test N: 210 Guess: 3 IT:   1 [Mexican Hat Function, tau = 1e+08 neq = 2]
+ 301 Conv:DIVERGE Test N: 211 Guess: 1 IT:  17 [Miele and Cantrell function neq = 4]
+ 302 Conv:YES     Test N: 211 Guess: 2 IT:  18 [Miele and Cantrell function neq = 4]
+ 303 Conv:DIVERGE Test N: 212 Guess: 1 IT: 100 [Model equations for the CSTR neq = 15]
+ 304 Conv:DIVERGE Test N: 213 Guess: 1 IT:   9 [Model equations for combustion of propane, R=10.000000 neq = 10]
+ 305 Conv:DIVERGE Test N: 214 Guess: 1 IT:  11 [Model equations for combustion of propane, R=5.000000 neq = 10]
+ 306 Conv:NO      Test N: 215 Guess: 1 IT:  11 [Nonlinear Integral Equations neq = 100]
+ 307 Conv:NO      Test N: 216 Guess: 1 IT:   4 [Order10to11 function neq = 1]
+ 308 Conv:DIVERGE Test N: 217 Guess: 1 IT:  21 [Paviani function neq = 10]
+ 309 Conv:NO      Test N: 218 Guess: 1 IT:   8 [Penalty I neq = 10]
+ 310 Conv:NO      Test N: 219 Guess: 1 IT:   9 [Penalty I neq = 50]
+ 311 Conv:DIVERGE Test N: 220 Guess: 1 IT: 100 [Penalty Function #1 neq = 2]
+ 312 Conv:YES     Test N: 221 Guess: 1 IT:  14 [Penalty Function #1 neq = 10]
+ 313 Conv:DIVERGE Test N: 222 Guess: 1 IT:  16 [Penalty Function #1 neq = 50]
+ 314 Conv:DIVERGE Test N: 223 Guess: 1 IT:  16 [Penalty Function #1 neq = 200]
+ 315 Conv:NO      Test N: 224 Guess: 1 IT:  10 [Penalty Function #2 neq = 2]
+ 316 Conv:DIVERGE Test N: 225 Guess: 1 IT: 100 [Penalty Function #2 neq = 10]
+ 317 Conv:DIVERGE Test N: 226 Guess: 1 IT: 100 [Penalty Function #2 neq = 50]
+ 318 Conv:DIVERGE Test N: 227 Guess: 1 IT:  10 [Penalty Function #2 neq = 200]
+ 319 Conv:YES     Test N: 228 Guess: 1 IT:   6 [Pipeline Network Problem (partial oxydation of methane) neq = 7]
+ 320 Conv:YES     Test N: 229 Guess: 1 IT:   6 [Pipeline Network Problem version 2 (partial oxydation of methane) neq = 9]
+ 321 Conv:YES     Test N: 230 Guess: 1 IT:   1 [Powell badly scaled function neq = 2]
+ 322 Conv:YES     Test N: 231 Guess: 1 IT:  25 [Powell's quartic function neq = 4]
+ 323 Conv:DIVERGE Test N: 232 Guess: 1 IT: 100 [Powell 3D Function neq = 3]
+ 324 Conv:NO      Test N: 233 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.129 neq = 3]
+ 325 Conv:YES     Test N: 234 Guess: 1 IT:  25 [Roose Kulla Lomb Meressoo N.201 neq = 10]
+ 326 Conv:DIVERGE Test N: 235 Guess: 1 IT: 100 [Roose Kulla Lomb Meressoo N.201 neq = 100]
+ 327 Conv:DIVERGE Test N: 236 Guess: 1 IT: 100 [Roose Kulla Lomb Meressoo N.201 neq = 500]
+ 328 Conv:YES     Test N: 237 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.202 neq = 10]
+ 329 Conv:YES     Test N: 238 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.202 neq = 100]
+ 330 Conv:NO      Test N: 239 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.203 neq = 2]
+ 331 Conv:NO      Test N: 240 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.203 neq = 5]
+ 332 Conv:NO      Test N: 241 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.203 neq = 7]
+ 333 Conv:NO      Test N: 242 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.203 neq = 10]
+ 334 Conv:YES     Test N: 243 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.203 neq = 15]
+ 335 Conv:NO      Test N: 244 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.203 neq = 20]
+ 336 Conv:NO      Test N: 245 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.203 neq = 30]
+ 337 Conv:NO      Test N: 246 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.203 neq = 50]
+ 338 Conv:YES     Test N: 247 Guess: 1 IT:  29 [Roose Kulla Lomb Meressoo N.204 neq = 10]
+ 339 Conv:YES     Test N: 248 Guess: 1 IT:  29 [Roose Kulla Lomb Meressoo N.204 neq = 100]
+ 340 Conv:YES     Test N: 249 Guess: 1 IT:  29 [Roose Kulla Lomb Meressoo N.204 neq = 500]
+ 341 Conv:NO      Test N: 250 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.205 neq = 2]
+ 342 Conv:NO      Test N: 251 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.205 neq = 5]
+ 343 Conv:NO      Test N: 252 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.205 neq = 10]
+ 344 Conv:YES     Test N: 253 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.205 neq = 20]
+ 345 Conv:YES     Test N: 254 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.205 neq = 30]
+ 346 Conv:YES     Test N: 255 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.206 neq = 2]
+ 347 Conv:YES     Test N: 256 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.206 neq = 5]
+ 348 Conv:YES     Test N: 257 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.206 neq = 10]
+ 349 Conv:NO      Test N: 258 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.206 neq = 20]
+ 350 Conv:NO      Test N: 259 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.206 neq = 30]
+ 351 Conv:YES     Test N: 260 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.207 neq = 2]
+ 352 Conv:NO      Test N: 261 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.207 neq = 5]
+ 353 Conv:YES     Test N: 262 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.207 neq = 10]
+ 354 Conv:NO      Test N: 263 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.207 neq = 20]
+ 355 Conv:YES     Test N: 264 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.207 neq = 30]
+ 356 Conv:YES     Test N: 265 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.208 neq = 2]
+ 357 Conv:NO      Test N: 266 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.208 neq = 5]
+ 358 Conv:NO      Test N: 267 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.208 neq = 10]
+ 359 Conv:NO      Test N: 268 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.208 neq = 20]
+ 360 Conv:NO      Test N: 269 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.208 neq = 30]
+ 361 Conv:YES     Test N: 270 Guess: 1 IT:  12 [Roose Kulla Lomb Meressoo N.209 neq = 10]
+ 362 Conv:YES     Test N: 271 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.209 neq = 100]
+ 363 Conv:YES     Test N: 272 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.209 neq = 500]
+ 364 Conv:DIVERGE Test N: 273 Guess: 1 IT:   0 [Roose Kulla Lomb Meressoo N.210 neq = 10]
+ 365 Conv:DIVERGE Test N: 274 Guess: 1 IT:   0 [Roose Kulla Lomb Meressoo N.211 neq = 10]
+ 366 Conv:YES     Test N: 275 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.212 neq = 10]
+ 367 Conv:YES     Test N: 276 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.212 neq = 100]
+ 368 Conv:YES     Test N: 277 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.212 neq = 500]
+ 369 Conv:YES     Test N: 278 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.213 neq = 2]
+ 370 Conv:NO      Test N: 279 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.213 neq = 5]
+ 371 Conv:NO      Test N: 280 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.213 neq = 10]
+ 372 Conv:YES     Test N: 281 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.213 neq = 20]
+ 373 Conv:YES     Test N: 282 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.213 neq = 30]
+ 374 Conv:YES     Test N: 283 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.214 neq = 2]
+ 375 Conv:YES     Test N: 284 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.214 neq = 5]
+ 376 Conv:YES     Test N: 285 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.214 neq = 10]
+ 377 Conv:YES     Test N: 286 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.214 neq = 20]
+ 378 Conv:YES     Test N: 287 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.214 neq = 30]
+ 379 Conv:YES     Test N: 288 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.215 neq = 2]
+ 380 Conv:YES     Test N: 289 Guess: 1 IT:  45 [Roose Kulla Lomb Meressoo N.215 neq = 5]
+ 381 Conv:DIVERGE Test N: 290 Guess: 1 IT: 100 [Roose Kulla Lomb Meressoo N.215 neq = 6]
+ 382 Conv:YES     Test N: 291 Guess: 1 IT:  43 [Roose Kulla Lomb Meressoo N.215 neq = 10]
+ 383 Conv:YES     Test N: 292 Guess: 1 IT:  44 [Roose Kulla Lomb Meressoo N.215 neq = 20]
+ 384 Conv:YES     Test N: 293 Guess: 1 IT:  58 [Roose Kulla Lomb Meressoo N.215 neq = 30]
+ 385 Conv:YES     Test N: 294 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.216 neq = 2]
+ 386 Conv:NO      Test N: 295 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.216 neq = 5]
+ 387 Conv:NO      Test N: 296 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.216 neq = 7]
+ 388 Conv:NO      Test N: 297 Guess: 1 IT:   8 [Roose Kulla Lomb Meressoo N.216 neq = 9]
+ 389 Conv:NO      Test N: 298 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.217 neq = 2]
+ 390 Conv:NO      Test N: 299 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.217 neq = 5]
+ 391 Conv:NO      Test N: 300 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.217 neq = 10]
+ 392 Conv:YES     Test N: 301 Guess: 1 IT:   9 [Roose Kulla Lomb Meressoo N.217 neq = 20]
+ 393 Conv:YES     Test N: 302 Guess: 1 IT:  10 [Roose Kulla Lomb Meressoo N.217 neq = 30]
+ 394 Conv:YES     Test N: 303 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.218 neq = 2]
+ 395 Conv:NO      Test N: 304 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.218 neq = 5]
+ 396 Conv:NO      Test N: 305 Guess: 1 IT:   5 [Roose Kulla Lomb Meressoo N.218 neq = 10]
+ 397 Conv:NO      Test N: 306 Guess: 1 IT:   6 [Roose Kulla Lomb Meressoo N.218 neq = 20]
+ 398 Conv:NO      Test N: 307 Guess: 1 IT:   7 [Roose Kulla Lomb Meressoo N.218 neq = 30]
+ 399 Conv:YES     Test N: 308 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.219 neq = 2]
+ 400 Conv:YES     Test N: 309 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.219 neq = 5]
+ 401 Conv:YES     Test N: 310 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.219 neq = 10]
+ 402 Conv:YES     Test N: 311 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.219 neq = 20]
+ 403 Conv:YES     Test N: 312 Guess: 1 IT:   4 [Roose Kulla Lomb Meressoo N.219 neq = 30]
+ 404 Conv:YES     Test N: 313 Guess: 1 IT:   7 [Sample problem 18 neq = 2]
+ 405 Conv:YES     Test N: 314 Guess: 1 IT:  16 [Sample problem 19 neq = 2]
+ 406 Conv:YES     Test N: 315 Guess: 1 IT:   6 [Scalar problem f(x) = x * ( x - 5 )**2 neq = 1]
+ 407 Conv:NO      Test N: 316 Guess: 1 IT:   4 [Schaffer Function F6 neq = 2]
+ 408 Conv:NO      Test N: 317 Guess: 1 IT:   6 [Schaffer Function F7 neq = 2]
+ 409 Conv:YES     Test N: 318 Guess: 1 IT:   6 [Schubert Broyden function neq = 10]
+ 410 Conv:YES     Test N: 319 Guess: 1 IT:  10 [Schubert Broyden function neq = 100]
+ 411 Conv:YES     Test N: 320 Guess: 1 IT:  13 [Schubert Broyden function neq = 1000]
+ 412 Conv:YES     Test N: 321 Guess: 1 IT:  15 [Schubert Broyden function neq = 5000]
+ 413 Conv:NO      Test N: 322 Guess: 1 IT:   4 [2D semiconductor neq = 6]
+ 414 Conv:YES     Test N: 323 Guess: 1 IT:  19 [Shekel SQRN5 Function neq = 4]
+ 415 Conv:YES     Test N: 324 Guess: 1 IT:  19 [Shekel SQRN7 Function neq = 4]
+ 416 Conv:YES     Test N: 325 Guess: 1 IT:  19 [Shekel SQRN10 Function neq = 4]
+ 417 Conv:YES     Test N: 326 Guess: 1 IT:  17 [Shen-Ypma Example N.5 neq = 2]
+ 418 Conv:YES     Test N: 326 Guess: 2 IT:  14 [Shen-Ypma Example N.5 neq = 2]
+ 419 Conv:NO      Test N: 327 Guess: 1 IT:   4 [Shen-Ypma Example N.7 neq = 2]
+ 420 Conv:YES     Test N: 327 Guess: 2 IT:   4 [Shen-Ypma Example N.7 neq = 2]
+ 421 Conv:NO      Test N: 328 Guess: 1 IT:  17 [Shen-Ypma Example N.8 neq = 5]
+ 422 Conv:YES     Test N: 329 Guess: 1 IT:   6 [Shubert Function neq = 2]
+ 423 Conv:YES     Test N: 330 Guess: 1 IT:  17 [Singular Function neq = 2]
+ 424 Conv:YES     Test N: 331 Guess: 1 IT:  19 [Singular Function neq = 10]
+ 425 Conv:YES     Test N: 332 Guess: 1 IT:  20 [Singular Function neq = 50]
+ 426 Conv:YES     Test N: 333 Guess: 1 IT:  18 [Singular Function neq = 500]
+ 427 Conv:YES     Test N: 334 Guess: 1 IT:  16 [Singular Function neq = 5000]
+ 428 Conv:YES     Test N: 335 Guess: 1 IT:  16 [Singular System A neq = 2]
+ 429 Conv:YES     Test N: 335 Guess: 2 IT:  17 [Singular System A neq = 2]
+ 430 Conv:YES     Test N: 335 Guess: 3 IT:  16 [Singular System A neq = 2]
+ 431 Conv:YES     Test N: 335 Guess: 4 IT:  16 [Singular System A neq = 2]
+ 432 Conv:YES     Test N: 336 Guess: 1 IT:  17 [Singular System B neq = 3]
+ 433 Conv:DIVERGE Test N: 336 Guess: 2 IT:  17 [Singular System B neq = 3]
+ 434 Conv:YES     Test N: 337 Guess: 1 IT:  24 [Singular System C neq = 2]
+ 435 Conv:YES     Test N: 337 Guess: 2 IT:  23 [Singular System C neq = 2]
+ 436 Conv:YES     Test N: 338 Guess: 1 IT:  32 [Singular System D neq = 2]
+ 437 Conv:YES     Test N: 338 Guess: 2 IT:  17 [Singular System D neq = 2]
+ 438 Conv:NO      Test N: 339 Guess: 1 IT:  19 [Singular System E neq = 3]
+ 439 Conv:YES     Test N: 339 Guess: 2 IT:  18 [Singular System E neq = 3]
+ 440 Conv:YES     Test N: 340 Guess: 1 IT:  16 [Singular System F neq = 3]
+ 441 Conv:YES     Test N: 340 Guess: 2 IT:  16 [Singular System F neq = 3]
+ 442 Conv:NO      Test N: 341 Guess: 1 IT:  29 [Singular System Problem 2 (Ishihara, K. 2001) neq = 3]
+ 443 Conv:YES     Test N: 341 Guess: 2 IT:   6 [Singular System Problem 2 (Ishihara, K. 2001) neq = 3]
+ 444 Conv:YES     Test N: 341 Guess: 3 IT:   7 [Singular System Problem 2 (Ishihara, K. 2001) neq = 3]
+ 445 Conv:YES     Test N: 341 Guess: 4 IT:   6 [Singular System Problem 2 (Ishihara, K. 2001) neq = 3]
+ 446 Conv:YES     Test N: 341 Guess: 5 IT:   7 [Singular System Problem 2 (Ishihara, K. 2001) neq = 3]
+ 447 Conv:NO      Test N: 342 Guess: 1 IT:  19 [Singular System Problem 3 neq = 2]
+ 448 Conv:NO      Test N: 342 Guess: 2 IT:  19 [Singular System Problem 3 neq = 2]
+ 449 Conv:NO      Test N: 342 Guess: 3 IT:   5 [Singular System Problem 3 neq = 2]
+ 450 Conv:NO      Test N: 343 Guess: 1 IT:   4 [Singular System Problem 4 neq = 2]
+ 451 Conv:YES     Test N: 343 Guess: 2 IT:   6 [Singular System Problem 4 neq = 2]
+ 452 Conv:YES     Test N: 343 Guess: 3 IT:   5 [Singular System Problem 4 neq = 2]
+ 453 Conv:YES     Test N: 344 Guess: 1 IT:   5 [Singular System Problem 5 neq = 2]
+ 454 Conv:YES     Test N: 345 Guess: 1 IT:   6 [Singular System Problem 6 neq = 3]
+ 455 Conv:YES     Test N: 345 Guess: 2 IT:  10 [Singular System Problem 6 neq = 3]
+ 456 Conv:YES     Test N: 345 Guess: 3 IT:   5 [Singular System Problem 6 neq = 3]
+ 457 Conv:YES     Test N: 345 Guess: 4 IT:  10 [Singular System Problem 6 neq = 3]
+ 458 Conv:YES     Test N: 346 Guess: 1 IT:   5 [Singular System Problem 7 (Ishihara, K. 2001) neq = 2]
+ 459 Conv:YES     Test N: 346 Guess: 2 IT:   5 [Singular System Problem 7 (Ishihara, K. 2001) neq = 2]
+ 460 Conv:YES     Test N: 346 Guess: 3 IT:   5 [Singular System Problem 7 (Ishihara, K. 2001) neq = 2]
+ 461 Conv:YES     Test N: 346 Guess: 4 IT:   5 [Singular System Problem 7 (Ishihara, K. 2001) neq = 2]
+ 462 Conv:YES     Test N: 347 Guess: 1 IT:  16 [Singular System Problem 8 neq = 2]
+ 463 Conv:NO      Test N: 348 Guess: 1 IT:   3 [Singular System Problem 9 neq = 2]
+ 464 Conv:NO      Test N: 348 Guess: 2 IT:   3 [Singular System Problem 9 neq = 2]
+ 465 Conv:YES     Test N: 348 Guess: 3 IT:   4 [Singular System Problem 9 neq = 2]
+ 466 Conv:NO      Test N: 348 Guess: 4 IT:   3 [Singular System Problem 9 neq = 2]
+ 467 Conv:DIVERGE Test N: 349 Guess: 1 IT:   9 [Semi-implicit approach Example 5 neq = 2]
+ 468 Conv:YES     Test N: 350 Guess: 1 IT:  11 [Semi-implicit approach Example 5 neq = 20]
+ 469 Conv:YES     Test N: 351 Guess: 1 IT:  10 [Semi-implicit approach Example 5 neq = 100]
+ 470 Conv:YES     Test N: 352 Guess: 1 IT:  11 [Six Hump Camel Back function neq = 2]
+ 471 Conv:YES     Test N: 353 Guess: 1 IT:   6 [Sonia Krzyworzcka example 2 neq = 6]
+ 472 Conv:NO      Test N: 354 Guess: 1 IT:   5 [Sonia Krzyworzcka example 3 neq = 10]
+ 473 Conv:DIVERGE Test N: 355 Guess: 1 IT:  39 [Spedicato N.17 neq = 10]
+ 474 Conv:NO      Test N: 356 Guess: 1 IT:  23 [Spedicato N.17 neq = 50]
+ 475 Conv:NO      Test N: 357 Guess: 1 IT:  24 [Spedicato N.17 neq = 100]
+ 476 Conv:NO      Test N: 358 Guess: 1 IT:  28 [Spedicato N.17 neq = 500]
+ 477 Conv:DIVERGE Test N: 359 Guess: 1 IT:   1 [SST nonlinearity term, N.0 neq = 4]
+ 478 Conv:DIVERGE Test N: 360 Guess: 1 IT:   1 [SST nonlinearity term, N.1 neq = 4]
+ 479 Conv:YES     Test N: 361 Guess: 1 IT:   6 [Strictly Convex Function 1 neq = 2]
+ 480 Conv:YES     Test N: 362 Guess: 1 IT:   6 [Strictly Convex Function 1 neq = 10]
+ 481 Conv:YES     Test N: 363 Guess: 1 IT:   6 [Strictly Convex Function 1 neq = 50]
+ 482 Conv:YES     Test N: 364 Guess: 1 IT:   6 [Strictly Convex Function 1 neq = 500]
+ 483 Conv:YES     Test N: 365 Guess: 1 IT:   6 [Strictly Convex Function 1 neq = 5000]
+ 484 Conv:YES     Test N: 366 Guess: 1 IT:   6 [Strictly Convex Function 2 neq = 2]
+ 485 Conv:YES     Test N: 367 Guess: 1 IT:   6 [Strictly Convex Function 2 neq = 10]
+ 486 Conv:YES     Test N: 368 Guess: 1 IT:   6 [Strictly Convex Function 2 neq = 50]
+ 487 Conv:YES     Test N: 369 Guess: 1 IT:   6 [Strictly Convex Function 2 neq = 500]
+ 488 Conv:YES     Test N: 370 Guess: 1 IT:   6 [Strictly Convex Function 2 neq = 5000]
+ 489 Conv:NO      Test N: 371 Guess: 1 IT:   7 [Toint N.225 neq = 10]
+ 490 Conv:NO      Test N: 372 Guess: 1 IT:   7 [Toint N.225 neq = 100]
+ 491 Conv:NO      Test N: 373 Guess: 1 IT:   7 [Toint N.225 neq = 500]
+ 492 Conv:YES     Test N: 374 Guess: 1 IT:  47 [Tridimensional valley. neq = 3]
+ 493 Conv:NO      Test N: 375 Guess: 1 IT:   5 [Trigonometric Exponential System prob 1 neq = 10]
+ 494 Conv:NO      Test N: 376 Guess: 1 IT:   5 [Trigonometric Exponential System prob 1 neq = 50]
+ 495 Conv:NO      Test N: 377 Guess: 1 IT:   5 [Trigonometric Exponential System prob 1 neq = 500]
+ 496 Conv:DIVERGE Test N: 378 Guess: 1 IT:  15 [Trigonometric Exponential System prob 2 neq = 9]
+ 497 Conv:DIVERGE Test N: 379 Guess: 1 IT: 100 [Trigonometric Exponential System prob 2 neq = 27]
+ 498 Conv:DIVERGE Test N: 380 Guess: 1 IT: 100 [Trigonometric Exponential System prob 2 neq = 81]
+ 499 Conv:NO      Test N: 381 Guess: 1 IT:   6 [TrigExp neq = 10]
+ 500 Conv:YES     Test N: 381 Guess: 2 IT:   6 [TrigExp neq = 10]
+ 501 Conv:NO      Test N: 381 Guess: 3 IT:   6 [TrigExp neq = 10]
+ 502 Conv:YES     Test N: 382 Guess: 1 IT:   6 [TrigExp neq = 100]
+ 503 Conv:YES     Test N: 382 Guess: 2 IT:   6 [TrigExp neq = 100]
+ 504 Conv:YES     Test N: 382 Guess: 3 IT:   6 [TrigExp neq = 100]
+ 505 Conv:NO      Test N: 383 Guess: 1 IT:   5 [Trigonometric function neq = 2]
+ 506 Conv:NO      Test N: 384 Guess: 1 IT:   6 [Trigonometric function neq = 10]
+ 507 Conv:NO      Test N: 385 Guess: 1 IT:  50 [Trigonometric function neq = 50]
+ 508 Conv:YES     Test N: 386 Guess: 1 IT:   5 [Troesch Function neq = 2]
+ 509 Conv:YES     Test N: 387 Guess: 1 IT:  12 [Troesch Function neq = 10]
+ 510 Conv:YES     Test N: 388 Guess: 1 IT:  11 [Troesch Function neq = 50]
+ 511 Conv:YES     Test N: 389 Guess: 1 IT:  11 [Troesch Function neq = 500]
+ 512 Conv:YES     Test N: 390 Guess: 1 IT:  12 [Troesch Function neq = 5000]
+ 513 Conv:NO      Test N: 391 Guess: 1 IT:   5 [Two-Point Boundary Value Problem neq = 10]
+ 514 Conv:NO      Test N: 392 Guess: 1 IT:   9 [Two-Point Boundary Value Problem neq = 100]
+ 515 Conv:NO      Test N: 393 Guess: 1 IT:  13 [Two-Point Boundary Value Problem neq = 1000]
+ 516 Conv:NO      Test N: 394 Guess: 1 IT:   1 [Two-Point Boundary Value Problem neq = 5000]
+ 517 Conv:YES     Test N: 395 Guess: 1 IT:  11 [Variably dimensioned function neq = 5]
+ 518 Conv:YES     Test N: 396 Guess: 1 IT:  14 [Variably dimensioned function neq = 10]
+ 519 Conv:DIVERGE Test N: 397 Guess: 1 IT:  16 [Variably dimensioned function neq = 50]
+ 520 Conv:YES     Test N: 398 Guess: 1 IT:  10 [Watson function neq = 31]
+ 521 Conv:YES     Test N: 399 Guess: 1 IT:  17 [Weibull function neq = 3]
+ 522 Conv:YES     Test N: 400 Guess: 1 IT:  23 [Wood function neq = 4]
+ 523 Conv:NO      Test N: 401 Guess: 1 IT:   4 [XiaoYin example 3 neq = 8]
+ 524 Conv:NO      Test N: 402 Guess: 1 IT:   3 [XiaoYin example 4 neq = 16]
+ 525 Conv:NO      Test N: 403 Guess: 1 IT:   4 [XiaoYin example 5 neq = 35]
+ 526 Conv:YES     Test N: 404 Guess: 1 IT:  10 [Shi, Yixun Problem N.3 neq = 3]
+ 527 Conv:NO      Test N: 404 Guess: 2 IT:   9 [Shi, Yixun Problem N.3 neq = 3]
+ 528 Conv:YES     Test N: 404 Guess: 3 IT:   8 [Shi, Yixun Problem N.3 neq = 3]
+ 529 Conv:YES     Test N: 405 Guess: 1 IT:   5 [Shi, Yixun Problem N.4 neq = 100]
+ 530 Conv:DIVERGE Test N: 405 Guess: 2 IT: 100 [Shi, Yixun Problem N.4 neq = 100]
+ 531 Conv:DIVERGE Test N: 405 Guess: 3 IT: 100 [Shi, Yixun Problem N.4 neq = 100]
+ 532 Conv:DIVERGE Test N: 405 Guess: 4 IT:  26 [Shi, Yixun Problem N.4 neq = 100]
+ 533 Conv:NO      Test N: 406 Guess: 1 IT:   5 [Shi, Yixun Problem N.5 neq = 100]
+ 534 Conv:DIVERGE Test N: 406 Guess: 2 IT:  60 [Shi, Yixun Problem N.5 neq = 100]
+ 535 Conv:DIVERGE Test N: 406 Guess: 3 IT:  59 [Shi, Yixun Problem N.5 neq = 100]
+ 536 Conv:DIVERGE Test N: 406 Guess: 4 IT: 100 [Shi, Yixun Problem N.5 neq = 100]
+ 537 Conv:YES     Test N: 407 Guess: 1 IT:  16 [Shi, Yixun Problem N.6 (Singular Broyden) neq = 100]
+ 538 Conv:YES     Test N: 407 Guess: 2 IT:  20 [Shi, Yixun Problem N.6 (Singular Broyden) neq = 100]
+ 539 Conv:YES     Test N: 407 Guess: 3 IT:  20 [Shi, Yixun Problem N.6 (Singular Broyden) neq = 100]
+ 540 Conv:DIVERGE Test N: 407 Guess: 4 IT:  70 [Shi, Yixun Problem N.6 (Singular Broyden) neq = 100]
+ 541 Conv:DIVERGE Test N: 407 Guess: 5 IT:  73 [Shi, Yixun Problem N.6 (Singular Broyden) neq = 100]
+ 542 Conv:DIVERGE Test N: 407 Guess: 6 IT: 100 [Shi, Yixun Problem N.6 (Singular Broyden) neq = 100]
+ 543 Conv:YES     Test N: 408 Guess: 1 IT:  16 [Zero Jacobian Function (same as function 27) neq = 10]
+ 544 Conv:YES     Test N: 409 Guess: 1 IT:  16 [Zero Jacobian Function (same as function 27) neq = 50]
+ 545 Conv:YES     Test N: 410 Guess: 1 IT:  16 [Zero Jacobian Function (same as function 27) neq = 101]
+ntest = 545
+ok   = 254
+qok  = 159
+fail = 132
+
+
+All done folks
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clc;
+clear all;
+close all;
+
+global nl;
+
+nl = NLtest();
+
+%res = nl.listall()
+%options = optimoptions(@fsolve,'Display','none','SpecifyObjectiveGradient',true,'PlotFcn',@optimplotfirstorderopt);
+algo = {'trust-region-dogleg', 'trust-region','levenberg-marquardt'};
+
+
+stat = {};
+kkk  = 0 ;
+
+for ntest=1:nl.numTest()
+  nl.select(ntest) ;
+  options = optimoptions( @fsolve,...
+    'Display',                  'none',...
+    'Algorithm',                algo{3}, ...
+    'SpecifyObjectiveGradient', true, ...
+    'FunctionTolerance',        1e-10, ...
+    'MaxIterations',            100,...
+    'OptimalityTolerance',      1e-10, ...
+    'CheckGradients',           false,...
+    'JacobPattern',             nl.pattern(), ...
+    'FiniteDifferenceType',     'central', ...
+    'FiniteDifferenceStepSize', eps^(1/3.5) ...
+  );
+  for ng=1:nl.numGuess()
+    
+    fprintf('test N.%4d GUESS N.%2d PROBLEM = %s\n',ntest,ng,nl.name());
+
+    x0 = nl.guess(ng);
+    [x,F,exitflag,output,JAC] = fsolve(@fun,x0,options);
+    kkk = kkk+1 ;
+    stat{kkk}.exitflag   = exitflag;
+    stat{kkk}.title      = nl.name();
+    stat{kkk}.iterations = output.iterations;
+    stat{kkk}.x          = x;
+    stat{kkk}.nguess     = ng;
+    stat{kkk}.n          = nl.numActive();
+  end
+end
+
+ok  = 0;
+qok = 0;
+for k=1:kkk
+  conv = 'DIVERGE';
+  if stat{k}.exitflag == 1
+    conv = 'YES    ';
+    ok = ok+1;
+  end
+  if stat{k}.exitflag == 4
+    conv = 'NO     ';
+    qok = qok+1;
+  end
+
+  fprintf('%4d Conv:%7s Test N:%4d Guess:%2d IT:%4d [%s]\n', ...
+           k, ...
+           conv, ...
+           stat{k}.n, ...
+           stat{k}.nguess, ...
+           stat{k}.iterations, ...
+           stat{k}.title);
+  % disp(stat{k}.x.');
+end
+
+fprintf('ntest = %d\n',kkk);
+fprintf('ok   = %d\n',ok);
+fprintf('qok  = %d\n',qok);
+fprintf('fail = %d\n',kkk-qok-ok);
+
+fprintf('\n\nAll done folks\n\n');
+
+function [F,J] = fun(x)
+  global nl ;
+  F = nl.evalF(x);
+  J = nl.evalJF(x);
+end
+##### SOURCE END #####
+--></body></html>

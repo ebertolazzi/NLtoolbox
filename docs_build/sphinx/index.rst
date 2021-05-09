@@ -5,6 +5,8 @@ NLtoolbox
 
 **Github homepage** `here <https://github.com/ebertolazzi/NLtoolbox>`__.
 
+**Matlab TOOLBOX** `here <https://github.com/ebertolazzi/NLtoolbox/releases>`__.
+
 .. toctree::
    :maxdepth: 2
 

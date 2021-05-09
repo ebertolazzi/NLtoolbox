@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration file="/Users/enrico/Ricerca/develop/myGitProjetcs/NLtoolbox/NLtoolbox.prj" location="/Users/enrico/Ricerca/develop/myGitProjetcs/NLtoolbox" name="NLtoolbox" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="572340669" file="/Users/enrico/Ricerca/develop/myGitProjetcs/NLtoolbox/NLtoolbox.prj" location="/Users/enrico/Ricerca/develop/myGitProjetcs/NLtoolbox" name="NLtoolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>NLtoolbox</param.appname>
     <param.authnamewatermark>Enrico Bertolazzi</param.authnamewatermark>
     <param.email>enrico.bertolazzi@unitn.it</param.email>
@@ -36,7 +36,26 @@
 .DS_Store
 populate_toolbox.rb</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
-    <param.examples />
+    <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;examples&gt;
+   &lt;exampleCategory name="tests"&gt;
+      &lt;example name="test_bibtex" type="html"&gt;
+         &lt;file type="source"&gt;/tests/html/test_bibtex.html&lt;/file&gt;
+         &lt;file type="main"&gt;/tests/test_bibtex.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="test_fsolve" type="html"&gt;
+         &lt;file type="source"&gt;/tests/html/test_fsolve.html&lt;/file&gt;
+         &lt;file type="main"&gt;/tests/test_fsolve.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="test_list" type="html"&gt;
+         &lt;file type="source"&gt;/tests/html/test_list.html&lt;/file&gt;
+         &lt;file type="main"&gt;/tests/test_list.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+   &lt;/exampleCategory&gt;
+&lt;/examples&gt;</param.examples>
     <param.demosxml />
     <param.apps />
     <param.registered.apps />
@@ -75,7 +94,6 @@ populate_toolbox.rb</param.exclude.filters>
       <param.products.version />
       <param.platforms />
       <param.exclude.pcodedmfiles />
-      <param.examples />
       <param.demosxml />
       <param.apps />
       <param.registered.apps />
@@ -106,6 +124,7 @@ populate_toolbox.rb</param.exclude.filters>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}/toolbox/CompileNLtoolbox.m</file>
       <file>${PROJECT_ROOT}/toolbox/bin</file>
+      <file>${PROJECT_ROOT}/toolbox/demos.xml</file>
       <file>${PROJECT_ROOT}/toolbox/lib</file>
       <file>${PROJECT_ROOT}/toolbox/lib3rd</file>
       <file>${PROJECT_ROOT}/toolbox/license.txt</file>

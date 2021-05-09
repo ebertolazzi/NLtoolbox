@@ -3,7 +3,6 @@ lib/lib
 *.pdf
 *.o
 *.obj
-
 toolbox/bin
 docs_build/sphinx/_build
 docs_build/sphinx/_doxygen
