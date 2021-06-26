@@ -16,7 +16,7 @@ class DiscreteBoundaryValueFunction : public nonlinearSystem {
    real_type h;
 public:
 
-  DiscreteBoundaryValueFunction( int_type neq )
+  DiscreteBoundaryValueFunction( integer neq )
   : nonlinearSystem(
       "Discrete boundary value function",
       "@article{More:1979,\n"
@@ -47,7 +47,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type f = 2*x(k) + 0.5 * power2(h) * power3( (x(k)+1) + (k+1) * h );
     if ( k > 0   ) f -= x(k-1);
     if ( k < n-1 ) f -= x(k+1);
@@ -56,25 +56,25 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
       f(k) = 2*x(k) + 0.5 * power2(h) * power3( (x(k)+1) + (k+1) * h );
       if ( k > 0   ) f(k) -= x(k-1);
       if ( k < n-1 ) f(k) -= x(k+1);
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 3*n-2; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
 
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       { ii(kk) = jj(kk) = i; ++kk; }
 
-    for ( int_type i = 0; i < n-1; ++i ) {
+    for ( integer i = 0; i < n-1; ++i ) {
       ii(kk) = i+1; jj(kk) = i;   ++kk;
       ii(kk) = i;   jj(kk) = i+1; ++kk;
     }
@@ -82,24 +82,24 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
       jac(kk++) = 2 + 1.5*h*h*power2( x(i) + h*(i+1) + 1 );
 
-    for ( int_type i = 0; i < n-1; ++i ) {
+    for ( integer i = 0; i < n-1; ++i ) {
       jac(kk++) = -1;
       jac(kk++) = -1;
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     if ( n == 2 || n == 5 ) return 1;
     return 0;
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     if ( n == 2 ) {
       x(0) = -0.128246763033732;
       x(1) = -0.159267567244641;
@@ -113,12 +113,12 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k )
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k )
       x(k) = real_type ( (k+1) * (k-n) ) / power2(n+1.0);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

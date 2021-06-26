@@ -33,7 +33,7 @@ public:
   { }
 
   real_type
-  evalFk( dvec_t const & x_in, int_type k ) const override {
+  evalFk( dvec_t const & x_in, integer k ) const override {
     real_type x    = x_in[0];
     real_type arg1 = 1./(1.-x);
     real_type arg2 = 0.95-x;
@@ -53,7 +53,7 @@ public:
       f(0) = nan("InfRefluxFunction");
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 1; }
 
@@ -73,16 +73,16 @@ public:
       jac(0) = nan("InfRefluxFunction");
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
       case 0 : x(0) = 0.23;  break; // default initial guess (critical as close to J=0 for x=0.229)
       case 1 : x(0) = 0.228; break; // an even harder initial point
@@ -91,14 +91,14 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 4; }
 
   void
   checkIfAdmissible( dvec_t const & x_in ) const override {
     real_type x = x_in[0];
-    NONLIN_ASSERT( x > 0 && x < 0.95, "ARGUMENT ERROR" );
+    UTILS_ASSERT0( x > 0 && x < 0.95, "ARGUMENT ERROR" );
   }
 
   void

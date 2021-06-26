@@ -16,7 +16,7 @@
 class TrigonometricFunction : public nonlinearSystem {
 public:
   
-  TrigonometricFunction( int_type neq )
+  TrigonometricFunction( integer neq )
   : nonlinearSystem(
       "Trigonometric function",
       "Spedicato, E.\n"
@@ -38,45 +38,45 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type c_sum = 0;
-    for ( int_type k = 0; k < n; ++k ) c_sum += cos(x(k));
+    for ( integer k = 0; k < n; ++k ) c_sum += cos(x(k));
     return n + (i+1) * (1-cos(x(i))) - sin(x(i)) - c_sum;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type c_sum = 0;
-    for ( int_type i = 0; i < n; ++i ) c_sum += cos(x(i));
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) c_sum += cos(x(i));
+    for ( integer i = 0; i < n; ++i ) {
       real_type t1 = n + (i+1) * (1-cos(x(i))) - sin(x(i)) - c_sum;
       real_type t2 = 2*sin(x(i)) - cos(x(i));
       f(i) = t1*t2;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
       real_type c_sum = 0;
-      for ( int_type j = 0; j < n; ++j ) c_sum += cos(x(j));
+      for ( integer j = 0; j < n; ++j ) c_sum += cos(x(j));
       real_type t1   = n + (i+1) * (1-cos(x(i))) - sin(x(i)) - c_sum;
       real_type t2   = 2*sin(x(i)) - cos(x(i));
       real_type t2_D = 2*cos(x(i)) + sin(x(i));
-      for ( int_type j = 0; j < n; ++j ) {
+      for ( integer j = 0; j < n; ++j ) {
         jac(kk) = t2*sin(x(j));
         if ( i == j )
           jac(kk) += t1*t2_D + t2*( (i+1)*sin(x(i)) - cos(x(i)) );
@@ -86,7 +86,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 1:
       x(0) = 0.9272952180016122324285124629224288040571;
@@ -133,30 +133,30 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     if ( n < 8 ) return 1;
     else         return 0;
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = 101.0 / real_type(100*n);
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = 101.0 / real_type(100*n);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    //for ( int_type i = 0; i < n; ++i )
-    // NONLIN_ASSERT( abs(x(i)) < 2*m_pi, "Bad range" );
+    //for ( integer i = 0; i < n; ++i )
+    // UTILS_ASSERT( abs(x(i)) < 2*m_pi, "Bad range" );
   }
 
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
-    //for ( int_type i = 0; i < n; ++i )
+    //for ( integer i = 0; i < n; ++i )
     //  { U[i] = 2*m_pi; L[i] = -2*m_pi; }
     U.fill(real_max);
     L.fill(-real_max);

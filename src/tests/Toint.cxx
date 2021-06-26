@@ -15,7 +15,7 @@
 class Toint225 : public nonlinearSystem {
 public:
   
-  Toint225( int_type neq )
+  Toint225( integer neq )
   : nonlinearSystem(
       "Toint N.225",
       "@Article{Spedicato1997,\n"
@@ -58,7 +58,7 @@ public:
   { return 4 - s*exp(s - t); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
     if      ( k == 0   ) f = phi1(x(0),x(1));
     else if ( k == n-1 ) f = phi2(x(n-2),x(n-1));
@@ -69,23 +69,23 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = phi1(x(0),x(1));
-    for ( int_type k = 1; k < n-1; ++k )
+    for ( integer k = 1; k < n-1; ++k )
       f(k) = phi1(x(k),x(k+1))+phi2(x(k-1),x(k));
     f(n-1) = phi2(x(n-2),x(n-1));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
-    for ( int_type k = 1; k < n-1; ++k ) {
+    for ( integer k = 1; k < n-1; ++k ) {
       SETIJ(k,k-1);
       SETIJ(k,k);
       SETIJ(k,k+1);
@@ -97,10 +97,10 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = phi1_1(x(0),x(1));
     jac(kk++) = phi1_2(x(0),x(1));
-    for ( int_type k = 1; k < n-1; ++k ) {
+    for ( integer k = 1; k < n-1; ++k ) {
       jac(kk++) = phi2_1(x(k-1),x(k));
       jac(kk++) = phi1_1(x(k),x(k+1))+phi2_2(x(k-1),x(k));
       jac(kk++) = phi1_2(x(k),x(k+1));
@@ -110,19 +110,19 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = 0;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = 0;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

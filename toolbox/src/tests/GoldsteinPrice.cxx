@@ -39,7 +39,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -73,7 +73,7 @@ public:
          + ( 2.0*a*b + a2 * dbdx2 ) * ( 30.0 + c2 * d );
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -131,29 +131,29 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0;
     x(1) = -1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = -0.5;
     x(1) = 0.25;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 10000, "x[" << i << "] = "<< x(i) << " too big");
+    //  UTILS_ASSERT( abs(x(i)) < 10000, "x[" << i << "] = "<< x(i) << " too big");
   }
 
 };

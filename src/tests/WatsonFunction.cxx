@@ -47,17 +47,17 @@ public:
       31
     )
   {
-    for ( int_type i = 0; i < 29; ++i ) {
+    for ( integer i = 0; i < 29; ++i ) {
       real_type ti = (i+1)/29.0;
       t[i][0] = 1;
-      for ( int_type j = 1; j < 31; ++j ) {
+      for ( integer j = 1; j < 31; ++j ) {
         t[i][j] = t[i][j-1]*ti;
       }
     }
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -66,39 +66,39 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f.setZero();
-    for ( int_type i = 0; i < 29; ++i ) {
+    for ( integer i = 0; i < 29; ++i ) {
       real_type const * ti = t[i];
       real_type fi = 0;
-      for ( int_type j = 1; j < 31; ++j ) fi += j*x(j)*ti[j-1];
+      for ( integer j = 1; j < 31; ++j ) fi += j*x(j)*ti[j-1];
       real_type tmp = 0;
-      for ( int_type j = 0; j < 31; ++j ) tmp += x(j)*ti[j];
+      for ( integer j = 0; j < 31; ++j ) tmp += x(j)*ti[j];
       f(i) = fi-tmp*tmp-1;
     }
     f(29) = x(0);
     f(30) = x(1) - x(0)*x(0) - 1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0;
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
-    for ( int_type i = 0; i < 29; ++i ) {
+    for ( integer i = 0; i < 29; ++i ) {
       real_type const * ti = t[i];
-      for ( int_type j = 1; j < 31; ++j ) jac(caddr(i,j)) += j*ti[j-1];
+      for ( integer j = 1; j < 31; ++j ) jac(caddr(i,j)) += j*ti[j-1];
       real_type tmp = 0;
-      for ( int_type j = 0; j < 31; ++j ) tmp += x(j)*ti[j];
-      for ( int_type j = 0; j < 31; ++j ) jac(caddr(i,j)) -= 2*tmp*ti[j];
+      for ( integer j = 0; j < 31; ++j ) tmp += x(j)*ti[j];
+      for ( integer j = 0; j < 31; ++j ) jac(caddr(i,j)) -= 2*tmp*ti[j];
     }
     jac(caddr(29,0)) = 1;
     jac(caddr(30,0)) = -2*x(0);
@@ -106,27 +106,27 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     // RES = [ -0.015725, 1.012435, -0.232992, 1.260430, -1.513729, 0.992996 ]';
     // RES = [ -0.000015, 0.999790, 0.014764, 0.146342, 1.000821, -2.617731, 4.104403, -3.143612, 1.052627 ]';
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override
+  getInitialPoint( dvec_t & x, integer ) const override
   { x.setZero(); }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( x(i) > -1, "Bad range" );
+    //  UTILS_ASSERT( x(i) > -1, "Bad range" );
   }
 
 };

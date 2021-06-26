@@ -15,7 +15,7 @@
 class BrownAlmostLinearFunction : public nonlinearSystem {
 public:
   
-  BrownAlmostLinearFunction( int_type  neq )
+  BrownAlmostLinearFunction( integer  neq )
   : nonlinearSystem(
       "Brown almost linear function",
       "@article{Brown:1968,\n"
@@ -43,14 +43,14 @@ public:
   { checkMinEquations(neq,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     if ( k < n-1 ) {
       real_type sumx = 0;
-      for ( int_type i = 0; i < n; ++i ) sumx  += x(i);
+      for ( integer i = 0; i < n; ++i ) sumx  += x(i);
       return x(k) + (sumx - (n+1));
     } else {
       real_type prodx = 1;
-      for ( int_type i = 0; i < n; ++i ) prodx *= x(i);
+      for ( integer i = 0; i < n; ++i ) prodx *= x(i);
       return prodx - 1;
     }           
   }
@@ -59,19 +59,19 @@ public:
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type sumx  = x.sum();
     real_type prodx = x.prod();
-    for ( int_type i = 0; i < n-1; ++i ) f(i) = x(i) + (sumx - (n+1));
+    for ( integer i = 0; i < n-1; ++i ) f(i) = x(i) + (sumx - (n+1));
     f(n-1) = prodx - 1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran address
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran address
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -79,12 +79,12 @@ public:
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
 
     jac.fill(1);
-    for ( int_type i = 0; i < n-1; ++i ) jac(caddr(i,i)) = 2;
+    for ( integer i = 0; i < n-1; ++i ) jac(caddr(i,i)) = 2;
 
     // last row
-    for ( int_type j = 0; j < n; ++j ) {
+    for ( integer j = 0; j < n; ++j ) {
       real_type prod = 1;
-      for ( int_type k = 0; k < n; ++k ) {
+      for ( integer k = 0; k < n; ++k ) {
         if ( k != j ) prod *= x(k);
       }
       jac(caddr(n-1,j)) = prod;
@@ -92,20 +92,20 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill( 0.5 );
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

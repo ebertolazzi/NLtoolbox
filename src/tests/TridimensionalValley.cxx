@@ -30,7 +30,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type bf = (c2*power2(x(0))+c1)*x(0);
     switch ( k ) {
       case 0: return bf*exp(-power2(x(0))/100)-1;
@@ -48,14 +48,14 @@ public:
     f(2) = 10*(cos(x(0))-x(2));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 5;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(1,0);
@@ -76,24 +76,24 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 1.0103301175891008618821430258424435903873866121054053;
     x(1) = 0.847007375051043571769939585744456415641478463861070185;
     x(2) = 0.531581138312055623979884869864864195697816223034820704;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = -4;
     x(1) = 1;
     x(2) = 2;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

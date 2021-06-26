@@ -17,7 +17,7 @@ class Chandrasekhar : public nonlinearSystem {
   real_type const w;
 public:
 
-  Chandrasekhar( real_type c, int_type neq )
+  Chandrasekhar( real_type c, integer neq )
   : nonlinearSystem(
       "Chandrasekhar function",
       "@book{Kelley:1995,\n"
@@ -40,44 +40,44 @@ public:
   , w(c/(2*neq))
   {
     mu.resize(neq);
-    for ( int_type i = 0; i < neq; ++i ) mu(i) = i + 0.5;
+    for ( integer i = 0; i < neq; ++i ) mu(i) = i + 0.5;
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type tmp = 0;
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       tmp += mu(j)*x(j)/(mu(i)+mu(j));
     return x(i)-1/(1-w*tmp);
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       f(i) = evalFk(x,i);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
       real_type tmp = 0;
-      for ( int_type j = 0; j < n; ++j )
+      for ( integer j = 0; j < n; ++j )
         tmp += mu(j)*x(j)/(mu(i)+mu(j));
       tmp = -w/power2(1-w*tmp);
-      for ( int_type j = 0; j < n; ++j ) {
+      for ( integer j = 0; j < n; ++j ) {
         jac(kk) = tmp*mu(j)/(mu(i)+mu(j));
         if ( i == j ) jac(kk) += 1;
         ++kk;
@@ -85,20 +85,20 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(10);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

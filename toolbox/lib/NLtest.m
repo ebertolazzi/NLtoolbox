@@ -66,8 +66,8 @@ classdef NLtest < handle
     %>
     %> \endrst
     %>
-    function n = numTest( self )
-      n = NLtestMexWrapper( 'numTest' );
+    function n = numberOfTests( self )
+      n = NLtestMexWrapper( 'numberOfTests' );
     end
 
     %>

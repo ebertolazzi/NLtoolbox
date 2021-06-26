@@ -38,7 +38,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -52,7 +52,7 @@ public:
     f(1) = 4.0 * x2 + 1.6 * m_pi * sin( 4.0 * m_pi * x2 );
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -77,22 +77,22 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0.5;
     x(1) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -114,7 +114,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -128,7 +128,7 @@ public:
     f(1) = 4 * x2 + 1.2*m_pi*cos(3*m_pi*x1)*sin(4*m_pi*x2);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -153,22 +153,22 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0.6;
     x(1) = 1.3;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -190,7 +190,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -204,7 +204,7 @@ public:
     f(1) = 4.0 * x2 - 4.0 * m_pi * sin( 4*m_pi*x2 );
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 2; }
 
@@ -224,22 +224,22 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0.5;
     x(1) = 1.0;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

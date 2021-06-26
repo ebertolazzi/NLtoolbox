@@ -15,7 +15,7 @@
 class DiscreteIntegralEquationFunction : public nonlinearSystem {
 public:
   
-  DiscreteIntegralEquationFunction( int_type neq )
+  DiscreteIntegralEquationFunction( integer neq )
   : nonlinearSystem(
       "Discrete integral equation function",
       "@article{More:1981,\n"
@@ -35,17 +35,17 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type h = 1 / real_type ( n + 1 );
     
     real_type tk = real_type ( k + 1 ) / real_type ( n + 1 );
     real_type sum1 = 0;
-    for ( int_type j = 0; j < k; ++j ) {
+    for ( integer j = 0; j < k; ++j ) {
       real_type tj = (j+1) * h;
       sum1 += tj * power3( x(j) + tj + 1 );
     }
     real_type sum2 = 0;
-    for ( int_type j = k; j < n; ++j ) {
+    for ( integer j = k; j < n; ++j ) {
       real_type tj = (j+1) * h;
       sum2 += (1-tj) * power3( x(j) + tj + 1 );
     }
@@ -56,15 +56,15 @@ public:
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type h = 1 / real_type ( n + 1 );
     
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
       real_type tk = real_type ( k + 1 ) / real_type ( n + 1 );
       real_type sum1 = 0;
-      for ( int_type j = 0; j < k; ++j ) {
+      for ( integer j = 0; j < k; ++j ) {
         real_type tj = (j+1) * h;
         sum1 += tj * power3( x(j) + tj + 1 );
       }
       real_type sum2 = 0;
-      for ( int_type j = k; j < n; ++j ) {
+      for ( integer j = k; j < n; ++j ) {
         real_type tj = (j+1) * h;
         sum2 += (1-tj) * power3( x(j) + tj + 1 );
       }
@@ -72,24 +72,24 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
       real_type tk = real_type(k+1) / real_type(n+1);
-      for ( int_type j = 0; j < n; ++j ) {
+      for ( integer j = 0; j < n; ++j ) {
         real_type tj = real_type(j+1) / real_type(n+1);
         real_type temp1 = power2( x(j) + tj + 1 );
         real_type temp2 = min(tk, tj) - tj * tk;
@@ -100,14 +100,14 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     if ( n == 2 || n == 5 ) return 1;
     return 0;
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     if ( n == 2 ) {
       x(0) = -0.0739748874643476;
       x(1) = -0.162925156390870;
@@ -121,12 +121,12 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k )
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k )
       x(k) = real_type ( (k+1) * (k-n) ) / power2(n+1.0);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

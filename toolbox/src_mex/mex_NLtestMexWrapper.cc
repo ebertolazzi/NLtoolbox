@@ -17,7 +17,7 @@
 "n" \
 "  - Methods:\n" \
 "    NLtestMexWrapper( 'select', name_or_number );\n" \
-"    n      = NLtestMexWrapper( 'numTest' );\n" \
+"    n      = NLtestMexWrapper( 'numberOfTests' );\n" \
 "    names  = NLtestMexWrapper( 'listall' );\n" \
 "    F      = NLtestMexWrapper( 'evalF', ntest, x [,k] );\n" \
 "    JF     = NLtestMexWrapper( 'evalJF', ntest, x );\n" \
@@ -72,11 +72,11 @@ namespace NLproblem {
 
   static
   void
-  do_numTest(
+  do_numberOfTests(
     int nlhs, mxArray       *plhs[],
     int nrhs, mxArray const *prhs[]
   ) {
-    #define CMD "NLtestMexWrapper('numTest'): "
+    #define CMD "NLtestMexWrapper('numberOfTests'): "
     MEX_ASSERT( nlhs == 1, CMD "expected no output, nlhs = " << nlhs );
     MEX_ASSERT( nrhs == 1, CMD "expected 1 input, nrhs = " << nrhs );
     setScalarInt( arg_out_0, theProblems.size() );
@@ -96,20 +96,28 @@ namespace NLproblem {
     MEX_ASSERT( nlhs == 1, CMD "expected 1 output, nlhs = " << nlhs );
     MEX_ASSERT( nrhs == 2, CMD "expected 2 input, nrhs = " << nrhs );
 
-    int_type n;
+    integer n;
     if ( mxIsChar(arg_in_1) ) {
-      string name = mxArrayToString(arg_in_2);
-      n = theProblemsMap[name];
+      string name = mxArrayToString(arg_in_1);
+      try {
+        n = theProblemsMap.at(name);
+      } catch ( ... ) {
+        n = -1;
+      }
       ++n;
+      MEX_ASSERT(
+        n > 0 && n <= integer(theProblems.size()),
+        CMD "name = " << name << " cant find"
+      );
     } else {
-      n = int_type( getInt( arg_in_1, CMD "error in get name_or_number" ) );
+      n = integer( getInt( arg_in_1, CMD "error in get name_or_number" ) );
+      MEX_ASSERT(
+        n > 0 && n <= integer(theProblems.size()),
+        CMD "number = " << n << " out of range"
+      );
     }
 
-    MEX_ASSERT(
-      n > 0 && n <= int_type(theProblems.size()),
-      CMD "name_or_number = " << n << " out of range"
-    );
-
+    mexPrintf( "Selected test N.%d:%s\n", n, theProblems[n-1]->title().c_str() );
     setScalarInt( arg_out_0, n );
     #undef CMD
   }
@@ -125,11 +133,11 @@ namespace NLproblem {
 
     #define CMD "NLtestMexWrapper('listall'): "
     MEX_ASSERT( nlhs == 1, CMD "expected 1 output, nlhs = " << nlhs );
-    int_type nprb = int_type(theProblems.size());
+    integer nprb = integer(theProblems.size());
     arg_out_0 = mxCreateCellMatrix( 1, nprb );
 
     // Fill cell matrix with input arguments
-    for( int_type i = 0;  i < nprb; ++i )
+    for( integer i = 0;  i < nprb; ++i )
       mxSetCell( arg_out_0, i, mxCreateString( theProblems[i]->title().c_str() ) );
     #undef CMD
   }
@@ -144,10 +152,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('evalF',ntest,...): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -173,7 +181,7 @@ namespace NLproblem {
       real_type * f = createMatrixValue( arg_out_0, dimx, 1 );
       std::copy_n( F.data(), dimx, f );
     } else if ( nrhs == 4 ) {
-      int_type  k  = int_type( getInt( arg_in_3, CMD "error in reading k") );
+      integer  k  = integer( getInt( arg_in_3, CMD "error in reading k") );
       real_type Fk = PRB -> evalFk( X, k );
       setScalarValue( arg_out_0, Fk );
     } else {
@@ -192,10 +200,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('pattern',ntest): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
 
@@ -204,8 +212,8 @@ namespace NLproblem {
     MEX_ASSERT( nlhs == 1, CMD "expected 1 output, nlhs = " << nlhs );
     MEX_ASSERT( nrhs == 2, CMD "expected 2 input, nrhs = " << nrhs );
 
-    int_type n   = PRB->numEqns();
-    int_type nnz = PRB->jacobianNnz();
+    integer n   = PRB->numEqns();
+    integer nnz = PRB->jacobianNnz();
 
     mxArray *args[5];
 
@@ -218,9 +226,9 @@ namespace NLproblem {
     ivec_t II(nnz), JJ(nnz);
     PRB->jacobianPattern( II, JJ );
 
-    for ( int_type i = 0; i < nnz; ++i ) {
-      int_type ii = I[i] = II(i)+1; // C to FORTRAN address
-      int_type jj = J[i] = JJ(i)+1;
+    for ( integer i = 0; i < nnz; ++i ) {
+      integer ii = I[i] = II(i)+1; // C to FORTRAN address
+      integer jj = J[i] = JJ(i)+1;
       MEX_ASSERT(
         ii > 0 && ii <= n &&  jj > 0 && jj <=  n,
         CMD "idx = " << i << " (i,j) = (" << ii << "," << jj << ") out of range"
@@ -246,10 +254,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('evalJF',ntest,...): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -269,8 +277,8 @@ namespace NLproblem {
 
     MEX_ASSERT( dimx == PRB->numEqns(), CMD "bad size(x) = " << dimx );
 
-    int_type n   = PRB->numEqns();
-    int_type nnz = PRB->jacobianNnz();
+    integer n   = PRB->numEqns();
+    integer nnz = PRB->jacobianNnz();
 
     mxArray *args[5];
 
@@ -285,9 +293,9 @@ namespace NLproblem {
     PRB->jacobianPattern( II, JJ );
     PRB->jacobian( X, VV );
 
-    for ( int_type i = 0; i < nnz; ++i ) {
-      int_type ii = I[i] = II(i)+1; // C to FORTRAN address
-      int_type jj = J[i] = JJ(i)+1;
+    for ( integer i = 0; i < nnz; ++i ) {
+      integer ii = I[i] = II(i)+1; // C to FORTRAN address
+      integer jj = J[i] = JJ(i)+1;
       MEX_ASSERT(
         ii > 0 && ii <= n &&  jj > 0 && jj <=  n,
         CMD "idx = " << i << " (i,j) = (" << ii << "," << jj << ") out of range"
@@ -312,10 +320,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('evalJF',ntest,...): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -342,10 +350,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('numGuess',ntest): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -364,10 +372,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('guess',ntest,...): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -379,7 +387,7 @@ namespace NLproblem {
     MEX_ASSERT( nlhs == 1, CMD "expected 1 output, nlhs = " << nlhs );
     MEX_ASSERT( nrhs == 3, CMD "expected 3 input, nrhs = " << nrhs );
 
-    int_type idx = int_type( getInt( arg_in_2, CMD "error in reading n" ) );
+    integer idx = integer( getInt( arg_in_2, CMD "error in reading n" ) );
 
     MEX_ASSERT(
       idx > 0 && idx <= PRB->numInitialPoint(),
@@ -404,10 +412,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('numExact',ntest): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -426,10 +434,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('exact',ntest,...): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -441,7 +449,7 @@ namespace NLproblem {
     MEX_ASSERT( nlhs == 1, CMD "expected 1 output, nlhs = " << nlhs );
     MEX_ASSERT( nrhs == 3, CMD "expected 3 input, nrhs = " << nrhs );
 
-    int_type idx  = int_type( getInt( arg_in_2, CMD "error in reading n") );
+    integer idx  = integer( getInt( arg_in_2, CMD "error in reading n") );
 
     MEX_ASSERT(
       idx > 0 && idx <= PRB->numExactSolution(),
@@ -466,10 +474,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('bbox',ntest): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
 
@@ -499,10 +507,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('check',ntest,...): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
     #undef CMD
@@ -549,10 +557,10 @@ namespace NLproblem {
   ) {
 
     #define CMD "NLtestMexWrapper('name',ntest): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
 
@@ -573,10 +581,10 @@ namespace NLproblem {
     int nrhs, mxArray const *prhs[]
   ) {
     #define CMD "NLtestMexWrapper('bibtex',ntest): "
-    int_type ntest = int_type( getInt( arg_in_1, CMD "error in reading ntest ") );
+    integer ntest = integer( getInt( arg_in_1, CMD "error in reading ntest ") );
 
     MEX_ASSERT(
-      ntest > 0 && ntest <= int_type(theProblems.size()),
+      ntest > 0 && ntest <= integer(theProblems.size()),
       CMD "ntest = " << ntest << " out of range"
     );
 
@@ -597,7 +605,7 @@ namespace NLproblem {
   static std::map<std::string,DO_CMD> cmd_to_fun = {
     {"new",do_new},
     {"delete",do_delete},
-    {"numTest",do_numTest},
+    {"numberOfTests",do_numberOfTests},
     {"select",do_select},
     {"listall",do_listall},
     {"evalF",do_evalF},

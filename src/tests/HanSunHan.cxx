@@ -32,14 +32,14 @@ public:
       2
     )
   {
-    for ( int_type i = 0; i < 99; ++i ) {
+    for ( integer i = 0; i < 99; ++i ) {
       real_type arg = (i+1) / 100.0;
       rr[i] = pow(-50.0*log(arg),2.0/3.0) + 25.0;
     }
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -55,7 +55,7 @@ public:
     f(1) = (2 * t1 * x(1)) + 2 * x(1) * t12;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -80,20 +80,20 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 5;
     x(1) = 3;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

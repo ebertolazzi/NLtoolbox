@@ -33,7 +33,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type res = 0;
     switch ( i ) {
     case 0: res = 3*x(0)-cos(x(1)*x(2))-0.5;             break;
@@ -50,14 +50,14 @@ public:
     f(2) = exp(-x(0)*x(1))+20*x(2)+(10*m_pi-3)/3;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 8;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
@@ -72,7 +72,7 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     real_type x0 = x(0);
     real_type x1 = x(1);
     real_type x2 = x(2);
@@ -88,19 +88,19 @@ public:
     jac(kk++) = 20;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0.4999816893677071161061094979125234746691;
     x(1) = -0.1999926757470828464424437991650093898676e-1;
     x(2) = -0.5241012469638837054562573412192983462072;
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
     case 0:
       x(0) = x(1) = x(2) = 1;
@@ -116,7 +116,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 3; }
 
@@ -151,7 +151,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type idx ) const override {
+  evalFk( dvec_t const & x, integer idx ) const override {
     real_type res = x(idx)*(3-2*x(idx))+1+x(49)/2;
     switch ( idx ) {
     case 0:
@@ -172,14 +172,14 @@ public:
     f = x.array()*(3-2*x.array())+1+x(49)/2;
     f(0)  -= 2*x(1);
     f(99) -= x(98);
-    for ( int_type idx = 1; idx < 99; ++idx )
+    for ( integer idx = 1; idx < 99; ++idx )
       f(idx) -= 2*x(idx+1)+x(idx-1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 6;
-    for ( int_type idx = 1; idx < 99; ++idx ) {
+    integer kk = 6;
+    for ( integer idx = 1; idx < 99; ++idx ) {
       kk += 3;
       if ( idx == 48 ) continue;
       if ( idx == 49 ) continue;
@@ -191,12 +191,12 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
     SETIJ(0,49);
-    for ( int_type idx = 1; idx < 99; ++idx ) {
+    for ( integer idx = 1; idx < 99; ++idx ) {
       SETIJ(idx,idx-1);
       SETIJ(idx,idx);
       SETIJ(idx,idx+1);
@@ -213,11 +213,11 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 3-4*x(0);
     jac(kk++) = -2;
     jac(kk++) = 0.5;
-    for ( int_type idx = 1; idx < 99; ++idx ) {
+    for ( integer idx = 1; idx < 99; ++idx ) {
       jac(kk++) = -1;
       jac(kk++) = 3-4*x(idx);
       jac(kk++) = -2;
@@ -236,16 +236,16 @@ public:
     jac(kk++) = 3-4*x(99);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     x.resize(n);
     switch ( idx ) {
     case 0:
@@ -263,7 +263,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 4; }
 
@@ -298,7 +298,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type idx ) const override {
+  evalFk( dvec_t const & x, integer idx ) const override {
     real_type res = 1-x(99)+0.5*x(98)-x(97)-x(96)+3*x(95)+x(idx)*(3-2*x(idx));
     switch ( idx ) {
     case 0:
@@ -319,14 +319,14 @@ public:
     f = 1-x(99)+0.5*x(98)-x(97)-x(96)+3*x(95)+x.array()*(3-2*x.array());
     f(0)  -= 2*x(1);
     f(99) -= x(98);
-    for ( int_type idx = 1; idx < 99; ++idx )
+    for ( integer idx = 1; idx < 99; ++idx )
       f(idx) -= 2*x(idx+1)+x(idx-1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 0;
-    for ( int_type idx = 0; idx < 100; ++idx ) {
+    integer kk = 0;
+    for ( integer idx = 0; idx < 100; ++idx ) {
       kk += 5;
       if ( idx == 0 ) {
         kk += 2;
@@ -343,9 +343,9 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type idx = 0; idx < 100; ++idx ) {
+    for ( integer idx = 0; idx < 100; ++idx ) {
       SETIJ(idx,95);
       SETIJ(idx,96);
       SETIJ(idx,97);
@@ -370,8 +370,8 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type idx = 0; idx < 100; ++idx ) {
+    integer kk = 0;
+    for ( integer idx = 0; idx < 100; ++idx ) {
       jac(kk++) = 3;    // 95
       jac(kk++) = -1;   // 96
       jac(kk++) = -1;   // 97
@@ -411,16 +411,16 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     x.resize(n);
     switch ( idx ) {
     case 0:
@@ -438,7 +438,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 4; }
 
@@ -475,7 +475,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type idx ) const override {
+  evalFk( dvec_t const & x, integer idx ) const override {
     real_type res = (3-h*x(idx))*x(idx)+1;
     switch ( idx ) {
     case 0:
@@ -496,25 +496,25 @@ public:
     f      = (3-h*x.array())*x.array()+1;
     f(0)  -= 2*x(1);
     f(99) -= x(98);
-    for ( int_type idx = 1; idx < 99; ++idx )
+    for ( integer idx = 1; idx < 99; ++idx )
       f(idx) -= 2*x(idx+1)+x(idx-1);
     f = f.array()*f.array();
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 4;
-    for ( int_type idx = 1; idx < 99; ++idx ) kk += 3;
+    integer kk = 4;
+    for ( integer idx = 1; idx < 99; ++idx ) kk += 3;
     return kk;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
-    for ( int_type idx = 1; idx < 99; ++idx ) {
+    for ( integer idx = 1; idx < 99; ++idx ) {
       SETIJ(idx,idx-1);
       SETIJ(idx,idx);
       SETIJ(idx,idx+1);
@@ -526,12 +526,12 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     real_type tmp   = (3-h*x(0))*x(0)-2*x(1)+1;
     real_type tmp_1 = 3-2*h*x(0);
     jac(kk++) = 2*tmp*tmp_1;
     jac(kk++) = -4*tmp;
-    for ( int_type idx = 1; idx < 99; ++idx ) {
+    for ( integer idx = 1; idx < 99; ++idx ) {
       tmp   = (3-h*x(idx))*x(idx)-x(idx-1)-2*x(idx+1)+1;
       tmp_1 = 3-2*h*x(idx);
       jac(kk++) = -2*tmp;
@@ -544,16 +544,16 @@ public:
     jac(kk++) = 2*tmp*tmp_1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     x.resize(n);
     switch ( idx ) {
     case 0:
@@ -577,7 +577,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 6; }
 

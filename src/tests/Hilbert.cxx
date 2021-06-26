@@ -15,7 +15,7 @@
 class Hilbert : public nonlinearSystem {
 public:
 
-  Hilbert( int_type n )
+  Hilbert( integer n )
   : nonlinearSystem(
       "Hilbert Matrix Function F = x'Ax",
       "@book{brent2013,\n"
@@ -31,60 +31,60 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type f = 0;
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       f += (2.0 * x(k)) / ( k + j + 1 );
     return f;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       f(i) = 0;
-      for ( int_type j = 0; j < n; ++j ) {
+      for ( integer j = 0; j < n; ++j ) {
         f(i) += (2.0 * x(j)) / ( i + j + 1 );
       }
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = 0; j < n; ++j ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = 0; j < n; ++j ) {
         jac(kk++) = 2.0 / ( i + j + 1 );
       }
     }
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.setZero();
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

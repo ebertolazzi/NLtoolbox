@@ -31,7 +31,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -56,13 +56,13 @@ public:
 
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 10; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I-1; jj(kk) = J-1; ++kk
 
     SETIJ(1,1);
@@ -105,33 +105,33 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 1;
     x(2) = 1;
     x(3) = 1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0.5;
     x(1) = 1.0;
     x(2) = -0.5;
     x(3) = -1.0;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 10000, "x[" << i << "] = "<< x(i) << " too big");
+    //  UTILS_ASSERT( abs(x(i)) < 10000, "x[" << i << "] = "<< x(i) << " too big");
   }
 
 };

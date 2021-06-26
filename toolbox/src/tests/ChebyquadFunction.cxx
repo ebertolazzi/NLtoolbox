@@ -19,7 +19,7 @@ class ChebyquadFunction : public nonlinearSystem {
 
 public:
   // Only the values N = 1, 2, 3, 4, 5, 6, 7 and 9 may be used.
-  ChebyquadFunction( int_type dim )
+  ChebyquadFunction( integer dim )
   : nonlinearSystem(
       "Chebyquad function",
       "@article {Fletcher:1965,\n"
@@ -44,9 +44,9 @@ public:
       dim
     )
   {
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       dim > 0 && dim < 10,
-      "ChebyquadFunction:: dimension n = " << dim << " must be on [1,2,...,8]"
+      "ChebyquadFunction:: dimension n = {} must be on [1,2,...,8]", dim
     );
   }
 
@@ -54,7 +54,7 @@ public:
   Chebyshev( real_type x ) const {
     T[0] = 1;
     T[1] = 2*x-1;
-    for ( int_type j=1; j < n; ++j )
+    for ( integer j=1; j < n; ++j )
       T[j+1] = 2*x*T[j]-T[j-1];
   }
 
@@ -64,16 +64,16 @@ public:
     T[1]  = 2*x-1;
     dT[0] = 0;
     dT[1] = 2;
-    for ( int_type j=1; j < n; ++j ) {
+    for ( integer j=1; j < n; ++j ) {
       T[j+1]  = 2*x*T[j] - T[j-1];
       dT[j+1] = 2*x*dT[j] - dT[j-1] + 2*T[j];
     }
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type f = 0;
-    for ( int_type j = 0; j < n; ++j ) {
+    for ( integer j = 0; j < n; ++j ) {
       Chebyshev( x(j) );
       f += T[k+1];
     }
@@ -84,42 +84,42 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k ) f(k) = 0;
-    for ( int_type j = 0; j < n; ++j ) {
+    for ( integer k = 0; k < n; ++k ) f(k) = 0;
+    for ( integer j = 0; j < n; ++j ) {
       Chebyshev( x(j) );
-      for ( int_type i = 0; i < n; ++i )
+      for ( integer i = 0; i < n; ++i )
         f(i) += T[i+1];
     }
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
       f(k) /= real_type(n);
       if ( (k%2) == 1 ) f(k) += 1.0/(power2(k+1)-1);
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0;
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type j = 0; j < n; ++j ) {
+    integer kk = 0;
+    for ( integer j = 0; j < n; ++j ) {
       Chebyshev_D( x(j) );
-      for ( int_type i = 0; i < n; ++i )
+      for ( integer i = 0; i < n; ++i )
         jac(kk++) = dT[i+1]/n;
     }
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     switch (n) {
     case 1:
       x << 0.5;
@@ -154,32 +154,32 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     if ( n < 10 && n > 0 && n != 8 ) return 1;
     return 0;
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; ++i ) {
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; ++i ) {
       real_type s = (i+1)/real_type(n+1);
       x(i) = s;
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    //for ( int_type i = 0; i < n; ++i )
-    //  NONLIN_ASSERT(:abs(x(i)) < 5000, "x range" );
+    //for ( integer i = 0; i < n; ++i )
+    //  UTILS_ASSERT(:abs(x(i)) < 5000, "x range" );
   }
 
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
-    //for ( int_type i = 0; i < n; ++i )
+    //for ( integer i = 0; i < n; ++i )
     //  { U[i] = 5000; L[i] = -5000; }
     U.fill(real_max);
     L.fill(-real_max);

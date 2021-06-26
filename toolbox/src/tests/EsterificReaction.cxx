@@ -32,7 +32,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type X  = x(0);
     real_type Y  = x(1);
     real_type t1 = 0.125E1*X;
@@ -66,7 +66,7 @@ public:
                    * (0.11526E3*t12-0.225E3*Y-0.125E3*X-0.61177E2);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -124,12 +124,12 @@ public:
                     - t89*(t90+0.9076725E3*t11-0.78342222E3*t16-0.225E3);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 4; }
 
   void
-  getExactSolution( dvec_t & x ,int_type idx ) const override {
+  getExactSolution( dvec_t & x ,integer idx ) const override {
     static real_type const s0[2] = {61.15373203, 6.976291975};
     static real_type const s1[2] = {67.09266777, 7.614805557};
     static real_type const s2[2] = {20.85605925, -24.33016974};
@@ -143,11 +143,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = x(1) = 20;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

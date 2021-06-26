@@ -39,7 +39,7 @@
 class StrictlyConvexFunction1 : public nonlinearSystem {
 public:
 
-  StrictlyConvexFunction1( int_type neq )
+  StrictlyConvexFunction1( integer neq )
   : nonlinearSystem(
       "Strictly Convex Function 1",
       STRICT_CONVEX_FUNCTION_BIBTEX,
@@ -48,48 +48,48 @@ public:
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     return exp(x(i))-1;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       f(i) = exp(x(i))-1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; ++i ) { SETIJ(i,i); }
+    for ( integer i = 0; i < n; ++i ) { SETIJ(i,i); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    for ( int_type i = 0; i < n; ++i ) jac(i) = exp(x(i));
+    for ( integer i = 0; i < n; ++i ) jac(i) = exp(x(i));
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; ++i ) x(i) = (i+1.0)/n;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; ++i ) x(i) = (i+1.0)/n;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -106,7 +106,7 @@ public:
 class StrictlyConvexFunction2 : public nonlinearSystem {
 public:
 
-  StrictlyConvexFunction2( int_type neq )
+  StrictlyConvexFunction2( integer neq )
   : nonlinearSystem(
       "Strictly Convex Function 2",
       STRICT_CONVEX_FUNCTION_BIBTEX,
@@ -115,49 +115,49 @@ public:
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     return ((i+1.0)/10.0)*(exp(x(i))-1);
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       f(i) = ((i+1.0)/10.0)*(exp(x(i))-1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; ++i ) { SETIJ(i,i); }
+    for ( integer i = 0; i < n; ++i ) { SETIJ(i,i); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       jac(i) = ((i+1.0)/10.0)*exp(x(i));
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; ++i ) x(i) = 1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; ++i ) x(i) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

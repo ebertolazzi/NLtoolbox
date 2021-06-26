@@ -15,7 +15,7 @@
 class ComplementaryFunction : public nonlinearSystem {
 public:
 
-  ComplementaryFunction( int_type neq)
+  ComplementaryFunction( integer neq)
   : nonlinearSystem(
       "Complementary Function",
       "@article{LaCruz:2006,\n"
@@ -45,10 +45,10 @@ public:
   { checkEven(n,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     if ( k == n-1 ) {
       real_type sum = 0;
-      for ( int_type i = 0; i < n; ++i ) sum += x(i)*x(i);
+      for ( integer i = 0; i < n; ++i ) sum += x(i)*x(i);
       return (sum/n-1)/4;
     } else {
       return sqrt(1e-5)*(x(k)-1);
@@ -57,7 +57,7 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; i += 2 ) {
+    for ( integer i = 0; i < n; i += 2 ) {
       real_type t1 = x(i)*x(i);
       real_type t2 = exp(x(i));
       real_type t4 = 1.0/n;
@@ -65,7 +65,7 @@ public:
       real_type t8 = sqrt(t1+t6);
       f(i) = t8-(t2+1.0)*x(i)+t4;
     }
-    for ( int_type i = 1; i < n; i += 2 ) {
+    for ( integer i = 1; i < n; i += 2 ) {
       real_type t1 = x(i)*x(i);
       real_type t3 = sin(x(i));
       real_type t4 = exp(x(i));
@@ -75,21 +75,21 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 2 ) { ii(kk) = jj(kk) = i; ++kk; }
-    for ( int_type i = 1; i < n; i += 2 ) { ii(kk) = jj(kk) = i; ++kk; }
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 2 ) { ii(kk) = jj(kk) = i; ++kk; }
+    for ( integer i = 1; i < n; i += 2 ) { ii(kk) = jj(kk) = i; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 2 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 2 ) {
       real_type t1 = x(i)*x(i);
       real_type t2 = exp(x(i));
       real_type t3 = t2*x(i);
@@ -98,7 +98,7 @@ public:
       real_type t8 = sqrt(t1+t6);
       jac(kk++) = (x(i)+(t2+t3)*t5)/t8-1.0-t2-t3;
     }
-    for ( int_type i = 1; i < n; i += 2 ) {
+    for ( integer i = 1; i < n; i += 2 ) {
       real_type t1 = x(i)*x(i);
       real_type t3 = sin(x(i));
       real_type t4 = exp(x(i));
@@ -111,19 +111,19 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(0.5);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

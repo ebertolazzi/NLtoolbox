@@ -18,7 +18,7 @@ class GheriMancino : public nonlinearSystem {
 public:
 
   // sum log(xi-2)^2+log(xi-10)^2 - prod( xi) ^(1/5)
-  GheriMancino( int_type neq )
+  GheriMancino( integer neq )
   : nonlinearSystem(
       "Gheri-Mancino function",
       "@Article{Gheri1971,\n"
@@ -41,19 +41,19 @@ public:
   }
 
   real_type
-  zfun( int_type i, int_type j, dvec_t const & x ) const {
+  zfun( integer i, integer j, dvec_t const & x ) const {
     return sqrt( x(j)*x(j)+(i+1.0)/(j+1.0) );
   }
 
   real_type
-  zfun_1( int_type i, int_type j, dvec_t const & x ) const {
+  zfun_1( integer i, integer j, dvec_t const & x ) const {
     return x(j)/sqrt( x(j)*x(j)+(i+1.0)/(j+1.0) );
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type f = beta*n*x(i) + pow(i+1-0.5*n,gamma);
-    for ( int_type j = 0; j < n; ++j ) {
+    for ( integer j = 0; j < n; ++j ) {
       if ( i != j ) {
         real_type zij = zfun(i,j,x);
         real_type lij = log(zij);
@@ -67,9 +67,9 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       f(i) = beta*n*x(i) + pow(i+1-0.5*n,gamma);
-      for ( int_type j = 0; j < n; ++j ) {
+      for ( integer j = 0; j < n; ++j ) {
         if ( i != j ) {
           real_type zij = zfun(i,j,x);
           real_type lij = log(zij);
@@ -81,23 +81,23 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = 0; j < n; ++j ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = 0; j < n; ++j ) {
         if ( i != j ) {
           real_type zij   = zfun(i,j,x);
           real_type zij_1 = zfun_1(i,j,x);
@@ -115,20 +115,20 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     real_type c = beta*n-(alpha+1)*(n-1);
     real_type k = beta*n+(alpha+1)*(n-1);
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       x(i) = (i+0.5*n) * gamma;
-      for ( int_type j = 0; j < n; ++j ) {
+      for ( integer j = 0; j < n; ++j ) {
         if ( i != j ) {
           real_type zij = sqrt( (i+1.0)/(j+1.0) );
           x(i) += zij*(pow( sin(log(zij)), alpha ) +
@@ -140,7 +140,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

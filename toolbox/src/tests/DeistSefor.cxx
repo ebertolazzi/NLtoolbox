@@ -47,58 +47,58 @@ public:
   real_type csc2( real_type x ) const { return 1/power2(sin(x)); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type f = 0;
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       if ( i != j ) f += cot(beta[i]*x(j));
     return f;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       f(i) = 0;
-      for ( int_type j = 0; j < n; ++j )
+      for ( integer j = 0; j < n; ++j )
         if ( i != j ) f(i) += cot(beta[i]*x(j));
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*(n-1); }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         if ( i != j )
           { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = 0; j < n; ++j )
         if ( i != j )
           jac(kk++) = -beta[i]/power2(sin(beta[i]*x(j)));
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numInitialPoint() const override { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(75);
   }
 

@@ -15,7 +15,7 @@
 class DiagonalFunctionMulQO : public nonlinearSystem {
 public:
 
-  DiagonalFunctionMulQO( int_type neq)
+  DiagonalFunctionMulQO( integer neq)
   : nonlinearSystem(
       "Diagonal Functions Multiplied by quasi-orthogonal matrix",
       "@article{Gasparo:2000,\n"
@@ -34,8 +34,8 @@ public:
   { checkThree(n,3); }
 
   real_type
-  evalFk( dvec_t const & X, int_type i ) const override {
-    int_type i3 = i/3;
+  evalFk( dvec_t const & X, integer i ) const override {
+    integer i3 = i/3;
     real_type x0 = X(i3*3+0);
     real_type x1 = X(i3*3+1);
     real_type x2 = X(i3*3+2);
@@ -49,7 +49,7 @@ public:
 
   void
   evalF( dvec_t const & X, dvec_t & F ) const override {
-    for ( int_type i = 0; i < n; i += 3 ) {
+    for ( integer i = 0; i < n; i += 3 ) {
       real_type x0 = X(i+0);
       real_type x1 = X(i+1);
       real_type x2 = X(i+2);
@@ -59,16 +59,16 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; i += 3 ) {
+    for ( integer i = 0; i < n; i += 3 ) {
       SETIJ(i+0,i+0);
       SETIJ(i+0,i+1);
 
@@ -83,8 +83,8 @@ public:
 
   void
   jacobian( dvec_t const & X, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 3 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 3 ) {
       real_type x0 = X(i+0);
       real_type x1 = X(i+1);
       real_type x2 = X(i+2);
@@ -100,24 +100,24 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & X, int_type ) const override {
+  getExactSolution( dvec_t & X, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & X, int_type ) const override {
-    for ( int_type i = 0; i < n; i += 3 ) {
+  getInitialPoint( dvec_t & X, integer ) const override {
+    for ( integer i = 0; i < n; i += 3 ) {
       X(i+0) = -1;
       X(i+1) = 0.5;
       X(i+2) = -1;
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

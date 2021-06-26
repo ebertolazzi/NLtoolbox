@@ -31,7 +31,7 @@
 class TrigonometricExponentialSystem1 : public nonlinearSystem {
 public:
   
-  TrigonometricExponentialSystem1( int_type neq )
+  TrigonometricExponentialSystem1( integer neq )
   : nonlinearSystem(
       "Trigonometric Exponential System prob 1",
       TRIGONOMETRIC_EXPONENTIAL_BIBTEX,
@@ -39,33 +39,33 @@ public:
   { checkEven(n,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     if ( (i%2) == 0 ) return 3*power3(x(i))+2*x(i+1)-5 + sin(x(i)-x(i+1))*sin(x(i)+x(i+1));
     return -x(i-1)*exp(x(i-1)-x(i)) + 4*x(i)-3;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; i+=2 )
+    for ( integer i = 0; i < n; i+=2 )
       f(i) = 3*power3(x(i))+2*x(i+1)-5 + sin(x(i)-x(i+1))*sin(x(i)+x(i+1));
-    for ( int_type i = 1; i < n; i+=2 )
+    for ( integer i = 1; i < n; i+=2 )
       f(i) = -x(i-1)*exp(x(i-1)-x(i)) + 4*x(i)-3;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; i+=2 ) {
+    for ( integer i = 0; i < n; i+=2 ) {
       SETIJ(i,i);
       SETIJ(i,i+1);
     }
-    for ( int_type i = 1; i < n; i+=2 ) {
+    for ( integer i = 1; i < n; i+=2 ) {
       SETIJ(i,i);
       SETIJ(i,i-1);
     }
@@ -74,38 +74,38 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i+=2 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i+=2 ) {
       jac(kk++) = 9*power2(x(i)) + sin(2*x(i));
       jac(kk++) = 2 - sin(2*x(i+1));
     }
-    for ( int_type i = 1; i < n; i+=2 ) {
+    for ( integer i = 1; i < n; i+=2 ) {
       jac(kk++) = x(i-1)*exp(x(i-1)-x(i)) + 4;
       jac(kk++) = -(x(i-1)+1)*exp(x(i-1)-x(i));
     }
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = 0;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = 0;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( abs(x(i)) < 100, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( abs(x(i)) < 100, "Bad range" );
   }
 
   void
@@ -123,7 +123,7 @@ public:
 class TrigonometricExponentialSystem2 : public nonlinearSystem {
 public:
   
-  TrigonometricExponentialSystem2( int_type neq )
+  TrigonometricExponentialSystem2( integer neq )
   : nonlinearSystem(
       "Trigonometric Exponential System prob 2",
       TRIGONOMETRIC_EXPONENTIAL_BIBTEX,
@@ -132,7 +132,7 @@ public:
   { checkOdd(n,6); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(i);
@@ -144,10 +144,10 @@ public:
          + 2*x(1)-5
          + sin( x(0)-x(1)-x(2) )*sin( x(0)+x(1)-x(2) );
 
-    for ( int_type i = 1; i < n-1; i += 2 )
+    for ( integer i = 1; i < n-1; i += 2 )
       f(i) = (x(i+1)-x(i-1))*exp(x(i-1)-x(i)-x(i+1))+4*x(i) - 3;
 
-    for ( int_type i = 2; i < n-1; i += 2 )
+    for ( integer i = 2; i < n-1; i += 2 )
       f(i) = 3*power3(x(i)-x(i+2)) + 6*power3(x(i)-x(i-2)) +
              2*x(i+1)-4*x(i-1)+5
              -2*sin( x(i-2)-x(i-1)-x(i) )*sin( x(i-2)+x(i-1)-x(i) )
@@ -158,29 +158,29 @@ public:
              - 2*sin( x(n-3)-x(n-2)-x(n-1) )*sin( x(n-3)+x(n-2)-x(n-1) );
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 6;
-    for ( int_type i = 1; i < n-1; i += 2 ) kk += 3;
-    for ( int_type i = 2; i < n-1; i += 2 ) kk += 5;
+    integer kk = 6;
+    for ( integer i = 1; i < n-1; i += 2 ) kk += 3;
+    for ( integer i = 2; i < n-1; i += 2 ) kk += 5;
     return kk;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
     SETIJ(0,2);
 
-    for ( int_type i = 1; i < n-1; i += 2 ) {
+    for ( integer i = 1; i < n-1; i += 2 ) {
       SETIJ(i,i-1);
       SETIJ(i,i);
       SETIJ(i,i+1);
     }
 
-    for ( int_type i = 2; i < n-1; i += 2 ) {
+    for ( integer i = 2; i < n-1; i += 2 ) {
       SETIJ(i,i-2);
       SETIJ(i,i-1);
       SETIJ(i,i-0);
@@ -196,12 +196,12 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 9*power2(x(0)-x(2))+sin(2*(x(0)-x(2)));
     jac(kk++) = 2-sin(2*x(1));
     jac(kk++) = -9*power2(x(0)-x(2))-sin(2*(x(0)-x(2)));
 
-    for ( int_type i = 1; i < n-1; i += 2 ) {
+    for ( integer i = 1; i < n-1; i += 2 ) {
       real_type ex = exp(x(i-1)-x(i)-x(i+1));
       real_type tp = x(i+1)-x(i-1)-1;
       jac(kk++) = tp*ex;
@@ -209,7 +209,7 @@ public:
       jac(kk++) = -tp*ex;
     }
 
-    for ( int_type i = 2; i < n-1; i += 2 ) {
+    for ( integer i = 2; i < n-1; i += 2 ) {
       jac(kk++) = 2*sin(2*(x(i)-x(i-2)))-18*power2(x(i)-x(i-2));
       jac(kk++) = -4+2*sin(2*x(i-1));
       jac(kk++) = sin(2*(x(i)-x(i+2)))-2*sin(2*(x(i)-x(i-2)))
@@ -228,26 +228,26 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = 1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( abs(x(i)) < 100, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( abs(x(i)) < 100, "Bad range" );
   }
 
   void
@@ -266,7 +266,7 @@ public:
 class TrigExp : public nonlinearSystem {
 public:
   
-  TrigExp( int_type neq )
+  TrigExp( integer neq )
   : nonlinearSystem(
       "TrigExp",
       "@article{Ruggiero:1992,\n"
@@ -285,7 +285,7 @@ public:
   { checkMinEquations(n,3); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     if ( i == 0 )
       return 3*x(0)*x(0)+2*x(1)-5 + sin(x(0)-x(1))*sin(x(0)+x(1));
     else if ( i == n-1 )
@@ -299,26 +299,26 @@ public:
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0)   = 3*x(0)*x(0)+2*x(1)-5 + sin(x(0)-x(1))*sin(x(0)+x(1));
     f(n-1) = -x(n-2)*exp(x(n-1)-x(n-2)) + 4*x(n-1)-3;
-    for ( int_type i = 1; i < n-1; ++i )
+    for ( integer i = 1; i < n-1; ++i )
       f(i) = -x(i-1)*exp(x(i-1)-x(i))
              + x(i)*(4+3*x(i)*x(i))+2*x(i+1)
              + sin(x(i)-x(i+1))*sin(x(i)+x(i+1));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
     SETIJ(n-1,n-1);
     SETIJ(n-1,n-2);
-    for ( int_type i = 1; i < n-1; ++i ) {
+    for ( integer i = 1; i < n-1; ++i ) {
       SETIJ(i,i-1);
       SETIJ(i,i);
       SETIJ(i,i+1);
@@ -328,14 +328,14 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 6*x(0) + cos(x(0)-x(1))*sin(x(0)+x(1))
               + sin(x(0)-x(1))*cos(x(0)+x(1));
     jac(kk++) = 2 - cos(x(0)-x(1))*sin(x(0)+x(1))
               + sin(x(0)-x(1))*cos(x(0)+x(1));
     jac(kk++) = 4 - x(n-2)*exp(x(n-1)-x(n-2));
     jac(kk++) = (x(n-2)-1)*exp(x(n-1)-x(n-2));
-    for ( int_type i = 1; i < n-1; ++i ) {
+    for ( integer i = 1; i < n-1; ++i ) {
       jac(kk++) = -(1+x(i-1))*exp(x(i-1)-x(i));
       jac(kk++) = x(i-1)*exp(x(i-1)-x(i))+9*x(i)*x(i)+4
                 + cos(x(i)-x(i+1))*sin(x(i)+x(i+1))
@@ -346,36 +346,36 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
   
   void
-  getInitialPoint( dvec_t & x, int_type ini ) const override {
+  getInitialPoint( dvec_t & x, integer ini ) const override {
     switch( ini ) {
     case 0:
-      for ( int_type k = 0; k < n; ++k ) x(k) = 1 / real_type(n);
+      for ( integer k = 0; k < n; ++k ) x(k) = 1 / real_type(n);
       break;
     case 1:
-      for ( int_type k = 0; k < n; ++k ) x(k) = 0;
+      for ( integer k = 0; k < n; ++k ) x(k) = 0;
       break;
     case 2:
-      for ( int_type k = 0; k < n; ++k ) x(k) = 0.3;
+      for ( integer k = 0; k < n; ++k ) x(k) = 0.3;
       break;
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 3; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( abs(x(i)) < 1000, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( abs(x(i)) < 1000, "Bad range" );
   }
 
   void

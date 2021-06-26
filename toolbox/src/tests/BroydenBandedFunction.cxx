@@ -13,8 +13,8 @@
 \*/
 
 class BroydenBandedFunction : public nonlinearSystem {
-  int_type const ml;
-  int_type const mu;
+  integer const ml;
+  integer const mu;
 public:
   
   BroydenBandedFunction()
@@ -46,11 +46,11 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
-  	int_type k1 = max(0,  k-ml);
-    int_type k2 = min(n-1,k+mu);
+  evalFk( dvec_t const & x, integer k ) const override {
+  	integer k1 = max(0,  k-ml);
+    integer k2 = min(n-1,k+mu);
     real_type temp = 0;
-    for ( int_type j = k1; j <= k2; ++j ) {
+    for ( integer j = k1; j <= k2; ++j ) {
       if ( j != k ) temp += x(j)*(1+x(j));
     }
     return x(k)*(2+5*x(k)*x(k)) + 1 - temp;
@@ -58,24 +58,24 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k ) {
-    	int_type k1 = max(0,  k-ml);
-      int_type k2 = min(n-1,k+mu);
+    for ( integer k = 0; k < n; ++k ) {
+    	integer k1 = max(0,  k-ml);
+      integer k2 = min(n-1,k+mu);
       real_type temp = 0;
-      for ( int_type j = k1; j <= k2; ++j ) {
+      for ( integer j = k1; j <= k2; ++j ) {
         if ( j != k ) temp += x(j)*(1+x(j));
       }
       f(k) = x(k)*(2+5*x(k)*x(k)) + 1 - temp;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type tot = 0;
-    for ( int_type k = 0; k < n; ++k ) {
-      int_type k1 = max(0,  k-ml);
-      int_type k2 = min(n-1,k+mu);
-      for ( int_type j = k1; j <= k2; ++j ) {
+    integer tot = 0;
+    for ( integer k = 0; k < n; ++k ) {
+      integer k1 = max(0,  k-ml);
+      integer k2 = min(n-1,k+mu);
+      for ( integer j = k1; j <= k2; ++j ) {
         if ( j != k ) ++tot;
       }
       ++tot;
@@ -85,11 +85,11 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
-      int_type k1 = max(0,  k-ml);
-      int_type k2 = min(n-1,k+mu);
-      for ( int_type j = k1; j <= k2; ++j ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
+      integer k1 = max(0,  k-ml);
+      integer k2 = min(n-1,k+mu);
+      for ( integer j = k1; j <= k2; ++j ) {
         if ( j != k ) { ii(kk) = k; jj(kk) = j; ++kk; }
       }
       ii(kk) = jj(kk) = k; ++kk;
@@ -98,31 +98,31 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
-    	int_type k1 = max(0,  k-ml);
-      int_type k2 = min(n-1,k+mu);
-      for ( int_type j = k1; j <= k2; ++j ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
+    	integer k1 = max(0,  k-ml);
+      integer k2 = min(n-1,k+mu);
+      for ( integer j = k1; j <= k2; ++j ) {
         if ( j != k ) jac(kk++) = -(1+2*x(j));
       }
       jac(kk++) = 2+15*x(k)*x(k);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = -1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = -1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

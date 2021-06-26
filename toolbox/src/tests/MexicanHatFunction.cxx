@@ -12,22 +12,13 @@
  | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \*/
 
-static
-inline
-string
-ini_msg_MexicanHatFunction( real_type tau ) {
-  char msg[1000];
-  sprintf( msg, "Mexican Hat Function, tau = %g", tau );
-  return string(msg);
-}
-
 class MexicanHatFunction : public nonlinearSystem {
   real_type tau;
 public:
 
   MexicanHatFunction( real_type tau_in )
   : nonlinearSystem(
-      ini_msg_MexicanHatFunction(tau_in),
+      fmt::format( "Mexican Hat Function, tau = {}", tau_in),
       "@article{Grippo:1991,\n"
       "  author  = {Grippo, L. and Lampariello, F. and Lucidi, S.},\n"
       "  title   = {A Class of Nonmonotone Stabilization Methods\n"
@@ -45,7 +36,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -62,7 +53,7 @@ public:
     f(1) = 2*(1-x(1)) + tau*40000.0*t7*t2;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -93,15 +84,15 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
     case 0:
       x(0) = 0.86;
@@ -118,7 +109,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 3; }
 

@@ -15,7 +15,7 @@
 class Function27 : public nonlinearSystem {
 public:
 
-  Function27( int_type neq)
+  Function27( integer neq)
   : nonlinearSystem(
       "Function 27",
       "@article{LaCruz:2003,\n"
@@ -34,7 +34,7 @@ public:
   { checkMinEquations(n,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type f = 0;
     if ( i == 0 ) {
       f = x(0)*x(0);
@@ -48,23 +48,23 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = x(0)*x(0);
-    for ( int_type i = 1; i < n; ++i ) {
+    for ( integer i = 1; i < n; ++i ) {
       f(0) += x(i)*x(i);
       f(i) = -2*x(0)*x(i);
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
-    for ( int_type i = 1; i < n; ++i ) {
+    for ( integer i = 1; i < n; ++i ) {
       SETIJ(0,i);
       SETIJ(i,0);
       SETIJ(i,i);
@@ -74,30 +74,30 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 2*x(0);
-    for ( int_type i = 1; i < n; ++i ) {
+    for ( integer i = 1; i < n; ++i ) {
       jac(kk++) = 2*x(i);
       jac(kk++) = -2*x(i);
       jac(kk++) = -2*x(0);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(1.0/(n*n));
     x(0) = 100;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

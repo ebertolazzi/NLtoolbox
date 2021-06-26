@@ -15,7 +15,7 @@
 class SIRtest : public nonlinearSystem {
 public:
 
-  SIRtest( int_type neq_in )
+  SIRtest( integer neq_in )
   : nonlinearSystem(
       "Semi-implicit approach Example 5",
       "@article{Scheffel:2009,\n"
@@ -34,28 +34,28 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     if ( k == n-1 ) return x(n-1) - 3*cos(x(0));
     return x(k) - cos(x(k+1));
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n-1; ++i )
+    for ( integer i = 0; i < n-1; ++i )
       f(i) = x(i) - cos(x(i+1));
     f(n-1) = x(n-1) - 3*cos(x(0));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n-1; ++i ) {
+    for ( integer i = 0; i < n-1; ++i ) {
       SETIJ(i,i);
       SETIJ(i,i+1);
     }
@@ -66,8 +66,8 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n-1; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n-1; ++i ) {
       jac(kk++) = 1;
       jac(kk++) = sin(x(i+1));
     }
@@ -76,27 +76,27 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     if ( n == 2 ) x.fill(-2.0);
     else          x.fill(3.0);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( x(i) > -5 && x(i) < 5, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( x(i) > -5 && x(i) < 5, "Bad range" );
   }
 
   void

@@ -25,23 +25,18 @@
 "  doi     = {10.1007/BF01385810},\n" \
 "}\n"
 
-static
-inline
-string
-ini_msg_HAS64( real_type tau ) {
-  char msg[1000];
-  sprintf( msg, "HAS 64, tau = %g", tau );
-  return string(msg);
-}
-
 class HAS64 : public nonlinearSystem {
-  typedef pair<int_type,int_type> INDEX;
+  typedef pair<integer,integer> INDEX;
   mutable map<INDEX,real_type> jac_idx_vals;
   real_type tau;
 public:
 
   HAS64( real_type tau_in)
-  : nonlinearSystem( ini_msg_HAS64(tau_in), HAS_BIBTEX, 7 )
+  : nonlinearSystem(
+      fmt::format( "HAS 64, tau = {}", tau_in ),
+      HAS_BIBTEX,
+      7
+    )
   , tau(tau_in)
   {
     jac_idx_vals.clear();
@@ -85,7 +80,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -139,14 +134,14 @@ public:
     f(2) -= 144000/x2x2;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
-  { return int_type(jac_idx_vals.size()); }
+  { return integer(jac_idx_vals.size()); }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    map<pair<int_type,int_type>,real_type>::const_iterator it = jac_idx_vals.begin();
-    int_type kk = 0;
+    map<pair<integer,integer>,real_type>::const_iterator it = jac_idx_vals.begin();
+    integer kk = 0;
     for (; it != jac_idx_vals.end(); ++it ) {
       ii(kk) = it->first.first;
       jj(kk) = it->first.second;
@@ -156,7 +151,7 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    map<pair<int_type,int_type>,real_type>::iterator it = jac_idx_vals.begin();
+    map<pair<integer,integer>,real_type>::iterator it = jac_idx_vals.begin();
     for (; it != jac_idx_vals.end(); ++it ) it->second = 0;
 
     real_type x0 = x(0);
@@ -230,13 +225,13 @@ public:
     jac_idx_vals[INDEX(3,2)] -= tt4*(tmp_2*x3);
     jac_idx_vals[INDEX(3,3)] -= tt4*(tmp-2*x3x3);
 
-    int_type kk = 0;
+    integer kk = 0;
     for ( it = jac_idx_vals.begin(); it != jac_idx_vals.end(); ++it )
       jac(kk++) = it->second;
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     if ( tau == 1e2 ) {
       x << 6.6818141799970216926, 9.0745104956268746744, 12.995355396076109065, 0, 0, 0, 0;
     } if ( tau == 1e4 ) {
@@ -250,14 +245,14 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     if ( tau == 1e2 || tau == 1e4 || tau == 1e6 || tau == 1e8 || tau == 1e10 ) return 1;
     return 0;
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 1;
     x(2) = 1;
@@ -267,19 +262,19 @@ public:
     x(6) = -10;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(0) > 0, "checkIfAdmissible x(0) = " << x(0) << " must be > 0" );
-    NONLIN_ASSERT( x(1) > 0, "checkIfAdmissible x(1) = " << x(1) << " must be > 0" );
-    NONLIN_ASSERT( x(2) > 0, "checkIfAdmissible x(2) = " << x(2) << " must be > 0" );
-    // NONLIN_ASSERT( x(3) < 0, "Bad range" );
-    // NONLIN_ASSERT( x(4) < 0, "Bad range" );
-    // NONLIN_ASSERT( x(5) < 0, "Bad range" );
-    // NONLIN_ASSERT( x(6) < 0, "Bad range" );
+    UTILS_ASSERT( x(0) > 0, "checkIfAdmissible x(0) = {} must be > 0", x(0) );
+    UTILS_ASSERT( x(1) > 0, "checkIfAdmissible x(1) = {} must be > 0", x(1) );
+    UTILS_ASSERT( x(2) > 0, "checkIfAdmissible x(2) = {} must be > 0", x(2) );
+    // UTILS_ASSERT( x(3) < 0, "Bad range" );
+    // UTILS_ASSERT( x(4) < 0, "Bad range" );
+    // UTILS_ASSERT( x(5) < 0, "Bad range" );
+    // UTILS_ASSERT( x(6) < 0, "Bad range" );
   }
 
   void
@@ -295,26 +290,21 @@ public:
  | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \*/
 
-static
-inline
-string
-ini_msg_HAS93( real_type tau ) {
-  char msg[1000];
-  sprintf( msg, "HAS 93, tau = %g", tau );
-  return string(msg);
-}
-
 class HAS93 : public nonlinearSystem {
   real_type tau;
 public:
 
   HAS93( real_type tau_in)
-  : nonlinearSystem( ini_msg_HAS93(tau_in), HAS_BIBTEX, 14 )
+  : nonlinearSystem(
+      fmt::format( "HAS 93, tau = {}", tau_in),
+      HAS_BIBTEX,
+      14
+    )
   , tau(tau_in)
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -356,7 +346,7 @@ public:
       f(13) = -2.0*x(5)+2.0*x(13);
     }
 
-    for ( int_type i = 0; i < n; ++i ) f(i) *= tau;
+    for ( integer i = 0; i < n; ++i ) f(i) *= tau;
 
     real_type t2  = x(4)*x(4);
     real_type t13 = x(2)*x(1);
@@ -376,15 +366,15 @@ public:
     f(5) += 0.874E-1*t13*t36*x(5);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran address
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran address
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -666,15 +656,15 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(1);
     x(0) = 5.54;
     x(1) = 4.4;
@@ -684,7 +674,7 @@ public:
     x(5) = 0.852;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -740,7 +730,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -785,15 +775,15 @@ public:
     f(9) = ex9*(c[9]+x(9)-logss) + fact*f(9);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran addressing
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran addressing
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -995,16 +985,16 @@ public:
 
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
     case 0:
       x.fill( -1.5-0.5 ); // funziona
@@ -1015,7 +1005,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 2; }
 

@@ -16,7 +16,7 @@ class GeneralizedRosenbrock : public nonlinearSystem {
   real_type N;
 public:
   
-  GeneralizedRosenbrock( int_type neq )
+  GeneralizedRosenbrock( integer neq )
   : nonlinearSystem(
       "Generalized Rosenbrock function",
       "@article{Rosenbrock:1960,\n"
@@ -49,7 +49,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type f = 0;
     if ( i == 0 ) {
       f = -4*N*(x(1)-power2(x(0)))*x(0)+2*x(0)-2;
@@ -64,23 +64,23 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = -4*N*(x(1)-power2(x(0)))*x(0)+2*x(0)-2;
-    for ( int_type i = 1; i < n-1; ++i )
+    for ( integer i = 1; i < n-1; ++i )
       f(i) = 2*N*(x(i)-power2(x(i-1)))-4*N*(x(i+1)-power2(x(i)))*x(i)+2*x(i)-2;
     f(n-1) = 2*N*(x(n-1)-power2(x(n-2)));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
-    for ( int_type i = 1; i < n-1; ++i ) {
+    for ( integer i = 1; i < n-1; ++i ) {
       SETIJ(i,i-1);
       SETIJ(i,i);
       SETIJ(i,i+1);
@@ -92,10 +92,10 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 8*N*power2(x(0))-4*N*(x(1)-power2(x(0)))+2;
     jac(kk++) = -4*N*x(0);
-    for ( int_type i = 1; i < n-1; ++i ) {
+    for ( integer i = 1; i < n-1; ++i ) {
       jac(kk++) = -4*N*x(i-1);
       jac(kk++) =  2+(12*x(i)*x(i)-4*x(i+1)+2)*N;
       jac(kk++) = -4*N*x(i);
@@ -105,30 +105,30 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; i += 2 ) {
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; i += 2 ) {
       x(i)   = -1.2;
       x(i+1) = 1;
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 10, "Bad range" );
+    //  UTILS_ASSERT( abs(x(i)) < 10, "Bad range" );
   }
 
 };

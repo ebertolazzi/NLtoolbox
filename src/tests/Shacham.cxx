@@ -53,15 +53,27 @@ class ChemicalReactorEquilibriumConversion : public nonlinearSystem {
   eval( dvec_t const & x ) const {
     T = x(0);
     y = x(1);
-    NONLIN_ASSERT( y<=1, "ChemicalReactorEquilibriumConversion::eval found y > 1, y = " << y );
-    NONLIN_ASSERT( T>0,  "ChemicalReactorEquilibriumConversion::eval found T <= 0, T = " << T );
+    UTILS_ASSERT(
+      y<=1,
+      "ChemicalReactorEquilibriumConversion::eval found y > 1, y = {}", y
+    );
+    UTILS_ASSERT(
+      T>0,
+      "ChemicalReactorEquilibriumConversion::eval found T <= 0, T = {}", T
+    );
     real_type bf1 = 149750.0/T;
     real_type bf2 = 192050.0/T;
 
     real_type k1 = 92.5 - bf1;
     real_type k2 = 116.7 - bf2 - 0.17*log(T);
-    NONLIN_ASSERT( k1 <= 350, "ChemicalReactorEquilibriumConversion::eval found k1 > 350, k1 = " << k1 );
-    NONLIN_ASSERT( k2 <= 350, "ChemicalReactorEquilibriumConversion::eval found k2 > 350, k2 = " << k2 );
+    UTILS_ASSERT(
+      k1 <= 350,
+      "ChemicalReactorEquilibriumConversion::eval found k1 > 350, k1 = {}", k1
+    );
+    UTILS_ASSERT(
+      k2 <= 350,
+      "ChemicalReactorEquilibriumConversion::eval found k2 > 350, k2 = {}", k2
+    );
     k     = exp(k1);
     kkp   = exp(k2);
     k_1   = k*bf1/T;
@@ -91,7 +103,7 @@ public:
   { return 0.5*_y*(4-_y)*pow(1-_y,-2.5); }
 
   real_type
-  evalFk( dvec_t const & x, int_type kk ) const override {
+  evalFk( dvec_t const & x, integer kk ) const override {
     eval(x);
     switch ( kk ) {
       case 0: return k*f1(y) - kkp*f2(y);
@@ -107,7 +119,7 @@ public:
     f(1) = T * (1.84*y+77.3) - 43260 * y - 105128; // nell'articolo originale trovo 150128!
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -128,18 +140,18 @@ public:
     jac(3) = 1.84*T-43260;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 1637.7032294649301990;
     x(1) = 0.53337289955233521695;
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
       // close to solution, but large initial residual
       case 0: x(1) = 0.5; x(0) = 1700.0; break;
@@ -153,12 +165,13 @@ public:
       case 6: x(1) = 0.0; x(0) = 200;    break; // da controllare
       case 7: x(1) = 0.0; x(0) = 1650.0; break;
     }
-    NONLIN_ASSERT( idx >= 0 && idx < 8,
-                   "ChemicalReactorEquilibriumConversion::getInitialPoint idx = "
-                   << idx );
+    UTILS_ASSERT(
+      idx >= 0 && idx < 8,
+      "ChemicalReactorEquilibriumConversion::getInitialPoint idx = {}", idx
+    );
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 8; }
 
@@ -166,26 +179,26 @@ public:
   checkIfAdmissible( dvec_t const & x ) const override {
     real_type _T = x(0);
     real_type _y = x(1);
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       _y<=1,
-      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found y > 1, y = " << y
+      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found y > 1, y = {}", y
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       _T>0,
-      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found T <= 0, T = " << T
+      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found T <= 0, T = {}", T
     );
     real_type bf1 = 149750.0/_T;
     real_type bf2 = 192050.0/_T;
 
     real_type k1 = 92.5 - bf1;
     real_type k2 = 116.7 - bf2 - 0.17*log(_T);
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       k1 <= 350,
-      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found k1 > 350, k1 = " << k1
+      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found k1 > 350, k1 = {}", k1
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       k2 <= 350,
-      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found k2 > 350, k2 = " << k2
+      "ChemicalReactorEquilibriumConversion::checkIfAdmissible found k2 > 350, k2 = {}", k2
     );
   }
 
@@ -227,7 +240,7 @@ public:
   : nonlinearSystem("Chemical Reactor Steady State",SHACHAM_BIBTEX,2) {}
 
   real_type
-  evalFk( dvec_t const & x, int_type kk ) const override {
+  evalFk( dvec_t const & x, integer kk ) const override {
     if ( eval(x) ) {
       switch ( kk ) {
         case 0: return 120.0*y - 75.0*k*(1.0-y);
@@ -248,7 +261,7 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -262,7 +275,7 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    NONLIN_ASSERT( eval(x), "bad eval" );
+    UTILS_ASSERT0( eval(x), "bad eval" );
     real_type dkdT = k * (12581.0 *298.0*T - 12581.0*(T-298.0)*298.0) / power2(298.0*T);
     jac(0) = 120.0 +75.0*k;
     jac(1) = -75.0*dkdT*(1.0-y);
@@ -270,18 +283,18 @@ public:
     jac(3) = y + 11.0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(1) = 346.1636981;
     x(0) = 0.9638680513;
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
       case 0: x(0) = 0.5;   x(1) = 320.0; break;
       case 1: x(0) = 0.0;   x(1) = 300.0; break;
@@ -297,7 +310,7 @@ public:
     }
   }
   
-  int_type
+  integer
   numInitialPoint() const override
   { return 9; }
 
@@ -306,8 +319,8 @@ public:
     real_type _y = x(0);
     real_type _T = x(1);
     //real_type T = x(1);
-    NONLIN_ASSERT( _y >= 0,     "bad point1");
-    NONLIN_ASSERT( _T >= 298.0, "bad point2");
+    UTILS_ASSERT0( _y >= 0,     "bad point1");
+    UTILS_ASSERT0( _T >= 298.0, "bad point2");
   }
 
   void
@@ -339,7 +352,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     switch ( k ) {
       case 0: return 0.5*x(0) + x(1) + 0.5*x(2) - x(5)/x(6);
       case 1: return x(2) + x(3) + 2*x(4) - 2/x(6);
@@ -363,14 +376,14 @@ public:
     f(6) = x(0)*x(2) - 2.6058*x(1)*x(3);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 33;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I-1; jj(kk) = J-1; ++kk
 
     SETIJ(1,1); // 1
@@ -418,7 +431,7 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 0.5;
     jac(kk++) = 1.0;
     jac(kk++) = 0.5;
@@ -460,16 +473,16 @@ public:
     jac(kk++) = -2.6058*x(1);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
     case 0:
       // the first hard initial guess
@@ -494,17 +507,17 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 5; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(0) > 0, "checkIfAdmissible: x(0) = " << x(0) );
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT(
+    UTILS_ASSERT( x(0) > 0, "checkIfAdmissible: x(0) = {}", x(0) );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT(
         abs(x(i)) < 20,
-        "checkIfAdmissible: x[" << i << "] = " << x(i) << " out of [-20,20]"
+        "checkIfAdmissible: x[{}] = {} out of [-20,20]", i, x(i)
       );
   }
 
@@ -517,30 +530,22 @@ public:
 
 };
 
-static
-inline
-string
-ini_msg_CutlipsSteadyStateForReactionRateEquations( int k_set ) {
-  char msg[1000];
-  sprintf(
-    msg,"Cutlips steady state for reaction rate equations, k set N.%d", k_set
-  );
-  return string(msg);
-}
-
 /*\
  | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \*/
 
 class CutlipsSteadyStateForReactionRateEquations : public nonlinearSystem {
-  int_type const k_set;
+  integer const k_set;
   real_type p_k1, p_k2, p_k3, p_kr1, p_kr2;
 
 public:
 
-  CutlipsSteadyStateForReactionRateEquations( int_type k_set_in )
+  CutlipsSteadyStateForReactionRateEquations( integer k_set_in )
   : nonlinearSystem(
-      ini_msg_CutlipsSteadyStateForReactionRateEquations(k_set_in),
+      fmt::format(
+        "Cutlips steady state for reaction rate equations, k set N.{}",
+        k_set_in
+      ),
       "@inbook{eden2014proceedings,\n"
       "  author    = {M. Shacham},\n"
       "  title     = {Recent developments in solution techniques for\n"
@@ -591,7 +596,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     switch ( k ) {
       case 0: return 1 - x(0) - p_k1*x(0)*x(5) + p_kr1*x(3);
       case 1: return 1 - x(1) - p_k2*x(1)*x(5) + p_kr2*x(4);
@@ -613,14 +618,14 @@ public:
     f(5) = 1 - x(3) - x(4) - x(5);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 20;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
 
     SETIJ( 0, 0); // 1
@@ -654,7 +659,7 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
 
     jac(kk++) = -1.0 - p_k1*x(5);
     jac(kk++) = p_kr1;
@@ -683,16 +688,16 @@ public:
     jac(kk++) = -1.0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type ini_set ) const override {
+  getInitialPoint( dvec_t & x, integer ini_set ) const override {
     switch ( ini_set ) {
     case 0: x << 0.99, 0.05, 0.05, 0.99, 0.05, 0.0; break;
     case 1: x << 0.05, 0.99, 0.05, 0.05, 0.99, 0.0; break;
@@ -704,7 +709,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 7; }
 
@@ -713,15 +718,6 @@ public:
   {}
 
 };
-
-static
-inline
-string
-ini_msg_Hiebert3ChemicalEquilibriumProblem( real_type R ) {
-  char msg[1000];
-  sprintf( msg, "Hiebert's 3rd Chemical Equilibrium Problem, R=%lf", R );
-  return string(msg);
-}
 
 /*\
  | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -733,7 +729,9 @@ public:
 
   Hiebert3ChemicalEquilibriumProblem( real_type r_in )
   : nonlinearSystem(
-      ini_msg_Hiebert3ChemicalEquilibriumProblem(r_in),
+      fmt::format(
+        "Hiebert's 3rd Chemical Equilibrium Problem, R=%lf", r_in
+      ),
       "@article{Mordechai:10.1002/nme.1620230805,\n"
       "  author  = {Shacham Mordechai},\n"
       "  title   = {Numerical solution of constrained non-linear algebraic equations},\n"
@@ -759,7 +757,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     if ( check_x( x ) ) {
       real_type s = x(0)+x(1)+x(2)+x(3)+x(4)+x(5)+x(6)+x(7)+x(8)+x(9);
       switch ( k ) {
@@ -800,15 +798,15 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran addessing
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran addessing
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -915,15 +913,15 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type init ) const override {
+  getInitialPoint( dvec_t & x, integer init ) const override {
     switch ( init ) {
       case 0: x(0) = 1; x(1) = 1; x(2) = 10; x(3) = 1; x(4) = 1;
               x(5) = 1; x(6) = 0; x(7) = 0;  x(8) = 0; x(9) = 0;
@@ -940,25 +938,25 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 1000, "Bad range" );
+    //  UTILS_ASSERT( abs(x(i)) < 1000, "Bad range" );
     real_type s = x(0)+x(1)+x(2)+x(3)+x(4)+x(5)+x(6)+x(7)+x(8)+x(9);
-    NONLIN_ASSERT( x(0) >= 0, "Bad range" );
-    NONLIN_ASSERT( x(1) >= 0, "Bad range" );
-    NONLIN_ASSERT( x(2) >= 0, "Bad range" );
-    NONLIN_ASSERT( x(3) >= 0, "Bad range" );
-    NONLIN_ASSERT( s    >= 0, "Bad range" );
+    UTILS_ASSERT0( x(0) >= 0, "Bad range" );
+    UTILS_ASSERT0( x(1) >= 0, "Bad range" );
+    UTILS_ASSERT0( x(2) >= 0, "Bad range" );
+    UTILS_ASSERT0( x(3) >= 0, "Bad range" );
+    UTILS_ASSERT0( s    >= 0, "Bad range" );
   }
 
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       { U[i] = real_max; L[i] = -real_max; }
     L[0] = L[1] = L[2] = L[3] = 0;
   }
@@ -998,7 +996,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x_in, int_type k ) const override {
+  evalFk( dvec_t const & x_in, integer k ) const override {
     real_type x = x_in[0];
     if ( check_x(x) )
       return x/(1-x)-5*log(0.4*(1-x)/(0.4-0.5*x))+4.45977;
@@ -1015,7 +1013,7 @@ public:
       f(0) = nan("FractionalConversionInAchemicalReactor");
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 1; }
 
@@ -1032,27 +1030,29 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0.75740;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ini ) const override {
+  getInitialPoint( dvec_t & x, integer ini ) const override {
     x(0) = ini*0.1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 8; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(0) >= 0 && x(0) < 0.8, "x(0) = " << x(0) <<
-                   " must be in [0,0.8)" );
+    UTILS_ASSERT(
+      x(0) >= 0 && x(0) < 0.8,
+      "x(0) = {} must be in [0,0.8)", x(0)
+    );
   }
 
   void
@@ -1074,7 +1074,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type x1 = x(0);
     real_type x2 = x(1);
     real_type x3 = x(2);
@@ -1104,15 +1104,15 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -1136,25 +1136,25 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0.75740;
     x(1) = 1-x(0);
     x(2) = 0.4-0.5*x(0);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ini ) const override {
+  getInitialPoint( dvec_t & x, integer ini ) const override {
     x(0) = ini*0.1;
     x(1) = 1-x(0);
     x(2) = 0.4-0.5*x(0);
     if ( x(2) <= 0 ) x(2) = 0.1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 8; }
 
@@ -1162,8 +1162,14 @@ public:
   checkIfAdmissible( dvec_t const & x ) const override {
     real_type x2 = x(1);
     real_type x3 = x(2);
-    NONLIN_ASSERT( x2 > 0, "FractionalConversionInAchemicalReactor2, x2 = " << x2 << " must be > 0" );
-    NONLIN_ASSERT( x3 > 0, "FractionalConversionInAchemicalReactor2, x3 = " << x3 << " must be > 0" );
+    UTILS_ASSERT(
+      x2 > 0,
+      "FractionalConversionInAchemicalReactor2, x2 = {} must be > 0", x2
+    );
+    UTILS_ASSERT(
+      x3 > 0,
+      "FractionalConversionInAchemicalReactor2, x3 = {} must be > 0", x3
+    );
   }
 
   void
@@ -1203,7 +1209,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type x1 = x(0);
     real_type x2 = x(1);
     real_type x3 = x(2);
@@ -1241,14 +1247,14 @@ public:
     f(6) = x1*x3 - 2.6058*x2*x4;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 33;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I-1; jj(kk) = J-1; ++kk
 
     SETIJ(1,1); // 1
@@ -1304,7 +1310,7 @@ public:
     real_type x6 = x(5);
     real_type x7 = x(6);
     
-    int_type kk = 0;
+    integer kk = 0;
 
     jac(kk++) = 0.5;
     jac(kk++) = 1;
@@ -1348,7 +1354,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0.32287083947654068257;
     x(1) = 0.92235435391875035348e-2;
     x(2) = 0.46017090960632262350e-1;
@@ -1358,12 +1364,12 @@ public:
     x(6) = 2.9778634507911453048;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0.208;
     x(1) = 0.042;
     x(2) = 0.048;
@@ -1373,13 +1379,13 @@ public:
     x(6) = 2;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(6) > 0, "Bad range" );
+    UTILS_ASSERT0( x(6) > 0, "Bad range" );
   }
 
   void
@@ -1407,7 +1413,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type x1 = x(0);
     real_type x2 = x(1);
     real_type x3 = x(2);
@@ -1454,14 +1460,14 @@ public:
     f(8) = x9 - x6/x7;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 37;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I-1; jj(kk) = J-1; ++kk
 
     SETIJ(1,1); // 1
@@ -1523,7 +1529,7 @@ public:
     real_type x6 = x(5);
     real_type x7 = x(6);
 
-    int_type kk = 0;
+    integer kk = 0;
 
     jac(kk++) = 0.5;
     jac(kk++) = 1;
@@ -1574,7 +1580,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0.32287083947654068257;
     x(1) = 0.92235435391875035348e-2;
     x(2) = 0.46017090960632262350e-1;
@@ -1586,12 +1592,12 @@ public:
     x(8) = x(5)/x(6);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0.208;
     x(1) = 0.042;
     x(2) = 0.048;
@@ -1603,13 +1609,13 @@ public:
     x(8) = x(5)/x(6);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(6) > 0, "Bad range" );
+    UTILS_ASSERT0( x(6) > 0, "Bad range" );
   }
 
   void
@@ -1654,7 +1660,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type T   = x(0);
     real_type SRH = x(1);
     real_type CA  = x(2);
@@ -1730,14 +1736,14 @@ public:
     f(14) = SRH - 40000*k1B*CA*CB - 20000*k2C*CC*CB*CB + 5000*k3E*CD;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 51;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
 
     SETIJ(0,2); // 1
@@ -1823,7 +1829,7 @@ public:
     real_type k2C = x(13);
     real_type k3E = x(14);
 
-    int_type kk = 0;
+    integer kk = 0;
 
     jac(kk++) = -vo;
     jac(kk++) = V;
@@ -1894,7 +1900,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     real_type & T   = x(0);
     real_type & SRH = x(1);
     real_type & CA  = x(2);
@@ -1928,12 +1934,12 @@ public:
     k3E = 1098.3958631006667095;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     real_type & T   = x(0);
     real_type & SRH = x(1);
     real_type & CA  = x(2);
@@ -1967,7 +1973,7 @@ public:
     k3E = 422.9115;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -1988,7 +1994,7 @@ public:
     real_type k1B = x(12);
     real_type k2C = x(13);
     real_type k3E = x(14);
-    NONLIN_ASSERT(
+    UTILS_ASSERT0(
       T   > 0 &&
       CA  > 0 &&
       CB  > 0 &&
@@ -2025,22 +2031,15 @@ public:
  | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \*/
 
-static
-inline
-string
-ini_msg_ModelEquationsForCombustionOfPropane( real_type R_set ) {
-  char msg[1000];
-  sprintf( msg, "Model equations for combustion of propane, R=%lf", R_set );
-  return string(msg);
-}
-
 class ModelEquationsForCombustionOfPropane : public nonlinearSystem {
   real_type K5, K6, K7, K8, K9, K10, p, R;
 public:
 
   ModelEquationsForCombustionOfPropane( real_type R_in )
   : nonlinearSystem(
-      ini_msg_ModelEquationsForCombustionOfPropane(R_in),
+      fmt::format( 
+        "Model equations for combustion of propane, R={}", R_in
+      ),
       "@article{Shacham:2002,\n"
       "  author  = {Mordechai Shacham and Neima Brauner},\n"
       "  title   = {Numerical solution of non-linear algebraic\n"
@@ -2077,7 +2076,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type n1  = x(0);
     real_type n2  = x(1);
     real_type n3  = x(2);
@@ -2107,7 +2106,7 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       if ( x(i) <  0 ) {
         f(0) = f(1) = f(2) = f(3) = f(4) = f(5) =
         f(6) = f(7) = f(8) = f(9) = nan("ModelEquationsForCombustionOfPropane");
@@ -2140,15 +2139,15 @@ public:
     f(9) = K10*n1*n1-n4*n4*n10*(p/nT);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran addressing
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran addressing
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -2345,35 +2344,35 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     real_type xhh = 1;
     if ( idx == 0 || idx == 2 ) {
-      for ( int_type i = 0; i < n; ++i ) x(i) = xhh;
+      for ( integer i = 0; i < n; ++i ) x(i) = xhh;
     } else if ( idx == 1 ) {
-      for ( int_type i = 0; i < n; ++i ) x(i) = log(xhh);
+      for ( integer i = 0; i < n; ++i ) x(i) = log(xhh);
     } else if ( idx == 3 ) {
-      for ( int_type i = 0; i < n; ++i ) x(i) = sqrt(xhh);
+      for ( integer i = 0; i < n; ++i ) x(i) = sqrt(xhh);
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 4; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(0) >= 0, "Bad range" );
-    NONLIN_ASSERT( x(1) >= 0, "Bad range" );
-    NONLIN_ASSERT( x(2) >= 0, "Bad range" );
+    UTILS_ASSERT0( x(0) >= 0, "Bad range" );
+    UTILS_ASSERT0( x(1) >= 0, "Bad range" );
+    UTILS_ASSERT0( x(2) >= 0, "Bad range" );
   }
 
   void
@@ -2398,7 +2397,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 2.915725423895220;
     x(1) = 3.960942810808880;
     x(2) = 19.986291646551500;
@@ -2411,12 +2410,12 @@ public:
     x(9) = 0.031146775227006;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1.5;
     x(1) = 2;
     x(2) = 35;
@@ -2429,7 +2428,7 @@ public:
     x(9) = 5;
   }
   
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -2447,12 +2446,12 @@ public:
   {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 2.915725423895220;
     x(1) = 3.960942810808880;
     x(2) = 19.986291646551500;
@@ -2466,7 +2465,7 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1.5;
     x(1) = 2;
     x(2) = 35;
@@ -2479,7 +2478,7 @@ public:
     x(9) = 5;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

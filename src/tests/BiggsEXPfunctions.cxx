@@ -57,7 +57,7 @@
 
 class BiggsEXP2function : public nonlinearSystem {
   dvec_t z, y;
-  int_type const NPT;
+  integer const NPT;
 
 public:
 
@@ -67,7 +67,7 @@ public:
   {
     z.resize(NPT);
     y.resize(NPT);
-    for ( int_type i = 0; i < NPT; ++i ) z(i) = (i+1)*0.1;
+    for ( integer i = 0; i < NPT; ++i ) z(i) = (i+1)*0.1;
     y = exp(-z.array())-5*exp(-10*z.array());
   }
 
@@ -77,13 +77,13 @@ public:
   }
 
   void
-  Grad_map( dvec_t const & x, int_type k, dvec_t & G ) const {
+  Grad_map( dvec_t const & x, integer k, dvec_t & G ) const {
     G(0) = -z(k)*exp(-x(0)*z(k));
     G(1) = 5*z(k)*exp(-x(1)*z(k));
   }
 
   void
-  Hess_map( dvec_t const & x, int_type k, dmat_t & H ) const {
+  Hess_map( dvec_t const & x, integer k, dmat_t & H ) const {
     real_type zk  = z(k);
     real_type zk2 = zk*zk;
     real_type ex0 = exp(-x(0)*zk);
@@ -95,7 +95,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -106,21 +106,21 @@ public:
     dvec_t eq(NPT), G(n);
     map( x, eq );
     f.setZero();
-    for ( int_type k = 0; k < NPT; ++k ) {
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       f += eq(k)*G;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -133,13 +133,13 @@ public:
     dmat_t H(n,n);
     map( x, eq );
     jac.setZero();
-    int_type kk = 0;
-    for ( int_type k = 0; k < NPT; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       Hess_map( x, k, H );
       kk = 0;
-      for ( int_type i = 0; i < n; ++i ) {
-        for ( int_type j = 0; j < n; ++j ) {
+      for ( integer i = 0; i < n; ++i ) {
+        for ( integer j = 0; j < n; ++j ) {
           jac(kk) += eq(k)*H(i,j)+G(i)*G(j); ++kk;
         }
       }
@@ -147,22 +147,22 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 16.7046761257;
     x(1) = 16.7046761257;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 2;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -178,7 +178,7 @@ public:
 
 class BiggsEXP3function : public nonlinearSystem {
   dvec_t z, y;
-  int_type const NPT;
+  integer const NPT;
 
 public:
 
@@ -188,7 +188,7 @@ public:
   {
     z.resize(NPT);
     y.resize(NPT);
-    for ( int_type i = 0; i < NPT; ++i ) z(i) = (i+1)*0.1;
+    for ( integer i = 0; i < NPT; ++i ) z(i) = (i+1)*0.1;
     y = exp(-z.array())-5*exp(-10*z.array());
   }
 
@@ -198,7 +198,7 @@ public:
   }
 
   void
-  Grad_map( dvec_t const & x, int_type k, dvec_t & G ) const {
+  Grad_map( dvec_t const & x, integer k, dvec_t & G ) const {
     real_type zk  = z(k);
     real_type ex0 = exp(-x(0)*zk);
     real_type ex1 = exp(-x(1)*zk);
@@ -208,7 +208,7 @@ public:
   }
 
   void
-  Hess_map( dvec_t const & x, int_type k, dmat_t & H ) const {
+  Hess_map( dvec_t const & x, integer k, dmat_t & H ) const {
     real_type zk  = z(k);
     real_type zk2 = zk*zk;
     real_type ex0 = exp(-x(0)*zk);
@@ -219,7 +219,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -230,21 +230,21 @@ public:
     dvec_t eq(NPT), G(n);
     map( x, eq );
     f.setZero();
-    for ( int_type k = 0; k < NPT; ++k ) {
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       f += eq(k)*G;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -257,13 +257,13 @@ public:
     dmat_t H(n,n);
     map( x, eq );
     jac.setZero();
-    int_type kk = 0;
-    for ( int_type k = 0; k < NPT; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       Hess_map( x, k, H );
       kk = 0;
-      for ( int_type i = 0; i < n; ++i ) {
-        for ( int_type j = 0; j < n; ++j ) {
+      for ( integer i = 0; i < n; ++i ) {
+        for ( integer j = 0; j < n; ++j ) {
           jac(kk) += eq(k)*H(i,j)+G(i)*G(j); ++kk;
         }
       }
@@ -271,31 +271,31 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 1;
     x(1) = 1;
     x(2) = 5;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 2;
     x(2) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  k = 0; k < n; ++k )
-    //  NONLIN_ASSERT( abs(x(k)) < 1000, "Bad Range" );
+    //  UTILS_ASSERT( abs(x(k)) < 1000, "Bad Range" );
   }
 
 };
@@ -306,7 +306,7 @@ public:
 
 class BiggsEXP4function : public nonlinearSystem {
   dvec_t z, y;
-  int_type const NPT;
+  integer const NPT;
 
 public:
 
@@ -316,7 +316,7 @@ public:
   {
     z.resize(NPT);
     y.resize(NPT);
-    for ( int_type i = 0; i < NPT; ++i ) z(i) = (i+1)*0.1;
+    for ( integer i = 0; i < NPT; ++i ) z(i) = (i+1)*0.1;
     y = exp(-z.array())-5*exp(-10*z.array());
   }
 
@@ -326,7 +326,7 @@ public:
   }
 
   void
-  Grad_map( dvec_t const & x, int_type k, dvec_t & G ) const {
+  Grad_map( dvec_t const & x, integer k, dvec_t & G ) const {
     real_type zk  = z(k);
     real_type ex0 = exp(-x(0)*zk);
     real_type ex1 = exp(-x(1)*zk);
@@ -337,7 +337,7 @@ public:
   }
 
   void
-  Hess_map( dvec_t const & x, int_type k, dmat_t & H ) const {
+  Hess_map( dvec_t const & x, integer k, dmat_t & H ) const {
     real_type zk  = z(k);
     real_type zk2 = zk*zk;
     real_type ex0 = exp(-x(0)*zk);
@@ -365,7 +365,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -376,21 +376,21 @@ public:
     dvec_t eq(NPT), G(n);
     map( x, eq );
     f.setZero();
-    for ( int_type k = 0; k < NPT; ++k ) {
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       f += eq(k)*G;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -403,13 +403,13 @@ public:
     dmat_t H(n,n);
     map( x, eq );
     jac.setZero();
-    int_type kk = 0;
-    for ( int_type k = 0; k < NPT; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       Hess_map( x, k, H );
       kk = 0;
-      for ( int_type i = 0; i < n; ++i ) {
-        for ( int_type j = 0; j < n; ++j ) {
+      for ( integer i = 0; i < n; ++i ) {
+        for ( integer j = 0; j < n; ++j ) {
           jac(kk) += eq(k)*H(i,j)+G(i)*G(j); ++kk;
         }
       }
@@ -417,33 +417,33 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = -1.370515321;
     x(1) = -1.370515321;
     x(2) = 0.146554089168054;
     x(3) = 0.003045452799256;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 2;
     x(2) = 1;
     x(3) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  k = 0; k < n; ++k )
-    //  NONLIN_ASSERT( abs(x(k)) < 1000, "Bad Range" );
+    //  UTILS_ASSERT( abs(x(k)) < 1000, "Bad Range" );
   }
 
 };
@@ -454,7 +454,7 @@ public:
 
 class BiggsEXP5function : public nonlinearSystem {
   dvec_t z, y;
-  int_type const NPT;
+  integer const NPT;
 
 public:
 
@@ -464,7 +464,7 @@ public:
   {
     z.resize(NPT);
     y.resize(NPT);
-    for ( int_type k = 0; k < NPT; ++k ) z(k) = (k+1)*0.1;
+    for ( integer k = 0; k < NPT; ++k ) z(k) = (k+1)*0.1;
     y = exp(-z.array())-5*exp(-10*z.array()) + 3*exp(-4*z.array());
   }
 
@@ -477,7 +477,7 @@ public:
   }
 
   void
-  Grad_map( dvec_t const & x, int_type k, dvec_t & G ) const {
+  Grad_map( dvec_t const & x, integer k, dvec_t & G ) const {
     real_type zk  = z(k);
     real_type ex0 = exp(-x(0)*zk);
     real_type ex1 = exp(-x(1)*zk);
@@ -490,7 +490,7 @@ public:
   }
 
   void
-  Hess_map( dvec_t const & x, int_type k, dmat_t & H ) const {
+  Hess_map( dvec_t const & x, integer k, dmat_t & H ) const {
     real_type zk  = z(k);
     real_type zk2 = zk*zk;
     real_type ex0 = exp(-x(0)*zk);
@@ -529,7 +529,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -540,21 +540,21 @@ public:
     dvec_t eq(NPT), G(n);
     map( x, eq );
     f.setZero();
-    for ( int_type k = 0; k < NPT; ++k ) {
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       f += eq(k)*G;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -567,13 +567,13 @@ public:
     dmat_t H(n,n);
     map( x, eq );
     jac.setZero();
-    int_type kk = 0;
-    for ( int_type k = 0; k < NPT; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       Hess_map( x, k, H );
       kk = 0;
-      for ( int_type i = 0; i < n; ++i ) {
-        for ( int_type j = 0; j < n; ++j ) {
+      for ( integer i = 0; i < n; ++i ) {
+        for ( integer j = 0; j < n; ++j ) {
           jac(kk) += eq(k)*H(i,j)+G(i)*G(j); ++kk;
         }
       }
@@ -581,7 +581,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 2.645310671110160;
     x(1) = 2.693935021162610;
     x(2) = 0.048826924681352;
@@ -589,12 +589,12 @@ public:
     x(4) = 0.025390267672614;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 2;
     x(2) = 1;
@@ -602,14 +602,14 @@ public:
     x(4) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  k = 0; k < n; ++k )
-    //  NONLIN_ASSERT( abs(x(k)) < 1000, "Bad Range" );
+    //  UTILS_ASSERT( abs(x(k)) < 1000, "Bad Range" );
   }
 
 };
@@ -631,12 +631,12 @@ public:
   {
     y.resize(6);
     t.resize(6);
-    for ( int_type i = 0; i < 6; ++i ) t(i) = (i+1)*0.1;
+    for ( integer i = 0; i < 6; ++i ) t(i) = (i+1)*0.1;
     y = exp(-t.array())-5*exp(-10*t.array())+3*exp(-4*t.array());
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type e0 = exp(-t(k)*x(0));
     real_type e1 = exp(-t(k)*x(1));
     real_type e4 = exp(-t(k)*x(4));
@@ -645,7 +645,7 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < 6; ++k ) {
+    for ( integer k = 0; k < 6; ++k ) {
       real_type e0 = exp(-t(k)*x(0));
       real_type e1 = exp(-t(k)*x(1));
       real_type e4 = exp(-t(k)*x(4));
@@ -653,14 +653,14 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 36; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < 6; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < 6; ++k ) {
       ii(kk) = k; jj(kk) = 0; ++kk;
       ii(kk) = k; jj(kk) = 1; ++kk;
       ii(kk) = k; jj(kk) = 2; ++kk;
@@ -672,8 +672,8 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < 6; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < 6; ++k ) {
       real_type e0 = exp(-t(k)*x(0));
       real_type e1 = exp(-t(k)*x(1));
       real_type e4 = exp(-t(k)*x(4));
@@ -687,7 +687,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx) const override {
+  getExactSolution( dvec_t & x, integer idx) const override {
     switch ( idx ) {
     case 0:
       x(0) = 10;
@@ -708,12 +708,12 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 2; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 2;
     x(2) = 1;
@@ -722,13 +722,13 @@ public:
     x(5) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT(
+    UTILS_ASSERT0(
       x(0) > xmin && x(0) < xmax &&
       x(1) > xmin && x(1) < xmax &&
       x(2) > xmin && x(2) < xmax &&

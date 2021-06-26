@@ -16,8 +16,15 @@ NLtoolbox
 Third Party software
 --------------------
 
-NLtoolbox uses the fantastic `eigen3 <https://eigen.tuxfamily.org>`__
+NLtoolbox uses the fantastic `Eigen <https://eigen.tuxfamily.org>`__
 C++ template library for managing linear algebra.
+Moreover the following other software are part of the
+`Utils <https://github.com/ebertolazzi/Utils>`__ library used
+to include Eigen and other utilities functions:
+
+- `{fmt} <https://fmt.dev/latest/index.html>`__
+- `rang <https://github.com/agauniyal/rang>`__
+- `Z-stream <http://www.codeproject.com/Articles/4457/zipstream-bzip-stream-iostream-wrappers-for-the-zl>`__.
 
 Author
 ~~~~~~

@@ -29,7 +29,7 @@ class BadlyScaledAugmentedPowellFunction : public nonlinearSystem {
 
 public:
 
-  BadlyScaledAugmentedPowellFunction( int_type neq )
+  BadlyScaledAugmentedPowellFunction( integer neq )
   : nonlinearSystem(
       "Badly scaled augmented Powell’s function",
       "@article{Gasparo:2000,\n"
@@ -48,9 +48,9 @@ public:
   { checkThree(n,3); }
 
   real_type
-  evalFk( dvec_t const & X, int_type k ) const override {
-    int_type k1 = k % 3;
-    int_type k2 = k - k1;
+  evalFk( dvec_t const & X, integer k ) const override {
+    integer k1 = k % 3;
+    integer k2 = k - k1;
     //real_type const * x = X + k2;
     dvec_t const & x = X.segment(k2,3);
     switch ( k1 ) {
@@ -63,7 +63,7 @@ public:
 
   void
   evalF( dvec_t const & X, dvec_t & F ) const override {
-    for ( int_type k = 0; k < n; k += 3 ) {
+    for ( integer k = 0; k < n; k += 3 ) {
       dvec_t const & x = X.segment(k,3);
       F(k+0) = 10000 * (x(0) * x(1)) - 1.0;
       F(k+1) = exp(-x(1)) + exp(-x(0)) - 1.0001;
@@ -71,15 +71,15 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return (n/3)*5; }
 
   void
   jacobianPattern( ivec_t & i, ivec_t & j ) const override {
-    int_type kk   = 0;
-    int_type nblk = 0;
-    for ( int_type k = 0; k < n; k += 3, nblk += 3 ) {
+    integer kk   = 0;
+    integer nblk = 0;
+    for ( integer k = 0; k < n; k += 3, nblk += 3 ) {
       i(kk) = nblk+0; j(kk) = nblk+0; ++kk;
       i(kk) = nblk+0; j(kk) = nblk+1; ++kk;
       i(kk) = nblk+1; j(kk) = nblk+0; ++kk;
@@ -90,8 +90,8 @@ public:
 
   void
   jacobian( dvec_t const & X, dvec_t & vals ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; k += 3 ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; k += 3 ) {
       dvec_t const & x = X.segment(k,3);
       vals(kk) = 10000 * x(1); ++kk;
       vals(kk) = 10000 * x(0); ++kk;
@@ -102,30 +102,30 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; k += 3 ) {
+  getExactSolution( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; k += 3 ) {
       x(k+0) = 0.109815932969981745568376164563E-4;
       x(k+1) = 9.10614673986652401094671049032;
       x(k+2) = 0.3998810580736440979319618294548679254646;
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 2; }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
     switch (idx) {
     case 0:
-      for ( int_type k = 0; k < n; k += 3 ) {
+      for ( integer k = 0; k < n; k += 3 ) {
         x(k+0) = 0;
         x(k+1) = 1;
         x(k+2) = -4;
       }
       break;
     case 1:
-      for ( int_type k = 0; k < n; k += 3 ) {
+      for ( integer k = 0; k < n; k += 3 ) {
         x(k+0) = 1e-3;
         x(k+1) = 18;
         x(k+2) = 1;
@@ -134,7 +134,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 2; }
 

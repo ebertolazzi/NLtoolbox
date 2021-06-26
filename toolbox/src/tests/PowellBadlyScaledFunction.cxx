@@ -56,7 +56,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -70,7 +70,7 @@ public:
     //f(1) = exp(-x(1)) + exp(-x(0)) - 1.0001;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -92,32 +92,32 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     //x(0) = 0.109815932969981745568376164563E-4;
     //x(1) = 9.10614673986652401094671049032;
     x(0) = x0e;
     x(1) = x1e;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 0;
     x(1) = 100;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT(abs(x(i)) < 1000, "Bad range" );
-    // NONLIN_ASSERT( x(i) >= 0i] < 1000, "Bad range" );
+    //  UTILS_ASSERT(abs(x(i)) < 1000, "Bad range" );
+    // UTILS_ASSERT( x(i) >= 0i] < 1000, "Bad range" );
   }
 
 };

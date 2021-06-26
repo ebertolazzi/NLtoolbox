@@ -28,12 +28,12 @@
 class ExponentialFunction1 : public nonlinearSystem {
 public:
 
-  ExponentialFunction1( int_type neq )
+  ExponentialFunction1( integer neq )
   : nonlinearSystem( "Exponential Function N.1", EXPONENTIAL_FUNCTION_BIBTEX, neq )
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     if ( i == 0 ) return exp(x(0)-1) - 1;
     return (i+1)*(exp(x(i)-1)-x(i));
   }
@@ -41,42 +41,42 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = exp(x(0)-1) - 1;
-    for ( int_type  i = 1; i < n; ++i )
+    for ( integer  i = 1; i < n; ++i )
       f(i) = (i+1)*(exp(x(i)-1)-x(i));
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
       { ii(kk) = jj(kk) = i; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac(0) = exp(x(0)-1);
-    for ( int_type i = 1; i < n; ++i )
+    for ( integer i = 1; i < n; ++i )
       jac(i) = (i+1)*(exp(x(i)-1)-1);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill( n/(n-1.0) );
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -93,12 +93,12 @@ public:
 class ExponentialFunction2 : public nonlinearSystem {
 public:
 
-  ExponentialFunction2( int_type neq )
+  ExponentialFunction2( integer neq )
   : nonlinearSystem( "Exponential Function N.2", EXPONENTIAL_FUNCTION_BIBTEX, neq )
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     if ( i == 0 ) return exp(x(0)) - 1;
     return ((i+1)/10.0)*(exp(x(i))+x(i-1)-1);
   }
@@ -106,19 +106,19 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const  override{
     f(0) = exp(x(0)) - 1;
-    for ( int_type i = 1; i < n; ++i )
+    for ( integer i = 1; i < n; ++i )
       f(i) = ((i+1)/10.0)*(exp(x(i))+x(i-1)-1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 2*n-1; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     ii(kk) = jj(kk) = 0; ++kk;
-    for ( int_type i = 1; i < n; ++i ) {
+    for ( integer i = 1; i < n; ++i ) {
       ii(kk) = jj(kk) = i; ++kk;
       ii(kk) = i; jj(kk) = i-1; ++kk;
     }
@@ -126,28 +126,28 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = exp(x(0));
-    for ( int_type i = 1; i < n; ++i ) {
+    for ( integer i = 1; i < n; ++i ) {
       jac(kk++) = ((i+1)/10.0)*exp(x(i));
       jac(kk++) = ((i+1)/10.0);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill( 1.0/(n*n) );
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -164,12 +164,12 @@ public:
 class ExponentialFunction3 : public nonlinearSystem {
 public:
 
-  ExponentialFunction3( int_type neq )
+  ExponentialFunction3( integer neq )
   : nonlinearSystem( "Exponential Function N.3", EXPONENTIAL_FUNCTION_BIBTEX, neq )
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     if ( i == n-1 ) return (0.1*n)*(1-exp(-x(n-1)*x(n-1)));
     return (0.1*(i+1))*(1-x(i)*x(i)-exp(-x(i)*x(i)));
   }
@@ -177,44 +177,44 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(n-1) = (0.1*n)*(1-exp(-x(n-1)*x(n-1)));
-    for ( int_type i = 0; i < n-1; ++i )
+    for ( integer i = 0; i < n-1; ++i )
       f(i) = (0.1*(i+1))*(1-x(i)*x(i)-exp(-x(i)*x(i)));
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
       { ii(kk) = jj(kk) = i; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n-1; ++i )
+    integer kk = 0;
+    for ( integer i = 0; i < n-1; ++i )
       jac(kk++) = 0.2*(i+1)*x(i)*(exp(-x(i)*x(i))-1);
     jac(kk++) = 0.2*n*x(n-1)*exp(-x(n-1)*x(n-1));
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     real_type bf = 1.0/(4.0*n*n);
-    for ( int_type i = 0; i < n; ++i ) x(i) = (i+1)*bf;
+    for ( integer i = 0; i < n; ++i ) x(i) = (i+1)*bf;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

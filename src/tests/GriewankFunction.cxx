@@ -16,7 +16,7 @@ class GriewankFunction : public nonlinearSystem {
 
 public:
 
-  GriewankFunction( int_type n )
+  GriewankFunction( integer n )
   : nonlinearSystem(
       "Griewank function",
       "@Article{Griewan:k1981,\n"
@@ -32,16 +32,16 @@ public:
       n
     )
   {
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       n >= 2 && n <= 20,
-      "GriewankFunction(n=" << n << ") must be in range [2..20]"
+      "GriewankFunction(n={} must be in range [2..20]", n
     );
   }
 
   real_type
-  grad( dvec_t const & x, int_type k ) const {
+  grad( dvec_t const & x, integer k ) const {
     real_type f = 1/sqrt(k+1.0);
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       real_type t = x(i)/sqrt(i+1.0);
       if ( i == k ) f *= sin(t);
       else          f *= cos(t);
@@ -50,17 +50,17 @@ public:
   }
 
   real_type
-  hess( dvec_t const & x, int_type i, int_type j ) const {
+  hess( dvec_t const & x, integer i, integer j ) const {
     if ( i == j ) {
       real_type f = 1/(i+1.0);
-      for ( int_type k = 0; k < n; ++k ) {
+      for ( integer k = 0; k < n; ++k ) {
         real_type t = x(k)/sqrt(k+1.0);
         f *= cos(t);
       }
       return f;
     } else {
       real_type f = -1/sqrt((i+1.0)*(j+1.0));
-      for ( int_type k = 0; k < n; ++k ) {
+      for ( integer k = 0; k < n; ++k ) {
         real_type t = x(k)/sqrt(k+1.0);
         if ( k == i || k == j ) f *= sin(t);
         else                    f *= cos(t);
@@ -70,33 +70,33 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     return grad( x, k ) + x(k)/2000.0;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const  override{
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       f(k) = grad( x, k ) + x(k)/2000.0;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = 0; j < n; ++j ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = 0; j < n; ++j ) {
         jac(kk) = hess(x,i,j);
         if ( i == j ) jac(kk) += 1.0/2000.0;
         ++kk;
@@ -105,29 +105,29 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type idx ) const override {
-    for ( int_type i = 0; i < n; i += 2 ) {
+  getInitialPoint( dvec_t & x, integer idx ) const override {
+    for ( integer i = 0; i < n; i += 2 ) {
       x(i+0) = -50.0*(1+idx*9);
       x(i+1) =  70.0*(1+idx*9);
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 2; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( abs(x(i)) < 1000, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( abs(x(i)) < 1000, "Bad range" );
   }
 
   void

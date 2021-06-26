@@ -15,7 +15,7 @@
 class Function18 : public nonlinearSystem {
 public:
 
-  Function18( int_type neq)
+  Function18( integer neq)
   : nonlinearSystem(
       "Function 18",
       "@article{LaCruz:2003,\n"
@@ -34,8 +34,8 @@ public:
   { checkThree(n,3); }
 
   real_type
-  evalFk( dvec_t const & X, int_type i ) const override {
-    int_type i3 = i/3;
+  evalFk( dvec_t const & X, integer i ) const override {
+    integer i3 = i/3;
     dvec_t const & x = X.segment(i3*3,3);
     switch ( i % 3 ) {
       case 0: return x(0)*x(1) - x(2)*x(2) - 1;
@@ -47,7 +47,7 @@ public:
 
   void
   evalF( dvec_t const & X, dvec_t & F ) const override {
-    for ( int_type i = 0; i < n; i += 3 ) {
+    for ( integer i = 0; i < n; i += 3 ) {
       dvec_t const & x = X.segment(i,3);
       F(i+0) = x(0)*x(1) - x(2)*x(2) - 1;
       F(i+1) = x(0)*x(1)*x(2) - x(0)*x(0) + x(1)*x(1) - 2;
@@ -55,16 +55,16 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; i += 3 ) {
+    for ( integer i = 0; i < n; i += 3 ) {
       SETIJ(i+0,i+0);
       SETIJ(i+0,i+1);
       SETIJ(i+0,i+2);
@@ -82,8 +82,8 @@ public:
 
   void
   jacobian( dvec_t const & X, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 3 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 3 ) {
       dvec_t const & x = X.segment(i,3);
 
       jac(kk++) = x(1);
@@ -100,13 +100,13 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & X, int_type ) const override {
-    for ( int_type i = 0; i < n; i += 3 ) {
+  getExactSolution( dvec_t & X, integer ) const override {
+    for ( integer i = 0; i < n; i += 3 ) {
       X(i+0) = sqrt(2.0);
       X(i+1) = sqrt(2.0);
       X(i+2) = 1;
@@ -114,11 +114,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.setZero();
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

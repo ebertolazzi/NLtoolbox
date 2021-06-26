@@ -15,7 +15,7 @@
 class DixonFunction : public nonlinearSystem {
 public:
 
-  DixonFunction( int_type neq )
+  DixonFunction( integer neq )
   : nonlinearSystem(
       "Dixon Function",
       "@Article{Dixon1988,\n"
@@ -34,7 +34,7 @@ public:
   { checkMinEquations(n,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     if      ( i == 0   ) return 2*(x(0)-1);
     else if ( i == n-1 ) return 8*n*(2*x(n-1)*x(n-1)-x(n-2))*x(n-1);
     else                 return 8*(i+1)*(2*x(i)*x(i)-x(i-1))-2*(i+2)*(2*x(i+1)*x(i+1)-x(i));
@@ -43,20 +43,20 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = 2*(x(0)-1);
-    for ( int_type i = 1; i < n-1; ++i )
+    for ( integer i = 1; i < n-1; ++i )
       f(i) = 8*(i+1)*(2*x(i)*x(i)-x(i-1))-2*(i+2)*(2*x(i+1)*x(i+1)-x(i));
     f(n-1) = 8*n*(2*x(n-1)*x(n-1)-x(n-2))*x(n-1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 3*n-3; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     ii(kk) = 0; jj(kk) = 0; ++kk;
-    for ( int_type i = 1; i < n-1; ++i ) {
+    for ( integer i = 1; i < n-1; ++i ) {
       ii(kk) = i; jj(kk) = i-1; ++kk;
       ii(kk) = i; jj(kk) = i;   ++kk;
       ii(kk) = i; jj(kk) = i+1; ++kk;
@@ -67,9 +67,9 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 2;
-    for ( int_type i = 1; i < n-1; ++i ) {
+    for ( integer i = 1; i < n-1; ++i ) {
       jac(kk++) = -8*(i+1);
       jac(kk++) = 32*(i+1)*x(i)+2*(i+2);
       jac(kk++) = -8*(i+2)*x(i+1);
@@ -79,19 +79,19 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; ++i ) x(i) = 1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; ++i ) x(i) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

@@ -17,7 +17,7 @@ class VariablyDimensionedFunction : public nonlinearSystem {
   mutable dvec_t gf2;
 public:
   
-  VariablyDimensionedFunction( int_type neq )
+  VariablyDimensionedFunction( integer neq )
   : nonlinearSystem(
       "Variably dimensioned function",
       "@book{brent2013,\n"
@@ -43,9 +43,9 @@ public:
   { checkMinEquations(neq,2); gf2.resize(n); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type sum1 = 0;
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       sum1 += (j+1)*(x(j)-1);
     return x(k) - 1 + (k+1)*sum1*(1+2*power2(sum1));
   }
@@ -55,33 +55,33 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type sum1 = 0;
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       sum1 += (j+1)*(x(j)-1);
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       f(j) = x(j) - 1 + (j+1)*sum1*(1+2*power2(sum1));
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     real_type sum1 = 0;
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       sum1 += (j+1)*(x(j)-1);
 
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
-    	for ( int_type j = 0; j < n; ++j ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
+    	for ( integer j = 0; j < n; ++j ) {
     	  jac(kk) = (k+1)*(1+6*power2(sum1))*(j+1);
         if ( j == k ) jac(kk) += 1;
         ++kk;
@@ -90,20 +90,20 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
   
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k )
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k )
       x(k) = 1 - real_type(k+1) /real_type(n);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

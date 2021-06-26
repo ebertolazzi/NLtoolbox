@@ -31,21 +31,21 @@ public:
 
   DeVilliersGlasser01()
   : nonlinearSystem("De Villiers Glasser Problem #1",DEVILLIERS_BIBTEX,4) {
-    for ( int_type i = 0; i < 24; ++i ) {
+    for ( integer i = 0; i < 24; ++i ) {
       t_vec[i] = i/10.0;
       y_vec[i] = 60.137*pow(1.371,t_vec[i])*sin(3.112*t_vec[i]+1.761);
     }
   }
 
   real_type
-  f_val( dvec_t const & x, int_type k ) const {
+  f_val( dvec_t const & x, integer k ) const {
     real_type t  = t_vec[k];
     real_type bf = x(0)*pow(x(1), t);
     return sin(x(2) * t + x(3)) * bf - y_vec[k];
   }
   
   void
-  f_grad( dvec_t const & x, int_type k, dvec_t & g ) const {
+  f_grad( dvec_t const & x, integer k, dvec_t & g ) const {
     real_type t   = t_vec[k];
     real_type SIN = sin(x(2)*t+x(3));
     real_type COS = cos(x(2)*t+x(3));
@@ -58,7 +58,7 @@ public:
   }
 
   void
-  f_hess( dvec_t const & x, int_type k, dmat_t & h ) const {
+  f_hess( dvec_t const & x, integer k, dmat_t & h ) const {
     real_type t   = t_vec[k];
     real_type SIN = sin(x(2)*t+x(3));
     real_type COS = cos(x(2)*t+x(3));
@@ -92,7 +92,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -103,7 +103,7 @@ public:
     if ( check_x(x) ) {
       dvec_t g(4);
       f.setZero();
-      for ( int_type k = 0; k < 24; ++k ) {
+      for ( integer k = 0; k < 24; ++k ) {
         real_type ff = f_val( x, k );
         f_grad( x, k, g );
         f += ff*g;
@@ -113,15 +113,15 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -130,58 +130,58 @@ public:
     jac.setZero();
     dvec_t g(4);
     dmat_t h(4,4);
-    for ( int_type k = 0; k < 24; ++k ) {
+    for ( integer k = 0; k < 24; ++k ) {
       real_type ff = f_val( x, k );
       f_grad( x, k, g );
       f_hess( x, k, h );
-      int_type kk = 0;
-      for ( int_type ii = 0; ii < 4; ++ii )
-        for (  int_type jj = 0; jj < 4; ++jj )
+      integer kk = 0;
+      for ( integer ii = 0; ii < 4; ++ii )
+        for (  integer jj = 0; jj < 4; ++jj )
           jac(kk++) += ff*h(ii,jj)+g(ii)*g(jj);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 8;
     x(2) = 4;
     x(3) = 4.412;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible ( dvec_t const & x ) const override {
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       x(1) > 0,
-      "DeVilliersGlasser01, x(1) = " << x(1) << " <= 0"
+      "DeVilliersGlasser01, x(1) = {} <= 0", x(1)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(0) && x(0) <= 500,
-      "DeVilliersGlasser#1, x(0) = " << x(0) << " must be in [-500,500]"
+      "DeVilliersGlasser#1, x(0) = {} must be in [-500,500]", x(0)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       0 <= x(1) && x(1) <= 500,
-      "DeVilliersGlasser#1, x(1) = " << x(1) << " must be in [0,500]"
+      "DeVilliersGlasser#1, x(1) = {} must be in [0,500]", x(1)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(2) && x(2) <= 500,
-      "DeVilliersGlasser#1, x(2) = " << x(2) << " must be in [-500,500]"
+      "DeVilliersGlasser#1, x(2) = {} must be in [-500,500]", x(2)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(3) && x(3) <= 500,
-      "DeVilliersGlasser#1, x(3) = " << x(3) << " must be in [-500,500]"
+      "DeVilliersGlasser#1, x(3) = {} must be in [-500,500]", x(3)
     );
   }
 
@@ -211,14 +211,14 @@ public:
       5
     )
   {
-    for ( int_type i = 0; i < 24; ++i ) {
+    for ( integer i = 0; i < 24; ++i ) {
       t_vec[i] = i/10.0;
       y_vec[i] = 53.81*pow(1.27,t_vec[i])*tanh(3.012*t_vec[i]+sin(2.13*t_vec[i]))*cos(exp(0.507)*t_vec[i]);
     }
   }
 
   real_type
-  f_val( dvec_t const & x, int_type k ) const {
+  f_val( dvec_t const & x, integer k ) const {
     real_type t = t_vec[k];
     real_type bf;
     if ( x(1) < 0 ) bf = pow(-x(1), t);
@@ -227,7 +227,7 @@ public:
   }
   
   void
-  f_grad( dvec_t const & x, int_type k, dvec_t & g ) const {
+  f_grad( dvec_t const & x, integer k, dvec_t & g ) const {
     real_type PW   = pow(abs(x(1)),t_vec[k]);
     real_type PW1  = pow(abs(x(1)),t_vec[k]-1);
     real_type TANH = tanh(x(2)*t_vec[k]+sin(x(3)*t_vec[k]));
@@ -244,7 +244,7 @@ public:
   }
 
   void
-  f_hess( dvec_t const & x, int_type k, dmat_t & h ) const {
+  f_hess( dvec_t const & x, integer k, dmat_t & h ) const {
     real_type PW   = pow(abs(x(1)),t_vec[k]);
     real_type PW1  = pow(abs(x(1)),t_vec[k]-1);
     real_type PW2  = pow(abs(x(1)),t_vec[k]-2);
@@ -315,7 +315,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     if ( check_x( x ) ) {
       dvec_t f(n);
       evalF( x, f );
@@ -330,7 +330,7 @@ public:
     if ( check_x( x ) ) {
       dvec_t g(5);
       f.setZero();
-      for ( int_type k = 0; k < 24; ++k ) {
+      for ( integer k = 0; k < 24; ++k ) {
         real_type ff = f_val( x, k );
         f_grad( x, k, g );
         f += ff*g;
@@ -340,15 +340,15 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -357,27 +357,27 @@ public:
     jac.setZero();
     dvec_t g(5);
     dmat_t h(5,5);
-    for ( int_type k = 0; k < 24; ++k ) {
+    for ( integer k = 0; k < 24; ++k ) {
       real_type ff = f_val( x, k );
       f_grad( x, k, g );
       f_hess( x, k, h );
-      int_type kk = 0;
-      for ( int_type ii = 0; ii < 5; ++ii )
-        for ( int_type jj = 0; jj < 5; ++jj )
+      integer kk = 0;
+      for ( integer ii = 0; ii < 5; ++ii )
+        for ( integer jj = 0; jj < 5; ++jj )
           jac(kk++) += ff*h(ii,jj)+g(ii)*g(jj);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 45;
     x(1) = 2;
     x(2) = 2.5;
@@ -385,34 +385,34 @@ public:
     x(4) = 0.9;
   }
 
-  int_type
+  integer
   numInitialPoint() const override { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       x(1) > 0,
-      "DeVilliersGlasser02, x(1) = " << x(1) << " <= 0"
+      "DeVilliersGlasser02, x(1) = {} <= 0", x(1)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(0) && x(0) <= 500,
-      "DeVilliersGlasser#2, x(0) = " << x(0) << " must be in [-500,500]"
+      "DeVilliersGlasser#2, x(0) = {} must be in [-500,500]", x(0)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(1) && x(1) <= 500,
-      "DeVilliersGlasser#2, x(1) = " << x(1) << " must be in [-500,500]"
+      "DeVilliersGlasser#2, x(1) = {} must be in [-500,500]", x(1)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(2) && x(2) <= 500,
-      "DeVilliersGlasser#2, x(2) = " << x(2) << " must be in [-500,500]"
+      "DeVilliersGlasser#2, x(2) = {} must be in [-500,500]", x(2)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(3) && x(3) <= 500,
-      "DeVilliersGlasser#2, x(3) = " << x(3) << " must be in [-500,500]"
+      "DeVilliersGlasser#2, x(3) = {} must be in [-500,500]", x(3)
     );
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       -500 <= x(4) && x(4) <= 500,
-      "DeVilliersGlasser#2, x(4) = " << x(4) << " must be in [-500,500]"
+      "DeVilliersGlasser#2, x(4) = {} must be in [-500,500]", x(4)
     );
   }
 

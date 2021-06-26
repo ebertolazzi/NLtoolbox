@@ -40,6 +40,8 @@ task :build_win, [:year, :bits] do |t, args|
 
   args.with_defaults( :year => "2017", :bits => "x64" )
 
+  Rake::Task[:win_3rd].invoke(args.year,args.bits,args.lapack)
+
   dir = "vs_#{args.year}_#{args.bits}"
 
   FileUtils.rm_rf   dir
@@ -74,10 +76,16 @@ task :build_win, [:year, :bits] do |t, args|
   FileUtils.cd '..'
 end
 
-desc "compile for OSX"
 task :build, [:os] do |t, args|
 
   args.with_defaults( :os => "osx" )
+
+  case args.os
+  when "osx"
+    Rake::Task[:osx_3rd].invoke()
+  when "linux"
+    Rake::Task[:linux_3rd].invoke()
+  end
 
   dir = "build"
 
@@ -106,6 +114,32 @@ task :build, [:os] do |t, args|
     sh 'cmake --build . --config Release --target install '+PARALLEL+QUIET
   end
 
+  FileUtils.cd '..'
+end
+
+desc 'install third parties for osx'
+task :osx_3rd do
+  FileUtils.cd 'submodules'
+  sh "rake build_osx"
+  FileUtils.cd '..'
+end
+
+desc 'install third parties for linux'
+task :linux_3rd do
+  FileUtils.cd 'submodules'
+  sh "rake build_linux"
+  FileUtils.cd '..'
+end
+
+desc "compile for Visual Studio [default year=2017, bits=x64, lapack=LAPACK_WRAPPER_USE_OPENBLAS]"
+task :win_3rd, [:year, :bits, :lapack] do |t, args|
+  args.with_defaults(
+    :year   => "2017",
+    :bits   => "x64",
+    :lapack => "LAPACK_WRAPPER_USE_OPENBLAS"
+  )
+  FileUtils.cd 'submodules'
+  sh "rake build_win[#{args.year},#{args.bits}]"
   FileUtils.cd '..'
 end
 

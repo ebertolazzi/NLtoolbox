@@ -39,7 +39,7 @@ public:
   {}
   
   real_type
-  t_fun( dvec_t const & x, int_type i ) const {
+  t_fun( dvec_t const & x, integer i ) const {
     switch ( i ) {
     case 0: return sqrt(100.0) * (x(1)-x(0)*x(0));
     case 1: return 1.0 - x(0);
@@ -52,7 +52,7 @@ public:
   }
 
   void
-  t_grad( dvec_t const & x, int_type i, dvec_t & g ) const {
+  t_grad( dvec_t const & x, integer i, dvec_t & g ) const {
     g.setZero();
     switch ( i ) {
     case 0:
@@ -80,7 +80,7 @@ public:
   }
 
   void
-  t_hess( dvec_t const & x, int_type i, dmat_t & h ) const {
+  t_hess( dvec_t const & x, integer i, dmat_t & h ) const {
     h.setZero();
     switch ( i ) {
     case 0:
@@ -101,7 +101,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -111,29 +111,29 @@ public:
   evalF( dvec_t const & x, dvec_t & f ) const override {
     dvec_t g(4);
     f.setZero();
-    for ( int_type i = 0; i < 6; ++i ) {
+    for ( integer i = 0; i < 6; ++i ) {
       real_type t = t_fun( x, i );
       t_grad( x, i, g );
       f += t*g;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran addressing
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran addressing
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
-    for ( int_type i = 0; i < 6; ++i ) {
+    for ( integer i = 0; i < 6; ++i ) {
       dvec_t g(4);
       dmat_t h(4,4);
       real_type t = t_fun( x, i );
@@ -164,26 +164,26 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 1;
     x(2) = 1;
     x(3) = 1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = -3;
     x(1) = -1;
     x(2) = -3;
     x(3) = -1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -191,7 +191,7 @@ public:
   checkIfAdmissible( dvec_t const & x ) const override {
     // funziona solo con questo limite
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 100, "x range" );
+    //  UTILS_ASSERT( abs(x(i)) < 100, "x range" );
   }
 
 };

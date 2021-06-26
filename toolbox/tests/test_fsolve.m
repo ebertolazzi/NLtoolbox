@@ -14,7 +14,7 @@ algo = {'trust-region-dogleg', 'trust-region','levenberg-marquardt'};
 stat = {};
 kkk  = 0 ;
 
-for ntest=1:nl.numTest()
+for ntest=1:nl.numberOfTests()
   nl.select(ntest) ;
   options = optimoptions( @fsolve,...
     'Display',                  'none',...
@@ -47,14 +47,10 @@ end
 ok  = 0;
 qok = 0;
 for k=1:kkk
-  conv = 'DIVERGE';
-  if stat{k}.exitflag == 1
+  conv = 'NO     ';
+  if stat{k}.exitflag > 0
     conv = 'YES    ';
     ok = ok+1;
-  end
-  if stat{k}.exitflag == 4
-    conv = 'NO     ';
-    qok = qok+1;
   end
 
   fprintf('%4d Conv:%7s Test N:%4d Guess:%2d IT:%4d [%s]\n', ...
@@ -69,8 +65,7 @@ end
 
 fprintf('ntest = %d\n',kkk);
 fprintf('ok   = %d\n',ok);
-fprintf('qok  = %d\n',qok);
-fprintf('fail = %d\n',kkk-qok-ok);
+fprintf('fail = %d\n',kkk-ok);
 
 fprintf('\n\nAll done folks\n\n');
 

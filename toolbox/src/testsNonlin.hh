@@ -53,20 +53,9 @@
 #define DEBUG 1
 #define EIGEN_NO_AUTOMATIC_RESIZING 1
 
+#include <Utils.hh>
 #include <Eigen/Core>
 #include <Eigen/Dense>
-
-#ifndef NONLIN_ASSERT
-  #define NONLIN_ASSERT(COND,MSG)                   \
-    if ( !(COND) ) {                                \
-      std::ostringstream ost;                       \
-      ost << "\n***** ERROR *****\n"                \
-          << MSG << "\nline: " << __LINE__          \
-          << "\nfile: " << __FILE__ << "\n"         \
-          << "\n*****************\n";               \
-      throw std::runtime_error(ost.str());          \
-    }
-#endif
 
 namespace NLproblem {
 
@@ -82,7 +71,7 @@ namespace NLproblem {
   using std::numeric_limits;
 
   typedef double  real_type;
-  typedef int32_t int_type;
+  typedef int32_t integer;
 
   //! `m_e` the value of \f$ e \f$.
   static real_type const m_e = 2.718281828459045235360287471352662497757;
@@ -121,7 +110,7 @@ namespace NLproblem {
 
   typedef Eigen::Matrix<real_type,Eigen::Dynamic,Eigen::Dynamic> dmat_t;
   typedef Eigen::Matrix<real_type,Eigen::Dynamic,1>              dvec_t;
-  typedef Eigen::Matrix<int_type,Eigen::Dynamic,1>               ivec_t;
+  typedef Eigen::Matrix<integer,Eigen::Dynamic,1>               ivec_t;
 
   class nonlinearBase {
 
@@ -143,37 +132,37 @@ namespace NLproblem {
     real_type power6( real_type a ) const { real_type a2 = a*a; return a2*a2*a2; }
 
     void
-    checkMinEquations( int_type i, int_type i_min ) const {
-      NONLIN_ASSERT(
-        i >= i_min, "checkMinEquations:: i = " << i << " < " << i_min
+    checkMinEquations( integer i, integer i_min ) const {
+      UTILS_ASSERT(
+        i >= i_min, "checkMinEquations:: i = {} < {}", i, i_min
       );
     }
 
     void
-    checkEven( int_type i, int_type i_min ) const {
-      NONLIN_ASSERT(
-        (i % 2) == 0 && i >= i_min, "checkEven:: odd index i = " << i
+    checkEven( integer i, integer i_min ) const {
+      UTILS_ASSERT(
+        (i % 2) == 0 && i >= i_min, "checkEven:: odd index i = {}", i
       );
     }
 
     void
-    checkOdd( int_type i, int_type i_min ) const {
-      NONLIN_ASSERT(
-        (i % 2) != 0 && i >= i_min, "checkOdd:: odd index i = " << i
+    checkOdd( integer i, integer i_min ) const {
+      UTILS_ASSERT(
+        (i % 2) != 0 && i >= i_min, "checkOdd:: odd index i = {}", i
       );
     }
 
     void
-    checkThree( int_type i, int_type i_min ) const {
-      NONLIN_ASSERT(
-        (i % 3) == 0 && i >= i_min, "checkThree:: index i = " << i
+    checkThree( integer i, integer i_min ) const {
+      UTILS_ASSERT(
+        (i % 3) == 0 && i >= i_min, "checkThree:: index i = {}", i
       );
     }
 
     void
-    checkFour( int_type i, int_type i_min ) const {
-      NONLIN_ASSERT(
-        (i % 4) == 0 && i >= i_min, "checkFour:: index i = " << i
+    checkFour( integer i, integer i_min ) const {
+      UTILS_ASSERT(
+        (i % 4) == 0 && i >= i_min, "checkFour:: index i = {}", i
       );
     }
 
@@ -194,27 +183,18 @@ namespace NLproblem {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  static
-  inline
-  string
-  addNEQ( int_type n ) {
-    char tail[20];
-    snprintf( tail, 20, " neq = %d", n );
-    return string(tail);
-  }
-
   class multivariateFunction : public nonlinearBase {
 
     multivariateFunction( multivariateFunction const & );
     multivariateFunction const & operator = ( multivariateFunction const & );
 
   protected:
-    int_type n;
+    integer n;
 
   public:
 
-    multivariateFunction( string const & t, string const & b, int_type _n )
-    : nonlinearBase(t+addNEQ(_n),b)
+    multivariateFunction( string const & t, string const & b, integer _n )
+    : nonlinearBase( fmt::format("{} neq = {}", t, _n ), b )
     , n(_n)
     { }
 
@@ -223,17 +203,17 @@ namespace NLproblem {
     virtual real_type eval( dvec_t const & x ) const = 0;
     virtual void      gradient( dvec_t const & x, dvec_t & g ) const = 0;
 
-    virtual int_type  hessianNnz() const = 0;
-    virtual void      hessian( dvec_t const & x, dvec_t & jac ) const = 0;
-    virtual void      hessianPattern( ivec_t & i, ivec_t & j ) const = 0;
+    virtual integer hessianNnz() const = 0;
+    virtual void    hessian( dvec_t const & x, dvec_t & jac ) const = 0;
+    virtual void    hessianPattern( ivec_t & i, ivec_t & j ) const = 0;
 
-    virtual int_type  numExactSolution() const = 0;
-    virtual void      getExactSolution( dvec_t & x, int_type idx ) const = 0;
+    virtual integer numExactSolution() const = 0;
+    virtual void    getExactSolution( dvec_t & x, integer idx ) const = 0;
 
-    virtual int_type  numInitialPoint() const = 0;
-    virtual void      getInitialPoint( dvec_t & x, int_type idx ) const = 0;
+    virtual integer numInitialPoint() const = 0;
+    virtual void    getInitialPoint( dvec_t & x, integer idx ) const = 0;
 
-    virtual void      checkIfAdmissible( dvec_t const & x ) const = 0;
+    virtual void    checkIfAdmissible( dvec_t const & x ) const = 0;
 
     virtual void
     boundingBox( dvec_t & L, dvec_t & U ) const {
@@ -241,21 +221,12 @@ namespace NLproblem {
       U.fill( real_max );
     }
 
-    int_type dimX( void ) const { return n; }
+    integer dimX( void ) const { return n; }
 
   };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  static
-  inline
-  string
-  addDIM( int_type n, int_type m ) {
-    char tail[20];
-    snprintf( tail, 20, " dimF = %d, dimX = %d", n, m );
-    return string(tail);
-  }
 
   class nonlinearLeastSquares: public nonlinearBase {
 
@@ -264,41 +235,43 @@ namespace NLproblem {
 
   protected:
 
-    int_type n, m;
+    integer n, m;
 
   public:
 
     nonlinearLeastSquares(
       string const & t,
       string const & b,
-      int_type       _n,
-      int_type       _m
+      integer       _n,
+      integer       _m
     )
-    : nonlinearBase( t+addDIM(_n,_m), b )
+    : nonlinearBase(
+        fmt::format( "{} dimF = {}, dimX = {}", t, _n, _m ), b
+      )
     , n(_n)
     , m(_m)
     {}
 
     virtual ~nonlinearLeastSquares() {}
 
-    virtual real_type evalFk( dvec_t const & x, int_type k ) const = 0;
+    virtual real_type evalFk( dvec_t const & x, integer k ) const = 0;
     virtual void      evalF ( dvec_t const & x, dvec_t & f ) const = 0;
 
-    virtual int_type  jacobianNnz() const = 0;
-    virtual void      jacobian( dvec_t const & x, dvec_t & jac ) const = 0;
-    virtual void      jacobianPattern( ivec_t & i, ivec_t & j ) const = 0;
+    virtual integer jacobianNnz() const = 0;
+    virtual void    jacobian( dvec_t const & x, dvec_t & jac ) const = 0;
+    virtual void    jacobianPattern( ivec_t & i, ivec_t & j ) const = 0;
 
-    virtual int_type  tensorNnz() const = 0;
-    virtual void      tensor( dvec_t const & x, dvec_t const & lambda, dvec_t & jac ) const = 0;
-    virtual void      tensorPattern( ivec_t & i, ivec_t & j ) const = 0;
+    virtual integer tensorNnz() const = 0;
+    virtual void    tensor( dvec_t const & x, dvec_t const & lambda, dvec_t & jac ) const = 0;
+    virtual void    tensorPattern( ivec_t & i, ivec_t & j ) const = 0;
 
-    virtual int_type  numExactSolution() const = 0;
-    virtual void      getExactSolution( dvec_t & x, int_type idx ) const = 0;
+    virtual integer numExactSolution() const = 0;
+    virtual void    getExactSolution( dvec_t & x, integer idx ) const = 0;
 
-    virtual int_type  numInitialPoint() const = 0;
-    virtual void      getInitialPoint( dvec_t & x, int_type idx ) const = 0;
+    virtual integer numInitialPoint() const = 0;
+    virtual void    getInitialPoint( dvec_t & x, integer idx ) const = 0;
 
-    virtual void      checkIfAdmissible( dvec_t const & x ) const = 0;
+    virtual void checkIfAdmissible( dvec_t const & x ) const = 0;
 
     virtual void
     boundingBox( dvec_t & L, dvec_t & U ) const {
@@ -306,8 +279,8 @@ namespace NLproblem {
       U.fill( real_max );
     }
 
-    int_type dimF( void ) const { return n; }
-    int_type dimX( void ) const { return m; }
+    integer dimF( void ) const { return n; }
+    integer dimX( void ) const { return m; }
 
   };
 
@@ -327,41 +300,41 @@ namespace NLproblem {
     // i = riga
     // j = colonna
     // indirizzamento fortran
-    int_type faddr( int_type i, int_type j ) const
+    integer faddr( integer i, integer j ) const
     { return (i-1) + (j-1) * n; }
     
-    int_type caddr( int_type i, int_type j ) const
+    integer caddr( integer i, integer j ) const
     { return i + j * n; }
 
-    int_type n;
+    integer n;
 
   public:
 
-    nonlinearSystem( string const & t, string const & b, int_type _n )
-    : nonlinearBase(t+addNEQ(_n),b)
+    nonlinearSystem( string const & t, string const & b, integer _n )
+    : nonlinearBase( fmt::format("{} neq = {}", t, _n ), b )
     , n(_n)
     { }
 
     virtual ~nonlinearSystem() {}
 
     //void
-    //setup( string const & t, int_type _n )
+    //setup( string const & t, integer _n )
     //{ theTitle = t; n = _n; }
 
-    virtual real_type evalFk( dvec_t const & x, int_type k ) const = 0;
+    virtual real_type evalFk( dvec_t const & x, integer k ) const = 0;
     virtual void      evalF ( dvec_t const & x, dvec_t & f ) const = 0;
 
-    virtual int_type  jacobianNnz() const = 0;
-    virtual void      jacobian( dvec_t const & x, dvec_t & jac ) const = 0;
-    virtual void      jacobianPattern( ivec_t & i, ivec_t & j ) const = 0;
+    virtual integer jacobianNnz() const = 0;
+    virtual void    jacobian( dvec_t const & x, dvec_t & jac ) const = 0;
+    virtual void    jacobianPattern( ivec_t & i, ivec_t & j ) const = 0;
 
-    virtual int_type  numExactSolution() const = 0;
-    virtual void      getExactSolution( dvec_t & x, int_type idx ) const = 0;
+    virtual integer numExactSolution() const = 0;
+    virtual void    getExactSolution( dvec_t & x, integer idx ) const = 0;
 
-    virtual int_type  numInitialPoint() const = 0;
-    virtual void      getInitialPoint( dvec_t & x, int_type idx ) const = 0;
+    virtual integer numInitialPoint() const = 0;
+    virtual void    getInitialPoint( dvec_t & x, integer idx ) const = 0;
 
-    virtual void      checkIfAdmissible( dvec_t const & x ) const = 0;
+    virtual void checkIfAdmissible( dvec_t const & x ) const = 0;
 
     virtual void
     boundingBox( dvec_t & L, dvec_t & U ) const {
@@ -369,9 +342,9 @@ namespace NLproblem {
       U.fill( real_max );
     }
 
-    int_type numEqns( void ) const { return n; }
+    integer numEqns( void ) const { return n; }
 
-    int_type
+    integer
     fill_CSR(
       dvec_t const & x,
       ivec_t       & R,
@@ -407,7 +380,7 @@ namespace NLproblem {
 
     virtual
     real_type
-    evalFk( dvec_t const & x, int_type k ) const {
+    evalFk( dvec_t const & x, integer k ) const {
       dvec_t g(n);
       evalF( x, g );
       return g(k);
@@ -420,7 +393,7 @@ namespace NLproblem {
     }
 
     virtual
-    int_type
+    integer
     jacobianNnz() const
     { return pMF->hessianNnz(); }
 
@@ -435,23 +408,23 @@ namespace NLproblem {
     { pMF->hessianPattern( i, j ); }
 
     virtual
-    int_type
+    integer
     numExactSolution() const
     { return pMF->numExactSolution(); }
 
     virtual
     void
-    getExactSolution( dvec_t & x, int_type idx ) const
+    getExactSolution( dvec_t & x, integer idx ) const
     { pMF->getExactSolution( x, idx ); }
 
     virtual
-    int_type
+    integer
     numInitialPoint() const
     { return pMF->numInitialPoint(); }
 
     virtual
     void
-    getInitialPoint( dvec_t & x, int_type idx ) const
+    getInitialPoint( dvec_t & x, integer idx ) const
     { pMF->getInitialPoint( x, idx ); }
 
     virtual
@@ -464,7 +437,7 @@ namespace NLproblem {
     boundingBox( dvec_t & L, dvec_t & U ) const
     { pMF->boundingBox( L, U ); }
 
-    int_type numEqns( void ) const { return pMF->dimX(); }
+    integer numEqns( void ) const { return pMF->dimX(); }
 
     string const & title(void) const { return pMF->title(); }
 
@@ -493,7 +466,7 @@ namespace NLproblem {
 
     virtual
     real_type
-    evalFk( dvec_t const & x, int_type k ) const {
+    evalFk( dvec_t const & x, integer k ) const {
       dvec_t g(n);
       evalF( x, g );
       return g(k);
@@ -506,7 +479,7 @@ namespace NLproblem {
     }
 
     virtual
-    int_type
+    integer
     jacobianNnz() const
     { return pMF->hessianNnz(); }
 
@@ -521,23 +494,23 @@ namespace NLproblem {
     { pMF->hessianPattern(i,j); }
 
     virtual
-    int_type
+    integer
     numExactSolution() const
     { return pMF->numExactSolution(); }
 
     virtual
     void
-    getExactSolution( dvec_t & x, int_type idx ) const
+    getExactSolution( dvec_t & x, integer idx ) const
     { pMF->getExactSolution(x,idx); }
 
     virtual
-    int_type
+    integer
     numInitialPoint() const
     { return pMF->numInitialPoint(); }
 
     virtual
     void
-    getInitialPoint( dvec_t & x, int_type idx ) const
+    getInitialPoint( dvec_t & x, integer idx ) const
     { pMF->getInitialPoint(x,idx); }
 
     virtual
@@ -550,7 +523,7 @@ namespace NLproblem {
     boundingBox( dvec_t & L, dvec_t & U ) const
     { pMF->boundingBox(L,U); }
 
-    int_type numEqns( void ) const { return pMF->dimX(); }
+    integer numEqns( void ) const { return pMF->dimX(); }
 
     string const & title(void) const { return pMF->title(); }
 
@@ -558,7 +531,7 @@ namespace NLproblem {
 #endif
 
   extern vector<nonlinearSystem*> theProblems;
-  extern map<string,int_type>     theProblemsMap;
+  extern map<string,integer>      theProblemsMap;
   void initProblems();
 
 }

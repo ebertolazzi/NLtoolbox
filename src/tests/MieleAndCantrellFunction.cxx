@@ -87,7 +87,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -102,15 +102,15 @@ public:
     add_grad1( x, f );
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -122,26 +122,26 @@ public:
     add_hess2( x, h );
     add_hess3( x, h );
     add_hess1( x, h );
-    int_type kk = 0;
-    for ( int_type i = 0; i < 4; ++i )
-      for ( int_type j = 0; j < 4; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < 4; ++i )
+      for ( integer j = 0; j < 4; ++j )
         jac(kk++) = h(i,j);
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 0;
     x(1) = 1;
     x(2) = 1;
     x(3) = 1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type init_point ) const override {
+  getInitialPoint( dvec_t & x, integer init_point ) const override {
     switch ( init_point ) {
     case 0:
       x(0) = 10;
@@ -158,7 +158,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 2; }
 

@@ -31,7 +31,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x_in, int_type k ) const override {
+  evalFk( dvec_t const & x_in, integer k ) const override {
     real_type x = x_in(0);
     real_type y = x_in(1);
     switch ( k ) {
@@ -49,7 +49,7 @@ public:
     f(1) = delta*y+power2(y);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 2; }
 
@@ -68,30 +68,30 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1000;
     x(1) = 1000;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible ( dvec_t const & x ) const override {
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       x(0) >= xmin,
-      "BertolazziRootPlusSquare: x = " << x(0) << " must be >= " << xmin
+      "BertolazziRootPlusSquare: x = {} must be >= {}", x(0), xmin
     );
   }
 
@@ -127,7 +127,7 @@ public:
   { }
 
   real_type
-  evalFk( dvec_t const & x_in, int_type k ) const override {
+  evalFk( dvec_t const & x_in, integer k ) const override {
     real_type x = x_in(0);
     real_type y = x_in(1);
     switch ( k ) {
@@ -145,7 +145,7 @@ public:
     f(1) = epsilon*y+x*y;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 3; }
 
@@ -167,31 +167,31 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT(
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT(
         abs(x(i)) < 10,
-        "x[" << i << "] = " << x(i) << " out of range [-10,10]"
+        "x[{}] = {} out of range [-10,10]", i, x(i)
       );
   }
 
@@ -230,7 +230,7 @@ public:
   { }
 
   real_type
-  evalFk( dvec_t const & x_in, int_type k ) const override {
+  evalFk( dvec_t const & x_in, integer k ) const override {
     real_type x = x_in(0);
     real_type y = x_in(1);
     real_type t1 = exp(x/10);
@@ -260,7 +260,7 @@ public:
     f(1) = -t6 - 1 + t4 + t5 + t1 + t2 - t3;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 4; }
 
@@ -286,22 +286,22 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 0;
     x(1) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 10;
     x(1) = -1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -330,7 +330,7 @@ public:
   { }
 
   real_type
-  evalFk( dvec_t const & x_in, int_type k ) const override {
+  evalFk( dvec_t const & x_in, integer k ) const override {
     real_type x = x_in(0);
     return exp(-x) * (x*x + 1) * x + exp(x/10) - 1;
   }
@@ -341,7 +341,7 @@ public:
     f(0) = exp(-x) * (x*x + 1) * x + exp(x/10) - 1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return 1; }
 
@@ -360,20 +360,20 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     x(0) = 0;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 10;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

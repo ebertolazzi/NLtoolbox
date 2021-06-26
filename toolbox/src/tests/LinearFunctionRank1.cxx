@@ -34,55 +34,55 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type sumx = 0;
-    for ( int_type i = 0; i < n; ++i ) sumx += (i+1)*x(i);
+    for ( integer i = 0; i < n; ++i ) sumx += (i+1)*x(i);
     return (k+1)*sumx - 1;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type sumx = 0;
-    for ( int_type i = 0; i < n; ++i ) sumx += (i+1)*x(i);
-    for ( int_type i = 0; i < n; ++i ) f(i) = (i+1)*sumx - (i+1);
+    for ( integer i = 0; i < n; ++i ) sumx += (i+1)*x(i);
+    for ( integer i = 0; i < n; ++i ) f(i) = (i+1)*sumx - (i+1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const &, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = 0; j < n; ++j ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = 0; j < n; ++j ) {
         jac(kk++) = (i+1.0)*(j+1.0);
       }
     }
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; ++i ) x(i) = 1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; ++i ) x(i) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

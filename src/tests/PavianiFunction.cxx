@@ -52,15 +52,15 @@ public:
   real_type
   mul( dvec_t const & x ) const {
     real_type res = 1;
-    for ( int_type i = 0; i < 10; ++i )
+    for ( integer i = 0; i < 10; ++i )
       res *= power2(abs(x(i)));
     return res;
   }
 
   real_type
-  mul_D( dvec_t const & x, int_type k ) const {
+  mul_D( dvec_t const & x, integer k ) const {
     real_type res = 1;
-    for ( int_type i = 0; i < 10; ++i ) {
+    for ( integer i = 0; i < 10; ++i ) {
       res *= x(i);
       if ( i == k ) res *= 2;
       else          res *= x(i);
@@ -69,15 +69,15 @@ public:
   }
 
   real_type
-  mul_DD( dvec_t const & x, int_type i, int_type j ) const {
+  mul_DD( dvec_t const & x, integer i, integer j ) const {
     real_type res = 1;
     if ( i == j ) {
-      for ( int_type k = 0; k < 10; ++k ) {
+      for ( integer k = 0; k < 10; ++k ) {
         if ( i == k ) res *= 2;
         else          res *= power2(x(k));
       }
     } else {
-      for ( int_type k = 0; k < 10; ++k ) {
+      for ( integer k = 0; k < 10; ++k ) {
         res *= x(k);
         if ( i == k || j == k ) res *= 2;
         else                    res *= x(k);
@@ -87,13 +87,13 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     return loglog_D(x(k)) - mul_D(x,k);
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type i = 0; i < 10; ++i ) {
+    for ( integer i = 0; i < 10; ++i ) {
       if ( x(i) > 2 && x(i) < 10 )
         f(i) = loglog_D(x(i)) - mul_D(x,i);
       else
@@ -101,23 +101,23 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < 10; ++i ) {
-      for ( int_type j = 0; j < 10; ++j ) {
+    integer kk = 0;
+    for ( integer i = 0; i < 10; ++i ) {
+      for ( integer j = 0; j < 10; ++j ) {
         jac(kk) = -mul_DD(x,i,j);
         if ( i == j ) jac(kk) += loglog_DD(x(i));
         ++kk;
@@ -126,15 +126,15 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     /*x(0) = 2.001;
     x(1) = 9.999;
     x(2) = 2.001;
@@ -158,16 +158,16 @@ public:
     x(9) = 9.9;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < 10; ++i ) {
-      NONLIN_ASSERT(
+    for ( integer i = 0; i < 10; ++i ) {
+      UTILS_ASSERT(
         x(i) > 2 && x(i) < 10,
-        "x[" << i << "] = " << x(i) << " must be in (2,10)"
+        "x[{}] = {} must be in (2,10)", i, x(i)
       );
     }
   }

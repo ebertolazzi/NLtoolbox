@@ -14,7 +14,7 @@
 
 class Weibull : public nonlinearSystem {
   real_type z[99], y[99];
-  int_type const NPT;
+  integer const NPT;
 
 public:
 
@@ -34,7 +34,7 @@ public:
     )
   , NPT(99)
   {
-    for ( int_type i = 0; i < NPT; ++i ) {
+    for ( integer i = 0; i < NPT; ++i ) {
       z[i] = (i+1)*0.01;
       y[i] = 25 + pow( 50 * log(1/z[i]), 2./3. );
     }
@@ -42,7 +42,7 @@ public:
 
   void
   map( dvec_t const & x, dvec_t & eq ) const {
-    for ( int_type k = 0; k < NPT; ++k ) {
+    for ( integer k = 0; k < NPT; ++k ) {
       real_type y2 = y[k]-x(2);
       real_type g  = pow( y2, x(1) )/ x(0);
       real_type f  = exp( -g );
@@ -51,7 +51,7 @@ public:
   }
 
   void
-  Grad_map( dvec_t const & x, int_type k, dvec_t & G ) const {
+  Grad_map( dvec_t const & x, integer k, dvec_t & G ) const {
     real_type y2 = y[k]-x(2);
     real_type g  = pow( y2, x(1) )/ x(0);
     real_type fg = g*exp( -g );
@@ -62,7 +62,7 @@ public:
   }
 
   void
-  Hess_map( dvec_t const & x, int_type k, dmat_t & H ) const {
+  Hess_map( dvec_t const & x, integer k, dmat_t & H ) const {
     real_type y2   = y[k]-x(2);
     real_type g    = pow( y2, x(1) )/ x(0);
     real_type fg   = g*exp( -g );
@@ -89,7 +89,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -100,21 +100,21 @@ public:
     dvec_t eq(NPT), G(n);
     map( x, eq );
     f.setZero();
-    for ( int_type k = 0; k < NPT; ++k ) {
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       f += eq(k)*G;
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -127,13 +127,13 @@ public:
     dmat_t H(n,n);
     map( x, eq );
     jac.setZero();
-    int_type kk = 0;
-    for ( int_type k = 0; k < NPT; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < NPT; ++k ) {
       Grad_map( x, k, G );
       Hess_map( x, k, H );
       kk = 0;
-      for ( int_type i = 0; i < n; ++i ) {
-        for ( int_type j = 0; j < n; ++j ) {
+      for ( integer i = 0; i < n; ++i ) {
+        for ( integer j = 0; j < n; ++j ) {
           jac(kk) += eq(k)*H(i,j)+G(i)*G(j); ++kk;
         }
       }
@@ -141,21 +141,21 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 250;
     x(1) = 0.3;
     x(2) = 5;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

@@ -30,14 +30,14 @@ public:
       3
     )
   {
-    for ( int_type i = 0; i < 99; ++i ) {
+    for ( integer i = 0; i < 99; ++i ) {
       real_type arg = (i+1) / 100.0;
       rr[i] = pow(-50.0*log(arg),2.0/3.0) + 25.0;
     }
   }
 
   real_type
-  t_fun( dvec_t const & x, int_type i ) const {
+  t_fun( dvec_t const & x, integer i ) const {
     real_type arg = (i+1) / 100.0;
     real_type   r = rr[i] - x(1);
     if ( r <= 0 ) return nan("t_fun");
@@ -45,7 +45,7 @@ public:
   }
 
   void
-  t_grad( dvec_t const & x, int_type i, dvec_t & g ) const {
+  t_grad( dvec_t const & x, integer i, dvec_t & g ) const {
     real_type t1 = rr[i]-x(1);
     if ( t1 <= 0 ) {
       g(0) = g(1) = g(2) = nan("t_grad");
@@ -62,7 +62,7 @@ public:
   }
 
   void
-  t_hess( dvec_t const & x, int_type i, dmat_t & h ) const {
+  t_hess( dvec_t const & x, integer i, dmat_t & h ) const {
     real_type t1 = rr[i]-x(1);
     if ( t1 <= 0 ) {
       h.fill(nan("t_hess"));
@@ -93,7 +93,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -103,7 +103,7 @@ public:
   evalF( dvec_t const & x, dvec_t & f ) const override {
     dvec_t g(3);
     f(0) = f(1) = f(2) = 0;
-    for ( int_type i = 0; i < 99; ++i ) {
+    for ( integer i = 0; i < 99; ++i ) {
       real_type t = t_fun( x, i );
       t_grad( x, i, g );
       f(0) += t*g(0);
@@ -112,14 +112,14 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 9;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
     SETIJ(0,1);
@@ -136,7 +136,7 @@ public:
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac(0) = jac(1) = jac(2) = jac(3) = jac(4) = jac(5) = 0;
-    for ( int_type i = 0; i < 99; ++i ) {
+    for ( integer i = 0; i < 99; ++i ) {
       dvec_t g(3);
       dmat_t h(3,3);
       real_type t = t_fun( x, i );
@@ -157,34 +157,34 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 50.0;
     x(1) = 25.0;
     x(2) = 1.5;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 40.0;
     x(1) = 20.0;
     x(2) = 1.20;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    NONLIN_ASSERT( x(0) > 0, "x0!!!!" );
-    NONLIN_ASSERT( x(1) > 0, "x0!!!!" );
-    for ( int_type i = 0; i < 99; ++i ) {
+    UTILS_ASSERT0( x(0) > 0, "x0!!!!" );
+    UTILS_ASSERT0( x(1) > 0, "x0!!!!" );
+    for ( integer i = 0; i < 99; ++i ) {
       real_type t1 = rr[i]-x(1);
-      NONLIN_ASSERT( t1 >= 0, "r < 0!!!! r = " << t1 );
+      UTILS_ASSERT( t1 >= 0, "r < 0!!!! r = {}", t1 );
     }
   }
 

@@ -15,7 +15,7 @@
 class ZeroJacobianFunction : public nonlinearSystem {
 public:
 
-  ZeroJacobianFunction( int_type neq )
+  ZeroJacobianFunction( integer neq )
   : nonlinearSystem(
       "Zero Jacobian Function (same as function 27)",
       "@article{LaCruz:2003,\n"
@@ -31,68 +31,62 @@ public:
       "}\n",
       neq
     )
-  {  checkMinEquations(n,1); }
+  { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type f = 0;
-    if ( i == 0 ) {
-      f += x.dot(x);
-    } else {
-      f = -2*x(0)*x(i);
-    }
+    if ( i == 0 ) f = x.dot(x);
+    else          f = -2*x(0)*x(i);
     return f;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = x.dot(x);
-    for ( int_type i = 1; i < n; ++i ) f(i)  = -2*x(0)*x(i);
+    for ( integer i = 1; i < n; ++i ) f(i) = -2*x(0)*x(i);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; ++i ) { SETIJ(0,i); }
-    for ( int_type i = 1; i < n; ++i ) {
-      SETIJ(i,0);
-      SETIJ(i,i);
-    }
+    for ( integer i = 0; i < n; ++i ) { SETIJ(0,i); }
+    for ( integer i = 1; i < n; ++i ) { SETIJ(i,0); SETIJ(i,i); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) jac(kk++) = 2*x(i);
-    for ( int_type i = 1; i < n; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) jac(kk++) = 2*x(i);
+    for ( integer i = 1; i < n; ++i ) {
       jac(kk++) = -2*x(i);
       jac(kk++) = -2*x(0);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     real_type bf = (1.0/60.0-100.0/(6.0*n))*(1.0/60.0-50.0/6.0);
     x.fill(bf);
     x(0) = 100.0*(n-100.0)/n;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

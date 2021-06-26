@@ -19,9 +19,11 @@ class BroydenTridiagonalFunction : public nonlinearSystem {
   real_type const beta;
 public:
   
-  BroydenTridiagonalFunction( real_type _alpha,
-                              real_type _beta,
-                              int_type  _neq )
+  BroydenTridiagonalFunction(
+    real_type _alpha,
+    real_type _beta,
+    integer   _neq
+  )
   : nonlinearSystem(
       "Broyden tridiagonal function",
       "@article{Broyden:1965,\n"
@@ -50,7 +52,7 @@ public:
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = (3-alpha*x(k))*x(k)+beta;
     if ( k > 0   ) f -= x(k-1);
     if ( k < n-1 ) f -= 2*x(k+1);
@@ -59,50 +61,50 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
     	f(k) = (3-alpha*x(k))*x(k)+beta;
       if ( k > 0   ) f(k) -= x(k-1);
       if ( k < n-1 ) f(k) -= 2*x(k+1);
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 0; k < n;   ++k ) { SETIJ(k,k); }
-    for ( int_type k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
-    for ( int_type k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
+    for ( integer k = 0; k < n;   ++k ) { SETIJ(k,k); }
+    for ( integer k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
+    for ( integer k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n;   ++k ) jac(kk++) = 3 - 2*alpha*x(k);
-    for ( int_type k = 0; k < n-1; ++k ) jac(kk++) = -1;
-    for ( int_type k = 0; k < n-1; ++k ) jac(kk++) = -2;
+    integer kk = 0;
+    for ( integer k = 0; k < n;   ++k ) jac(kk++) = 3 - 2*alpha*x(k);
+    for ( integer k = 0; k < n-1; ++k ) jac(kk++) = -1;
+    for ( integer k = 0; k < n-1; ++k ) jac(kk++) = -2;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = -1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = -1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

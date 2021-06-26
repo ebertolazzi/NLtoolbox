@@ -65,7 +65,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     switch ( k ) {
     case 0: return x(0) + x(1) - 2;
     case 1: return x(0) - log(x(1)) + x(2) - 2;
@@ -81,15 +81,15 @@ public:
     f(2) = x(1)*x(1) - 2*x(2) + 1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
@@ -109,7 +109,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
       case 0:
         x(0) = x(1) = x(2) = 1;
@@ -122,16 +122,16 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 2; }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(0.5);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -150,12 +150,12 @@ public:
 class RooseKullaLombMeressoo201 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo201( int_type neq )
+  RooseKullaLombMeressoo201( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.201",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
     if ( k == 0 ) f = 1-x(0);
     else          f = 10*k*power2(x(k)-x(k-1));
@@ -165,21 +165,21 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = 1-x(0);
-    for ( int_type k = 1; k < n; ++k )
+    for ( integer k = 1; k < n; ++k )
     	f(k) = 10*k*power2(x(k)-x(k-1));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n-1;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
-    for ( int_type k = 1; k < n; ++k ) {
+    for ( integer k = 1; k < n; ++k ) {
       SETIJ(k,k-1);
       SETIJ(k,k);
     }
@@ -190,28 +190,28 @@ public:
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac(0) = -1;
-    for ( int_type k = 1; k < n; ++k ) {
+    for ( integer k = 1; k < n; ++k ) {
       jac[2*k-1] = -20*k*(x(k)-x(k-1));
       jac[2*k]   =  20*k*(x(k)-x(k-1));
     }
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(-1.2);
     x(n-1) = -1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -230,12 +230,12 @@ public:
 class RooseKullaLombMeressoo202 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo202( int_type neq )
+  RooseKullaLombMeressoo202( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.202",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
     if ( k == n-1 ) f = x(n-1)-0.1*power2(x(0));
     else            f = x(k)-0.1*power2(x(k+1));
@@ -244,21 +244,21 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n-1; ++k )
+    for ( integer k = 0; k < n-1; ++k )
     	f(k) = x(k) - 0.1*power2(x(k+1));
     f(n-1) = x(n-1) - 0.1*power2(x(0));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 0; k < n-1; ++k ) {
+    for ( integer k = 0; k < n-1; ++k ) {
       SETIJ(k,k);
       SETIJ(k,k+1);
     }
@@ -269,8 +269,8 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n-1; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n-1; ++k ) {
       jac(kk++) = 1;
       jac(kk++) = -0.2*x(k+1);
     }
@@ -279,23 +279,23 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( idx ) {
       case 0: x.setZero(); break;
       case 1: x.fill(10);  break;
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 2; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(2);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -311,14 +311,14 @@ public:
 class RooseKullaLombMeressoo203 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo203( int_type neq )
+  RooseKullaLombMeressoo203( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.203",RKM_BIBTEX,neq)
   { checkMinEquations(n,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
-    for ( int_type i = 0; i < n; ++i ) f += x(i);
+    for ( integer i = 0; i < n; ++i ) f += x(i);
     if ( k == n-1 ) f -= 1;
     else            f += x(k)-(n+1);
     return f;
@@ -327,30 +327,30 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
   	real_type sum = 0;
-    for ( int_type i = 0; i < n;   ++i ) sum += x(i);
-    for ( int_type k = 0; k < n-1; ++k ) f(k) = x(k)-(n+1)+sum;
+    for ( integer i = 0; i < n;   ++i ) sum += x(i);
+    for ( integer k = 0; k < n-1; ++k ) f(k) = x(k)-(n+1)+sum;
     f(n-1) = sum - 1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran storing
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran storing
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.fill(1);
-    for ( int_type i = 0; i < n-1; ++i ) jac[caddr(i,i)] += 1;
+    for ( integer i = 0; i < n-1; ++i ) jac[caddr(i,i)] += 1;
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2: return 2;
@@ -363,7 +363,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       switch ( idx ) {
@@ -395,11 +395,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(0.5);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -416,12 +416,12 @@ public:
 class RooseKullaLombMeressoo204 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo204( int_type neq )
+  RooseKullaLombMeressoo204( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.204",RKM_BIBTEX,neq)
   { checkEven(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
     if ( (k % 2) == 0 ) f = 1-x(k);
     else                f = 10*(x(k)-power2(x(k-1)));
@@ -430,23 +430,23 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; k += 2 ) f(k) = 1-x(k);
-    for ( int_type k = 1; k < n; k += 2 ) f(k) = 10*(x(k)-power2(x(k-1)));
+    for ( integer k = 0; k < n; k += 2 ) f(k) = 1-x(k);
+    for ( integer k = 1; k < n; k += 2 ) f(k) = 10*(x(k)-power2(x(k-1)));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return n+n/2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 0; k < n; k += 2 ) {
+    for ( integer k = 0; k < n; k += 2 ) {
       SETIJ(k,k);
     }
-    for ( int_type k = 1; k < n; k += 2 ) {
+    for ( integer k = 1; k < n; k += 2 ) {
       SETIJ(k,k-1);
       SETIJ(k,k);
     }
@@ -455,30 +455,30 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; k += 2 ) jac(kk++) = -1;
-    for ( int_type k = 1; k < n; k += 2 ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; k += 2 ) jac(kk++) = -1;
+    for ( integer k = 1; k < n; k += 2 ) {
       jac(kk++) = -20*x(k-1);
       jac(kk++) = 10;
     }
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; k += 2 ) x(k) = -1.2;
-    for ( int_type k = 1; k < n; k += 2 ) x(k) = 1;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; k += 2 ) x(k) = -1.2;
+    for ( integer k = 1; k < n; k += 2 ) x(k) = 1;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -495,14 +495,14 @@ public:
 class RooseKullaLombMeressoo205 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo205( int_type neq )
+  RooseKullaLombMeressoo205( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.205",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
-    for ( int_type j = 0; j < n; ++j ) f += power3(x(j));
+    for ( integer j = 0; j < n; ++j ) f += power3(x(j));
     f = x(k) - 0.5*(f+k+1)/n;
     return f;
   }
@@ -510,29 +510,29 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
   	real_type acc = 0;
-    for ( int_type j = 0; j < n; ++j ) acc += power3(x(j));
+    for ( integer j = 0; j < n; ++j ) acc += power3(x(j));
     acc /= 2*n;
-    for ( int_type j = 0; j < n; ++j ) f(j) = x(j) - acc - (0.5/n)*(j+1);
+    for ( integer j = 0; j < n; ++j ) f(j) = x(j) - acc - (0.5/n)*(j+1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     real_type bf = -1.5/n;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = 0; j < n; ++j ) {
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = 0; j < n; ++j ) {
         jac(kk) = bf*power2(x(j));
         if ( i == j ) jac(kk) += 1;
         ++kk;
@@ -540,7 +540,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -555,7 +555,7 @@ public:
   }
  
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       switch ( idx ) {
@@ -812,11 +812,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(1.5);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -834,12 +834,12 @@ class RooseKullaLombMeressoo206 : public nonlinearSystem {
   real_type h2;
 public:
   
-  RooseKullaLombMeressoo206( int_type neq )
+  RooseKullaLombMeressoo206( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.206",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); h2 = 1.0/power2(n+1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type xc = x(k);
   	real_type xp = k < n-1 ? x(k+1) : 0;
   	real_type xm = k > 0   ? x(k-1) : 0;
@@ -848,7 +848,7 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
     	real_type xc = x(k);
     	real_type xp = k < n-1 ? x(k+1) : 0;
     	real_type xm = k > 0   ? x(k-1) : 0;
@@ -856,35 +856,35 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
-    for ( int_type k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
-    for ( int_type k = 0; k < n;   ++k ) { SETIJ(k,k); }
+    for ( integer k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
+    for ( integer k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
+    for ( integer k = 0; k < n;   ++k ) { SETIJ(k,k); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 1; k < n;   ++k ) jac(kk++) = 1;
-    for ( int_type k = 0; k < n-1; ++k ) jac(kk++) = 1;
-    for ( int_type k = 0; k < n;   ++k ) jac(kk++) = -2 - h2 *exp(x(k));
+    integer kk = 0;
+    for ( integer k = 1; k < n;   ++k ) jac(kk++) = 1;
+    for ( integer k = 0; k < n-1; ++k ) jac(kk++) = 1;
+    for ( integer k = 0; k < n;   ++k ) jac(kk++) = -2 - h2 *exp(x(k));
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = -0.100488400337317069;
@@ -967,11 +967,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.setZero();
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -989,13 +989,13 @@ class RooseKullaLombMeressoo207 : public nonlinearSystem {
   real_type gamma;
 public:
   
-  RooseKullaLombMeressoo207( int_type neq )
+  RooseKullaLombMeressoo207( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.207",RKM_BIBTEX,neq)
   , gamma(0.1)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type xc = x(k);
   	real_type xp = k < n-1 ? x(k+1) : 0;
   	real_type xm = k > 0   ? x(k-1) : 0;
@@ -1004,7 +1004,7 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
     	real_type xc = x(k);
     	real_type xp = k < n-1 ? x(k+1) : 0;
     	real_type xm = k > 0   ? x(k-1) : 0;
@@ -1012,30 +1012,30 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
-    for ( int_type k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
-    for ( int_type k = 0; k < n;   ++k ) { SETIJ(k,k); }
+    for ( integer k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
+    for ( integer k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
+    for ( integer k = 0; k < n;   ++k ) { SETIJ(k,k); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 1; k < n;   ++k ) jac(kk++) = -1;
-    for ( int_type k = 0; k < n-1; ++k ) jac(kk++) = -2;
-    for ( int_type k = 0; k < n;   ++k ) jac(kk++) = 3-2*gamma*x(k);
+    integer kk = 0;
+    for ( integer k = 1; k < n;   ++k ) jac(kk++) = -1;
+    for ( integer k = 0; k < n-1; ++k ) jac(kk++) = -2;
+    for ( integer k = 0; k < n;   ++k ) jac(kk++) = 3-2*gamma*x(k);
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -1050,7 +1050,7 @@ public:
   }
  
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       switch ( idx ) {
@@ -1230,23 +1230,23 @@ public:
   }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(-1.0);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 3; i < n; ++i )
-      NONLIN_ASSERT( x(i) < 0, "Bad range" );
+    for ( integer i = 3; i < n; ++i )
+      UTILS_ASSERT0( x(i) < 0, "Bad range" );
   }
 
   void
   boundingBox( dvec_t & L, dvec_t & U ) const override {
-    int_type i = 0;
+    integer i = 0;
     for (; i < 3; ++i )
       { U[i] = real_max; L[i] = -real_max; }
     for (; i < n; ++i )
@@ -1263,11 +1263,11 @@ class RooseKullaLombMeressoo208 : public nonlinearSystem {
   real_type const K1;
   real_type const K2;
   real_type const K3;
-  int_type  const R1;
-  int_type  const R2;
+  integer   const R1;
+  integer   const R2;
 public:
   
-  RooseKullaLombMeressoo208( int_type neq )
+  RooseKullaLombMeressoo208( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.208",RKM_BIBTEX,neq)
   , K1(1)
   , K2(1)
@@ -1277,23 +1277,23 @@ public:
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type sum = 0;
-    for ( int_type i = max(0,k-R1); i <= min(n-1,k+R2); ++i )
+    for ( integer i = max(0,k-R1); i <= min(n-1,k+R2); ++i )
       if ( i != k ) sum += x(i)*(1+x(i));
   	return (K1+K2*x(k)*x(k))*x(k)+1-K3*sum;
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       f(k) = evalFk( x, k );
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
       kk += min(n-1,i+R2) - max(0,i-R1) + 1;
     }
     return kk;
@@ -1301,10 +1301,10 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = max(0,i-R1); j <= min(n-1,i+R2); ++j ) {
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = max(0,i-R1); j <= min(n-1,i+R2); ++j ) {
         SETIJ(i,j);
       }
     }
@@ -1313,9 +1313,9 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type j = max(0,i-R1); j <= min(n-1,i+R2); ++j ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer j = max(0,i-R1); j <= min(n-1,i+R2); ++j ) {
         if ( i == j ) jac(kk) = K1 + 3*K2*x(i)*x(i);
         else          jac(kk) = -K3*(1+2*x(j));
         ++kk;
@@ -1323,7 +1323,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -1338,7 +1338,7 @@ public:
   }
  
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = -0.754877666246692725;
@@ -1421,11 +1421,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(-1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -1442,20 +1442,21 @@ public:
 class RooseKullaLombMeressoo209 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo209( int_type neq )
+  RooseKullaLombMeressoo209( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.209",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
   
   void
   checkx( dvec_t const & x ) const {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( x(i) > 0,
-                     "RooseKullaLombMeressoo209, found x[" << i <<
-                     "] = " << x(i) << " <= 0" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT(
+        x(i) > 0,
+        "RooseKullaLombMeressoo209, found x[{}] = {} <= 0", i, x(i)
+      );
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
     if ( k == 0 ) f = power2(x(0))-1;
     else          f = power2(x(k-1))-1+log(x(k));
@@ -1465,21 +1466,21 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = power2(x(0))-1;
-    for ( int_type k = 1; k < n; ++k )
+    for ( integer k = 1; k < n; ++k )
       f(k) = power2(x(k-1))-1+log(x(k));
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n-1;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
-    for ( int_type k = 1; k < n; ++k ) {
+    for ( integer k = 1; k < n; ++k ) {
       SETIJ(k,k-1);
       SETIJ(k,k);
     }
@@ -1488,37 +1489,37 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    jac(kk++) = 2*x(0);
-    for ( int_type k = 1; k < n; ++k ) {
+    integer kk = 0;
+    jac(kk++)  = 2*x(0);
+    for ( integer k = 1; k < n; ++k ) {
       jac(kk++) = 2*x(k-1);
       jac(kk++) = 1/x(k);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(0.5);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 1; i < n; ++i ) {
-      NONLIN_ASSERT( x(i) > 0, "Bad range" );
-      NONLIN_ASSERT( abs(x(i)) < 1000, "Bad range" );
+    for ( integer i = 1; i < n; ++i ) {
+      UTILS_ASSERT0( x(i) > 0, "Bad range" );
+      UTILS_ASSERT0( abs(x(i)) < 1000, "Bad range" );
     }
   }
 
@@ -1538,14 +1539,14 @@ public:
 class RooseKullaLombMeressoo210 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo210( int_type neq )
+  RooseKullaLombMeressoo210( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.210",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
-    for ( int_type j = 0; j < n; ++j ) f += x(j);
+    for ( integer j = 0; j < n; ++j ) f += x(j);
     f = exp(cos((k+1)*f))-1;
     return f;
   }
@@ -1553,50 +1554,50 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
   	real_type acc = 0;
-    for ( int_type j = 0; j < n; ++j ) acc += x(j);
-    for ( int_type j = 0; j < n; ++j ) f(j) = exp(cos((j+1)*acc));
+    for ( integer j = 0; j < n; ++j ) acc += x(j);
+    for ( integer j = 0; j < n; ++j ) f(j) = exp(cos((j+1)*acc));
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
   	real_type acc = 0;
-    for ( int_type j = 0; j < n; ++j ) acc += x(j);
+    for ( integer j = 0; j < n; ++j ) acc += x(j);
 
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
       real_type cc = cos((i+1)*acc);
       real_type ss = sin((i+1)*acc);
-      for ( int_type j = 0; j < n; ++j )
+      for ( integer j = 0; j < n; ++j )
         jac(kk++) = -exp(cc)*ss*(i+1);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
   
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = 0;
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = 0;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -1615,59 +1616,59 @@ public:
 class RooseKullaLombMeressoo211 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo211( int_type neq )
+  RooseKullaLombMeressoo211( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.211",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = k+1;
-    for ( int_type j = 0; j < n; ++j ) f += power3(x(j));
+    for ( integer j = 0; j < n; ++j ) f += power3(x(j));
     return f/(2*n);
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
   	real_type acc = 0;
-    for ( int_type j = 0; j < n; ++j ) acc += power3(x(j));
-    for ( int_type j = 0; j < n; ++j ) f(j) = (acc+j+1)/(2*n);
+    for ( integer j = 0; j < n; ++j ) acc += power3(x(j));
+    for ( integer j = 0; j < n; ++j ) f(j) = (acc+j+1)/(2*n);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
   	real_type tmp = 1.5/n;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         jac(kk++) = tmp*power2(x(j));
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.setZero();
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -1686,12 +1687,12 @@ public:
 class RooseKullaLombMeressoo212 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo212( int_type neq )
+  RooseKullaLombMeressoo212( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.212",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f = 0;
     if ( k == 0 ) f = x(0);
     else          f = cos(x(k-1))+x(k)-1;
@@ -1701,21 +1702,21 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     f(0) = x(0);
-    for ( int_type k = 1; k < n; ++k )
+    for ( integer k = 1; k < n; ++k )
       f(k) = cos(x(k-1))+x(k)-1;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 2*n-1;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
     SETIJ(0,0);
-    for ( int_type k = 1; k < n; ++k ) {
+    for ( integer k = 1; k < n; ++k ) {
       SETIJ(k,k-1);
       SETIJ(k,k);
     }
@@ -1724,29 +1725,29 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 1;
-    for ( int_type k = 1; k < n; ++k ) {
+    for ( integer k = 1; k < n; ++k ) {
       jac(kk++) = -sin(x(k-1));
       jac(kk++) = 1;
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x.setZero();
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(0.5);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -1764,12 +1765,12 @@ class RooseKullaLombMeressoo213 : public nonlinearSystem {
   real_type h2;
 public:
   
-  RooseKullaLombMeressoo213( int_type neq )
+  RooseKullaLombMeressoo213( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.213",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); h2 = 1.0/power2(n+1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type xp = k < n-1 ? x(k+1) : 1;
   	real_type xm = k > 0   ? x(k-1) : 0;
   	real_type xc = x(k);
@@ -1778,20 +1779,20 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       f(k) = evalFk( x, k );
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
       if ( k > 0 ) { SETIJ(k,k-1); }
       SETIJ(k,k);
       if ( k < n-1 ) { SETIJ(k,k+1); }
@@ -1801,15 +1802,15 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
       if ( k > 0 ) jac(kk++) = -1;
       jac(kk++) = 2+h2*(1+cos(x(k)));
       if ( k < n-1 ) jac(kk++) = -1;
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -1824,7 +1825,7 @@ public:
   }
  
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = 0.25493102645914878;
@@ -1907,11 +1908,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -1928,16 +1929,16 @@ public:
 class RooseKullaLombMeressoo214 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo214( int_type neq )
+  RooseKullaLombMeressoo214( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.214",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type f    = 0;
-    int_type  imin = max(0,k-5);
-    int_type  imax = min(n-1,k+1);
-    for ( int_type i = imin; i <= imax; ++i )
+    integer  imin = max(0,k-5);
+    integer  imax = min(n-1,k+1);
+    for ( integer i = imin; i <= imax; ++i )
       if ( i != k )
         f += x(i)+power2(x(i));
     return x(k)*(2+5*power2(x(k))) + 1 - f;
@@ -1945,16 +1946,16 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       f(j) = evalFk(x,j);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
-      int_type imin = max(0,k-5);
-      int_type imax = min(n-1,k+1);
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
+      integer imin = max(0,k-5);
+      integer imax = min(n-1,k+1);
       kk += imax - imin + 1;
     }
     return kk;
@@ -1962,12 +1963,12 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 0; k < n; ++k ) {
-      int_type imin = max(0,k-5);
-      int_type imax = min(n-1,k+1);
-      for ( int_type i = imin; i <= imax; ++i ) {
+    for ( integer k = 0; k < n; ++k ) {
+      integer imin = max(0,k-5);
+      integer imax = min(n-1,k+1);
+      for ( integer i = imin; i <= imax; ++i ) {
         SETIJ(k,i);
       }
     }
@@ -1976,11 +1977,11 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
-      int_type imin = max(0,k-5);
-      int_type imax = min(n-1,k+1);
-      for ( int_type i = imin; i <= imax; ++i ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
+      integer imin = max(0,k-5);
+      integer imax = min(n-1,k+1);
+      for ( integer i = imin; i <= imax; ++i ) {
         if ( i == k ) jac(kk) = 2+15*power2(x(k));
         else          jac(kk) = -(1+2*x(i));
         ++kk;
@@ -1988,7 +1989,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -2003,7 +2004,7 @@ public:
   }
  
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = -0.427304623558166286;
@@ -2086,11 +2087,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(-1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -2110,60 +2111,60 @@ class RooseKullaLombMeressoo215 : public nonlinearSystem {
 
 public:
   
-  RooseKullaLombMeressoo215( int_type neq )
+  RooseKullaLombMeressoo215( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.215",RKM_BIBTEX,neq)
   { checkMinEquations(n,1); grad_dS.resize(n); grad_S.resize(n); }
 
   real_type
-  g( int_type k ) const
+  g( integer k ) const
   { return (k+1.0)/29.0; }
 
   real_type
-  S( dvec_t const & x, int_type k ) const {
+  S( dvec_t const & x, integer k ) const {
     real_type sum = 0;
     real_type gkj = 1;
     real_type gk  = g(k);
-    for ( int_type j = 0; j < n; ++j, gkj *= gk ) sum += gkj * x(j);
+    for ( integer j = 0; j < n; ++j, gkj *= gk ) sum += gkj * x(j);
     return sum;
   }
 
   void
-  S_1( dvec_t const & x, int_type k, dvec_t & grad ) const {
+  S_1( dvec_t const & x, integer k, dvec_t & grad ) const {
     real_type gkj = 1;
     real_type gk  = g(k);
-    for ( int_type j = 0; j < n; ++j, gkj *= gk ) grad[j] = gkj;
+    for ( integer j = 0; j < n; ++j, gkj *= gk ) grad[j] = gkj;
   }
 
   real_type
-  dS( dvec_t const & x, int_type k ) const {
+  dS( dvec_t const & x, integer k ) const {
     real_type sum = 0;
     real_type gkj = 1;
     real_type gk  = g(k);
-    for ( int_type j = 1; j < n; ++j, gkj *= gk ) sum += j * gkj * x(j);
+    for ( integer j = 1; j < n; ++j, gkj *= gk ) sum += j * gkj * x(j);
     return sum;
   }
 
   void
-  dS_1( dvec_t const & x, int_type k, dvec_t & grad ) const {
+  dS_1( dvec_t const & x, integer k, dvec_t & grad ) const {
     real_type gkj = 1;
     real_type gk  = g(k);
     grad[0] = 0;
-    for ( int_type j = 1; j < n; ++j, gkj *= gk ) grad[j] = j * gkj;
+    for ( integer j = 1; j < n; ++j, gkj *= gk ) grad[j] = j * gkj;
   }
   
   real_type
-  powergk( int_type k, int_type i ) const {
+  powergk( integer k, integer i ) const {
     real_type gk  = g(k);
     if ( i == 0 ) return 1/gk;
     real_type res = 1;
-    for ( int_type j = 1; j < i; ++j ) res *= gk;
+    for ( integer j = 1; j < i; ++j ) res *= gk;
     return res;
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
   	real_type f = 0;
-    for ( int_type k = 0; k < 29; ++k ) {
+    for ( integer k = 0; k < 29; ++k ) {
       real_type Sk    = S(x,k);
       real_type dSk   = dS(x,k);
       real_type gk    = g(k);
@@ -2177,27 +2178,27 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type j = 0; j < n; ++j )
+    for ( integer j = 0; j < n; ++j )
       f(j) = evalFk(x,j);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0; // fortran addressing
-    for ( int_type j = 0; j < n; ++j )
-      for ( int_type i = 0; i < n; ++i )
+    integer kk = 0; // fortran addressing
+    for ( integer j = 0; j < n; ++j )
+      for ( integer i = 0; i < n; ++i )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     jac.setZero();
-    for ( int_type i = 0; i < n; ++i ) {
-      for ( int_type k = 0; k < 29; ++k ) {
+    for ( integer i = 0; i < n; ++i ) {
+      for ( integer k = 0; k < 29; ++k ) {
         real_type gk    = g(k);
         real_type powgk = powergk(k,i);
         real_type Sk    = S(x,k);
@@ -2206,7 +2207,7 @@ public:
         S_1( x, k, grad_S );
         real_type A = i-2*gk*Sk;
         real_type B = dSk-Sk*Sk-1;
-        for ( int_type j = 0; j < n; ++j ) {
+        for ( integer j = 0; j < n; ++j ) {
           real_type A_1 = -2*gk*grad_S[j];
           real_type B_1 = grad_dS[j]-2*Sk*grad_S[j];
           jac[caddr(i,j)] += powgk*(A_1*B+A*B_1);
@@ -2219,7 +2220,7 @@ public:
     jac[caddr(1,1)] += 1;
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -2235,7 +2236,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = -0.501367007521962726;
@@ -2276,19 +2277,19 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.setZero();
     //getExactSolution( x, 0 );
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( x(i) > -50 && x(i) < 50, "Bad range" );
+    //  UTILS_ASSERT( x(i) > -50 && x(i) < 50, "Bad range" );
   }
 
   string note() const { return "Watson Function"; }
@@ -2303,15 +2304,15 @@ class RooseKullaLombMeressoo216 : public nonlinearSystem {
   mutable vector<vector<real_type> > m_y, m_y_D;
 public:
   
-  RooseKullaLombMeressoo216( int_type neq )
+  RooseKullaLombMeressoo216( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.216",RKM_BIBTEX,neq) {
-    NONLIN_ASSERT(
+    UTILS_ASSERT(
       n > 0 && n != 8 && n < 10,
-      "RooseKullaLombMeressoo216, neq=" << n << " must be [1..7] or 9"
+      "RooseKullaLombMeressoo216, neq={} must be [1..7] or 9", n
     );
     m_y.resize(n);
     m_y_D.resize(n);
-    for ( int_type i = 0; i < n; ++i ) {
+    for ( integer i = 0; i < n; ++i ) {
       m_y[i].resize(n);
       m_y_D[i].resize(n);
     }
@@ -2321,7 +2322,7 @@ public:
   evalY( real_type s, vector<real_type> & y ) const {
     y[0] = 2*s-1;
     y[1] = 8*(s-1)*s+1;
-    for ( int_type k = 2; k < n; ++k )
+    for ( integer k = 2; k < n; ++k )
       y[k] = 2*y[0]*y[k-1]-y[k-2];
   }
 
@@ -2334,35 +2335,35 @@ public:
     evalY( s, y );
     y_D[0] = 2;
     y_D[1] = 16*s-8;
-    for ( int_type k = 2; k < n; ++k )
+    for ( integer k = 2; k < n; ++k )
       y_D[k] = 2*(y[0]*y_D[k-1]+y_D[0]*y[k-1])-y_D[k-2];
   }
 
   void
   evalY( dvec_t const & x ) const {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       evalY( x(k), m_y[k] );
   }
 
   void
   evalY_D( dvec_t const & x ) const {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       evalY_D( x(k), m_y[k], m_y_D[k] );
   }
 
   real_type
-  Y( int_type xj, int_type k ) const
+  Y( integer xj, integer k ) const
   { return m_y[xj][k]; }
 
   real_type
-  Y_D( int_type xj, int_type k ) const
+  Y_D( integer xj, integer k ) const
   { return m_y_D[xj][k]; }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type f = 0;
     evalY( x );
-    for ( int_type j = 0; j < n; ++j ) f += Y(j,k);
+    for ( integer j = 0; j < n; ++j ) f += Y(j,k);
     f /= n;
     if ( (k % 2) == 1 ) f += 1.0/(power2(k+1)-1.0);
     return f;
@@ -2371,41 +2372,41 @@ public:
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
     evalY( x );
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
       f(k) = 0;
-      for ( int_type j = 0; j < n; ++j ) f(k) += Y(j,k);
+      for ( integer j = 0; j < n; ++j ) f(k) += Y(j,k);
       f(k) /= n;
       if ( (k % 2) == 1 ) f(k) += 1.0/(power2(k+1)-1.0);
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
     evalY_D( x );
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k )
+      for ( integer j = 0; j < n; ++j )
         jac(kk++) = Y_D(j,k)/n;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = 0.211324865405187134;
@@ -2461,19 +2462,19 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     real_type bf = 1.0/(n+1);
-    for ( int_type k = 0; k < n; ++k ) x(k) = bf*(k+1);
+    for ( integer k = 0; k < n; ++k ) x(k) = bf*(k+1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( x(i) > 0, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( x(i) > 0, "Bad range" );
   }
 
   string note() const { return "Each permutation of x is a solution"; }
@@ -2487,12 +2488,12 @@ public:
 class RooseKullaLombMeressoo217 : public nonlinearSystem {
 public:
   
-  RooseKullaLombMeressoo217( int_type neq )
+  RooseKullaLombMeressoo217( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.217",RKM_BIBTEX,neq)
   { checkMinEquations(n,2); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type xc = x(k);
   	real_type xp = k < n-1 ? x(k+1) : 20;
   	real_type xm = k > 0   ? x(k-1) : 0;
@@ -2501,20 +2502,20 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       f(k) = evalFk( x, k );
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 0; k < n; ++k ) {
+    for ( integer k = 0; k < n; ++k ) {
       SETIJ(k,k);
       if ( k > 0   ) { SETIJ(k,k-1); }
       if ( k < n-1 ) { SETIJ(k,k+1); }
@@ -2524,8 +2525,8 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 0; k < n; ++k ) {
+    integer kk = 0;
+    for ( integer k = 0; k < n; ++k ) {
     	real_type xc = x(k);
     	real_type xp = k < n-1 ? x(k+1) : 20;
     	real_type xm = k > 0   ? x(k-1) : 0;
@@ -2535,7 +2536,7 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -2550,7 +2551,7 @@ public:
   }
  
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = 8.33828484333201025;
@@ -2633,11 +2634,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x.fill(10);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -2655,16 +2656,16 @@ class RooseKullaLombMeressoo218 : public nonlinearSystem {
   real_type h, h2;
 public:
   
-  RooseKullaLombMeressoo218( int_type neq )
+  RooseKullaLombMeressoo218( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.218",RKM_BIBTEX,neq)
   { checkMinEquations(n,2); h = 1.0/(n+1); h2 = h*h; }
   
   real_type
-  t( int_type j ) const
+  t( integer j ) const
   { return (j+1)*h; }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
   	real_type xc = x(k);
   	real_type xp = k < n-1 ? x(k+1) : 0;
   	real_type xm = k > 0   ? x(k-1) : 0;
@@ -2673,34 +2674,34 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       f(k) = evalFk( x, k );
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
-    for ( int_type k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
-    for ( int_type k = 0; k < n;   ++k ) { SETIJ(k,k); }
+    for ( integer k = 1; k < n;   ++k ) { SETIJ(k,k-1); }
+    for ( integer k = 0; k < n-1; ++k ) { SETIJ(k,k+1); }
+    for ( integer k = 0; k < n;   ++k ) { SETIJ(k,k); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type k = 1; k < n;   ++k ) jac(kk++) = -1;
-    for ( int_type k = 0; k < n-1; ++k ) jac(kk++) = -1;
-    for ( int_type k = 0; k < n;   ++k ) jac(kk++) = 2+1.5*h2*power2(x(k)+t(k)+1);
+    integer kk = 0;
+    for ( integer k = 1; k < n;   ++k ) jac(kk++) = -1;
+    for ( integer k = 0; k < n-1; ++k ) jac(kk++) = -1;
+    for ( integer k = 0; k < n;   ++k ) jac(kk++) = 2+1.5*h2*power2(x(k)+t(k)+1);
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -2715,7 +2716,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = -0.128246763033731614;
@@ -2798,11 +2799,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = t(k)*(t(k)-1);
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = t(k)*(t(k)-1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -2822,59 +2823,59 @@ class RooseKullaLombMeressoo219 : public nonlinearSystem {
   real_type h;
 public:
   
-  RooseKullaLombMeressoo219( int_type neq )
+  RooseKullaLombMeressoo219( integer neq )
   : nonlinearSystem("Roose Kulla Lomb Meressoo N.219",RKM_BIBTEX,neq)
   { checkMinEquations(n,2); h = 1.0/(n+1); }
   
   real_type
-  t( int_type j ) const
+  t( integer j ) const
   { return (j+1)*h; }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
   	real_type sum1 = 0;
   	real_type sum2 = 0;
-    for ( int_type j = 0;   j <= i; ++j ) sum1 += t(j)*power3(x(j)+t(j)+1);
-    for ( int_type j = i+1; j < n;  ++j ) sum2 += (1-t(j))*power3(x(j)+t(j)+1);
+    for ( integer j = 0;   j <= i; ++j ) sum1 += t(j)*power3(x(j)+t(j)+1);
+    for ( integer j = i+1; j < n;  ++j ) sum2 += (1-t(j))*power3(x(j)+t(j)+1);
     return x(i)+0.5*h*( (1-t(i))*sum1 + t(i)*sum2 );
   }
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const override {
-    for ( int_type k = 0; k < n; ++k )
+    for ( integer k = 0; k < n; ++k )
       f(k) = evalFk(x,k);
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i ) {
     
       real_type bf = 1.5*h*(1-t(i));
-      for ( int_type j = 0; j <= i; ++j )
+      for ( integer j = 0; j <= i; ++j )
         jac(kk++) = bf*t(j)*power2(x(j)+t(j)+1);
 
       jac[kk-1] += 1; // somma su j(i,i)
 
       bf = 1.5*h*t(i);
-      for ( int_type j = i+1; j < n; ++j )
+      for ( integer j = i+1; j < n; ++j )
         jac(kk++) = bf*(1-t(j))*power2(x(j)+t(j)+1);
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override {
     switch ( n ) {
     case 2:
@@ -2889,7 +2890,7 @@ public:
   }
 
   void
-  getExactSolution( dvec_t & x, int_type idx ) const override {
+  getExactSolution( dvec_t & x, integer idx ) const override {
     switch ( n ) {
     case 2:
       x(0) = -0.128246763033731614;
@@ -2972,11 +2973,11 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type k = 0; k < n; ++k ) x(k) = t(k)*(t(k)-1);
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer k = 0; k < n; ++k ) x(k) = t(k)*(t(k)-1);
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

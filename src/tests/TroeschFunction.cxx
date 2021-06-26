@@ -19,7 +19,7 @@ class TroeschFunction : public nonlinearSystem {
 
 public:
 
-  TroeschFunction( int_type neq )
+  TroeschFunction( integer neq )
   : nonlinearSystem(
       "Troesch Function",
       "@inproceedings{Varadhan2009,\n"
@@ -36,7 +36,7 @@ public:
   { checkMinEquations(n,1); }
 
   real_type
-  evalFk( dvec_t const & x, int_type i ) const override {
+  evalFk( dvec_t const & x, integer i ) const override {
     real_type bf = rho*h*h;
     real_type f  = 2*x(i) + bf*sinh(rho*x(i));
     if      ( i == 0   ) f -= x(1);
@@ -49,55 +49,55 @@ public:
   evalF( dvec_t const & x, dvec_t & f ) const override {
     real_type bf = rho*h*h;
 
-    for ( int_type i = 0; i < n; ++i )
+    for ( integer i = 0; i < n; ++i )
       f(i) = 2*x(i) + bf*sinh(rho*x(i));
 
     f(0)   -= x(1);
     f(n-1) -= x(n-2)+1;
 
-    for ( int_type i = 1; i < n-1; ++i )
+    for ( integer i = 1; i < n-1; ++i )
       f(i) -= x(i-1) + x(i+1);
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 3*n-2;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I; jj(kk) = J; ++kk
-    for ( int_type i = 0; i < n;   ++i ) { SETIJ(i,i); }
-    for ( int_type i = 0; i < n-1; ++i ) { SETIJ(i,i+1); }
-    for ( int_type i = 1; i < n;   ++i ) { SETIJ(i,i-1); }
+    for ( integer i = 0; i < n;   ++i ) { SETIJ(i,i); }
+    for ( integer i = 0; i < n-1; ++i ) { SETIJ(i,i+1); }
+    for ( integer i = 1; i < n;   ++i ) { SETIJ(i,i-1); }
     #undef SETIJ
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     real_type bf = rho*rho*h*h;
-    for ( int_type i = 0; i < n;   ++i ) jac(kk++) = 2 + bf*cosh(rho*x(i));
-    for ( int_type i = 0; i < n-1; ++i ) jac(kk++) = -1;
-    for ( int_type i = 1; i < n;   ++i ) jac(kk++) = -1;
+    for ( integer i = 0; i < n;   ++i ) jac(kk++) = 2 + bf*cosh(rho*x(i));
+    for ( integer i = 0; i < n-1; ++i ) jac(kk++) = -1;
+    for ( integer i = 1; i < n;   ++i ) jac(kk++) = -1;
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
-    for ( int_type i = 0; i < n; ++i )
+  getInitialPoint( dvec_t & x, integer ) const override {
+    for ( integer i = 0; i < n; ++i )
       x(i) = ((123*i)%1001)/1000.0;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 

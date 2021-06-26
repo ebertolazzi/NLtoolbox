@@ -35,7 +35,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type x1 = x(0);
     real_type x2 = x(1);
     real_type x3 = x(2);
@@ -77,14 +77,14 @@ public:
     f(7) = x8 - x1 - x5 - x6 - x3;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 27;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I-1; jj(kk) = J-1; ++kk
     SETIJ(1,1); // 1
 
@@ -134,7 +134,7 @@ public:
     //real_type x7 = x(6);
     //real_type x8 = x(7);
 
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = 1;
 
     jac(kk++) = -0.5/sqrt(x1)-exp(x1);
@@ -171,12 +171,12 @@ public:
     jac(kk++) =  1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 1; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 18.71;
     x(2) = 2.0286;
@@ -188,7 +188,7 @@ public:
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1;
     x(1) = 20;
     x(2) = 2.2;
@@ -199,7 +199,7 @@ public:
     x(7) = 15;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -222,7 +222,7 @@ public:
   {}
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     real_type x1  = x(0);
     real_type x2  = x(1);
     real_type x3  = x(2);
@@ -352,14 +352,14 @@ public:
     f(29) = x27*x28 + x22 + sqrt(x28) - x30;
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
     return 101;
   }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) ii(kk) = I-1; jj(kk) = J-1; ++kk
 
     SETIJ(1,1); // +1
@@ -528,7 +528,7 @@ public:
     //real_type x29 = x(28);
     //real_type x30 = x(29);
 
-    int_type kk = 0;
+    integer kk = 0;
 
     jac(kk++) = 1;
 
@@ -662,16 +662,16 @@ public:
     jac(kk++) = -1;
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override {
+  getExactSolution( dvec_t & x, integer ) const override {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0)  = 1.5;
     x(1)  = 1;
     x(2)  = 50;
@@ -704,7 +704,7 @@ public:
     x(29) = 5000;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
@@ -718,14 +718,14 @@ public:
     real_type x10 = x(9);
     real_type x22 = x(21);
     real_type x28 = x(27);
-    NONLIN_ASSERT( x1  >  0, "x1" );
-    NONLIN_ASSERT( x4  >  0, "x4" );
-    NONLIN_ASSERT( x5  >  0, "x5" );
-    NONLIN_ASSERT( x6  >  0, "x6" );
-    NONLIN_ASSERT( x8  >  0, "x8" );
-    NONLIN_ASSERT( x10 >  0, "x10" );
-    NONLIN_ASSERT( x22 >  0, "x22" );
-    NONLIN_ASSERT( x28 >  0, "x28" );
+    UTILS_ASSERT0( x1  >  0, "x1" );
+    UTILS_ASSERT0( x4  >  0, "x4" );
+    UTILS_ASSERT0( x5  >  0, "x5" );
+    UTILS_ASSERT0( x6  >  0, "x6" );
+    UTILS_ASSERT0( x8  >  0, "x8" );
+    UTILS_ASSERT0( x10 >  0, "x10" );
+    UTILS_ASSERT0( x22 >  0, "x22" );
+    UTILS_ASSERT0( x28 >  0, "x28" );
   }
 
   void

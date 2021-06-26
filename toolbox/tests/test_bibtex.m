@@ -6,7 +6,7 @@ global nl;
 
 nl = NLtest();
 
-N = nl.numTest();
+N = nl.numberOfTests();
 for k=1:N
   fprintf('test N.%03d [%s]\n',k,nl.name(k));
   fprintf('%s\n\n',nl.bibtex(k));

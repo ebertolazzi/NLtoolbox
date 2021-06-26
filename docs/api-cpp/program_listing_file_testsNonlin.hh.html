@@ -129,20 +129,9 @@
 <span class="cp">#define DEBUG 1</span>
 <span class="cp">#define EIGEN_NO_AUTOMATIC_RESIZING 1</span>
 
+<span class="cp">#include</span> <span class="cpf">&lt;Utils.hh&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;Eigen/Core&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;Eigen/Dense&gt;</span><span class="cp"></span>
-
-<span class="cp">#ifndef NONLIN_ASSERT</span>
-  <span class="cp">#define NONLIN_ASSERT(COND,MSG)                   \</span>
-<span class="cp">    if ( !(COND) ) {                                \</span>
-<span class="cp">      std::ostringstream ost;                       \</span>
-<span class="cp">      ost &lt;&lt; "\n***** ERROR *****\n"                \</span>
-<span class="cp">          &lt;&lt; MSG &lt;&lt; "\nline: " &lt;&lt; __LINE__          \</span>
-<span class="cp">          &lt;&lt; "\nfile: " &lt;&lt; __FILE__ &lt;&lt; "\n"         \</span>
-<span class="cp">          &lt;&lt; "\n*****************\n";               \</span>
-<span class="cp">      throw std::runtime_error(ost.str());          \</span>
-<span class="cp">    }</span>
-<span class="cp">#endif</span>
 
 <span class="k">namespace</span> <span class="n">NLproblem</span> <span class="p">{</span>
 
@@ -158,7 +147,7 @@
   <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="p">;</span>
 
   <span class="k">typedef</span> <span class="kt">double</span>  <span class="n">real_type</span><span class="p">;</span>
-  <span class="k">typedef</span> <span class="kt">int32_t</span> <span class="n">int_type</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="kt">int32_t</span> <span class="n">integer</span><span class="p">;</span>
 
   <span class="k">static</span> <span class="n">real_type</span> <span class="k">const</span> <span class="n">m_e</span> <span class="o">=</span> <span class="mf">2.718281828459045235360287471352662497757</span><span class="p">;</span>
 
@@ -186,7 +175,7 @@
 
   <span class="k">typedef</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">real_type</span><span class="p">,</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="o">&gt;</span> <span class="n">dmat_t</span><span class="p">;</span>
   <span class="k">typedef</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">real_type</span><span class="p">,</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span><span class="mi">1</span><span class="o">&gt;</span>              <span class="n">dvec_t</span><span class="p">;</span>
-  <span class="k">typedef</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">int_type</span><span class="p">,</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span><span class="mi">1</span><span class="o">&gt;</span>               <span class="n">ivec_t</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">integer</span><span class="p">,</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span><span class="mi">1</span><span class="o">&gt;</span>               <span class="n">ivec_t</span><span class="p">;</span>
 
   <span class="k">class</span> <span class="nc">nonlinearBase</span> <span class="p">{</span>
 
@@ -208,37 +197,37 @@
     <span class="n">real_type</span> <span class="n">power6</span><span class="p">(</span> <span class="n">real_type</span> <span class="n">a</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="n">real_type</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="p">;</span> <span class="k">return</span> <span class="n">a2</span><span class="o">*</span><span class="n">a2</span><span class="o">*</span><span class="n">a2</span><span class="p">;</span> <span class="p">}</span>
 
     <span class="kt">void</span>
-    <span class="n">checkMinEquations</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-      <span class="n">NONLIN_ASSERT</span><span class="p">(</span>
-        <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkMinEquations:: i = "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">" &lt; "</span> <span class="o">&lt;&lt;</span> <span class="n">i_min</span>
+    <span class="n">checkMinEquations</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="n">UTILS_ASSERT</span><span class="p">(</span>
+        <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkMinEquations:: i = {} &lt; {}"</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i_min</span>
       <span class="p">);</span>
     <span class="p">}</span>
 
     <span class="kt">void</span>
-    <span class="n">checkEven</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-      <span class="n">NONLIN_ASSERT</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkEven:: odd index i = "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span>
+    <span class="n">checkEven</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="n">UTILS_ASSERT</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkEven:: odd index i = {}"</span><span class="p">,</span> <span class="n">i</span>
       <span class="p">);</span>
     <span class="p">}</span>
 
     <span class="kt">void</span>
-    <span class="n">checkOdd</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-      <span class="n">NONLIN_ASSERT</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkOdd:: odd index i = "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span>
+    <span class="n">checkOdd</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="n">UTILS_ASSERT</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkOdd:: odd index i = {}"</span><span class="p">,</span> <span class="n">i</span>
       <span class="p">);</span>
     <span class="p">}</span>
 
     <span class="kt">void</span>
-    <span class="n">checkThree</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-      <span class="n">NONLIN_ASSERT</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkThree:: index i = "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span>
+    <span class="n">checkThree</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="n">UTILS_ASSERT</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkThree:: index i = {}"</span><span class="p">,</span> <span class="n">i</span>
       <span class="p">);</span>
     <span class="p">}</span>
 
     <span class="kt">void</span>
-    <span class="n">checkFour</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-      <span class="n">NONLIN_ASSERT</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkFour:: index i = "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span>
+    <span class="n">checkFour</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">i_min</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+      <span class="n">UTILS_ASSERT</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">i_min</span><span class="p">,</span> <span class="s">"checkFour:: index i = {}"</span><span class="p">,</span> <span class="n">i</span>
       <span class="p">);</span>
     <span class="p">}</span>
 
@@ -259,27 +248,18 @@
   <span class="c1">// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span>
   <span class="c1">// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span>
 
-  <span class="k">static</span>
-  <span class="kr">inline</span>
-  <span class="n">string</span>
-  <span class="n">addNEQ</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">n</span> <span class="p">)</span> <span class="p">{</span>
-    <span class="kt">char</span> <span class="n">tail</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
-    <span class="n">snprintf</span><span class="p">(</span> <span class="n">tail</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">" neq = %d"</span><span class="p">,</span> <span class="n">n</span> <span class="p">);</span>
-    <span class="k">return</span> <span class="nf">string</span><span class="p">(</span><span class="n">tail</span><span class="p">);</span>
-  <span class="p">}</span>
-
   <span class="k">class</span> <span class="nc">multivariateFunction</span> <span class="o">:</span> <span class="k">public</span> <span class="n">nonlinearBase</span> <span class="p">{</span>
 
     <span class="n">multivariateFunction</span><span class="p">(</span> <span class="n">multivariateFunction</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="p">);</span>
     <span class="n">multivariateFunction</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span> <span class="n">multivariateFunction</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="p">);</span>
 
   <span class="k">protected</span><span class="o">:</span>
-    <span class="n">int_type</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">integer</span> <span class="n">n</span><span class="p">;</span>
 
   <span class="k">public</span><span class="o">:</span>
 
-    <span class="n">multivariateFunction</span><span class="p">(</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">_n</span> <span class="p">)</span>
-    <span class="o">:</span> <span class="n">nonlinearBase</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">addNEQ</span><span class="p">(</span><span class="n">_n</span><span class="p">),</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">multivariateFunction</span><span class="p">(</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="n">integer</span> <span class="n">_n</span> <span class="p">)</span>
+    <span class="o">:</span> <span class="n">nonlinearBase</span><span class="p">(</span> <span class="n">fmt</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">"{} neq = {}"</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">_n</span> <span class="p">),</span> <span class="n">b</span> <span class="p">)</span>
     <span class="p">,</span> <span class="n">n</span><span class="p">(</span><span class="n">_n</span><span class="p">)</span>
     <span class="p">{</span> <span class="p">}</span>
 
@@ -288,17 +268,17 @@
     <span class="k">virtual</span> <span class="n">real_type</span> <span class="n">eval</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">gradient</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">g</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">hessianNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">hessian</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">hessianPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">hessianNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">hessian</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">hessianPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">checkIfAdmissible</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">checkIfAdmissible</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="k">virtual</span> <span class="kt">void</span>
     <span class="n">boundingBox</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">L</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">U</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
@@ -306,21 +286,12 @@
       <span class="n">U</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span> <span class="n">real_max</span> <span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="n">int_type</span> <span class="n">dimX</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">integer</span> <span class="n">dimX</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
 
   <span class="p">};</span>
 
   <span class="c1">// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span>
   <span class="c1">// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span>
-
-  <span class="k">static</span>
-  <span class="kr">inline</span>
-  <span class="n">string</span>
-  <span class="n">addDIM</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">m</span> <span class="p">)</span> <span class="p">{</span>
-    <span class="kt">char</span> <span class="n">tail</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
-    <span class="n">snprintf</span><span class="p">(</span> <span class="n">tail</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">" dimF = %d, dimX = %d"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="p">);</span>
-    <span class="k">return</span> <span class="nf">string</span><span class="p">(</span><span class="n">tail</span><span class="p">);</span>
-  <span class="p">}</span>
 
   <span class="k">class</span> <span class="nc">nonlinearLeastSquares</span><span class="o">:</span> <span class="k">public</span> <span class="n">nonlinearBase</span> <span class="p">{</span>
 
@@ -329,41 +300,43 @@
 
   <span class="k">protected</span><span class="o">:</span>
 
-    <span class="n">int_type</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">;</span>
+    <span class="n">integer</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">;</span>
 
   <span class="k">public</span><span class="o">:</span>
 
     <span class="n">nonlinearLeastSquares</span><span class="p">(</span>
       <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">t</span><span class="p">,</span>
       <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span>
-      <span class="n">int_type</span>       <span class="n">_n</span><span class="p">,</span>
-      <span class="n">int_type</span>       <span class="n">_m</span>
+      <span class="n">integer</span>       <span class="n">_n</span><span class="p">,</span>
+      <span class="n">integer</span>       <span class="n">_m</span>
     <span class="p">)</span>
-    <span class="o">:</span> <span class="n">nonlinearBase</span><span class="p">(</span> <span class="n">t</span><span class="o">+</span><span class="n">addDIM</span><span class="p">(</span><span class="n">_n</span><span class="p">,</span><span class="n">_m</span><span class="p">),</span> <span class="n">b</span> <span class="p">)</span>
+    <span class="o">:</span> <span class="n">nonlinearBase</span><span class="p">(</span>
+        <span class="n">fmt</span><span class="o">::</span><span class="n">format</span><span class="p">(</span> <span class="s">"{} dimF = {}, dimX = {}"</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">_n</span><span class="p">,</span> <span class="n">_m</span> <span class="p">),</span> <span class="n">b</span>
+      <span class="p">)</span>
     <span class="p">,</span> <span class="n">n</span><span class="p">(</span><span class="n">_n</span><span class="p">)</span>
     <span class="p">,</span> <span class="n">m</span><span class="p">(</span><span class="n">_m</span><span class="p">)</span>
     <span class="p">{}</span>
 
     <span class="k">virtual</span> <span class="o">~</span><span class="n">nonlinearLeastSquares</span><span class="p">()</span> <span class="p">{}</span>
 
-    <span class="k">virtual</span> <span class="n">real_type</span> <span class="n">evalFk</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">k</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">real_type</span> <span class="n">evalFk</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">k</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">evalF</span> <span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">f</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">jacobianNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">jacobian</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">jacobianPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">jacobianNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">jacobian</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">jacobianPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">tensorNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">tensor</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">lambda</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">tensorPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">tensorNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">tensor</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">lambda</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">tensorPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">checkIfAdmissible</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">checkIfAdmissible</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="k">virtual</span> <span class="kt">void</span>
     <span class="n">boundingBox</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">L</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">U</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
@@ -371,8 +344,8 @@
       <span class="n">U</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span> <span class="n">real_max</span> <span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="n">int_type</span> <span class="n">dimF</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
-    <span class="n">int_type</span> <span class="n">dimX</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">integer</span> <span class="n">dimF</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">integer</span> <span class="n">dimX</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m</span><span class="p">;</span> <span class="p">}</span>
 
   <span class="p">};</span>
 
@@ -392,41 +365,41 @@
     <span class="c1">// i = riga</span>
     <span class="c1">// j = colonna</span>
     <span class="c1">// indirizzamento fortran</span>
-    <span class="n">int_type</span> <span class="n">faddr</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span>
+    <span class="n">integer</span> <span class="n">faddr</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="mi">-1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">j</span><span class="mi">-1</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
 
-    <span class="n">int_type</span> <span class="n">caddr</span><span class="p">(</span> <span class="n">int_type</span> <span class="n">i</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span>
+    <span class="n">integer</span> <span class="n">caddr</span><span class="p">(</span> <span class="n">integer</span> <span class="n">i</span><span class="p">,</span> <span class="n">integer</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
 
-    <span class="n">int_type</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">integer</span> <span class="n">n</span><span class="p">;</span>
 
   <span class="k">public</span><span class="o">:</span>
 
-    <span class="n">nonlinearSystem</span><span class="p">(</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">_n</span> <span class="p">)</span>
-    <span class="o">:</span> <span class="n">nonlinearBase</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="n">addNEQ</span><span class="p">(</span><span class="n">_n</span><span class="p">),</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">nonlinearSystem</span><span class="p">(</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="n">integer</span> <span class="n">_n</span> <span class="p">)</span>
+    <span class="o">:</span> <span class="n">nonlinearBase</span><span class="p">(</span> <span class="n">fmt</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">"{} neq = {}"</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">_n</span> <span class="p">),</span> <span class="n">b</span> <span class="p">)</span>
     <span class="p">,</span> <span class="n">n</span><span class="p">(</span><span class="n">_n</span><span class="p">)</span>
     <span class="p">{</span> <span class="p">}</span>
 
     <span class="k">virtual</span> <span class="o">~</span><span class="n">nonlinearSystem</span><span class="p">()</span> <span class="p">{}</span>
 
     <span class="c1">//void</span>
-    <span class="c1">//setup( string const &amp; t, int_type _n )</span>
+    <span class="c1">//setup( string const &amp; t, integer _n )</span>
     <span class="c1">//{ theTitle = t; n = _n; }</span>
 
-    <span class="k">virtual</span> <span class="n">real_type</span> <span class="n">evalFk</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">k</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">real_type</span> <span class="n">evalFk</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">k</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">evalF</span> <span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">f</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">jacobianNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">jacobian</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">jacobianPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">jacobianNnz</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">jacobian</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">jac</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">jacobianPattern</span><span class="p">(</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="n">ivec_t</span> <span class="o">&amp;</span> <span class="n">j</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="n">int_type</span>  <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">integer</span> <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span>    <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">virtual</span> <span class="kt">void</span>      <span class="n">checkIfAdmissible</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">checkIfAdmissible</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span> <span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
     <span class="k">virtual</span> <span class="kt">void</span>
     <span class="n">boundingBox</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">L</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">U</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
@@ -434,9 +407,9 @@
       <span class="n">U</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span> <span class="n">real_max</span> <span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="n">int_type</span> <span class="n">numEqns</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">integer</span> <span class="n">numEqns</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
 
-    <span class="n">int_type</span>
+    <span class="n">integer</span>
     <span class="n">fill_CSR</span><span class="p">(</span>
       <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span>
       <span class="n">ivec_t</span>       <span class="o">&amp;</span> <span class="n">R</span><span class="p">,</span>
@@ -472,7 +445,7 @@
 
     <span class="k">virtual</span>
     <span class="n">real_type</span>
-    <span class="n">evalFk</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">k</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">evalFk</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">k</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
       <span class="n">dvec_t</span> <span class="nf">g</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
       <span class="n">evalF</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span> <span class="n">g</span> <span class="p">);</span>
       <span class="k">return</span> <span class="nf">g</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
@@ -485,7 +458,7 @@
     <span class="p">}</span>
 
     <span class="k">virtual</span>
-    <span class="n">int_type</span>
+    <span class="n">integer</span>
     <span class="n">jacobianNnz</span><span class="p">()</span> <span class="k">const</span>
     <span class="p">{</span> <span class="k">return</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">hessianNnz</span><span class="p">();</span> <span class="p">}</span>
 
@@ -500,23 +473,23 @@
     <span class="p">{</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">hessianPattern</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">);</span> <span class="p">}</span>
 
     <span class="k">virtual</span>
-    <span class="n">int_type</span>
+    <span class="n">integer</span>
     <span class="n">numExactSolution</span><span class="p">()</span> <span class="k">const</span>
     <span class="p">{</span> <span class="k">return</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">numExactSolution</span><span class="p">();</span> <span class="p">}</span>
 
     <span class="k">virtual</span>
     <span class="kt">void</span>
-    <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span>
+    <span class="n">getExactSolution</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">getExactSolution</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span> <span class="n">idx</span> <span class="p">);</span> <span class="p">}</span>
 
     <span class="k">virtual</span>
-    <span class="n">int_type</span>
+    <span class="n">integer</span>
     <span class="n">numInitialPoint</span><span class="p">()</span> <span class="k">const</span>
     <span class="p">{</span> <span class="k">return</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">numInitialPoint</span><span class="p">();</span> <span class="p">}</span>
 
     <span class="k">virtual</span>
     <span class="kt">void</span>
-    <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">int_type</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span>
+    <span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">integer</span> <span class="n">idx</span> <span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">getInitialPoint</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span> <span class="n">idx</span> <span class="p">);</span> <span class="p">}</span>
 
     <span class="k">virtual</span>
@@ -529,7 +502,7 @@
     <span class="n">boundingBox</span><span class="p">(</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">L</span><span class="p">,</span> <span class="n">dvec_t</span> <span class="o">&amp;</span> <span class="n">U</span> <span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">boundingBox</span><span class="p">(</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="p">);</span> <span class="p">}</span>
 
-    <span class="n">int_type</span> <span class="n">numEqns</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">dimX</span><span class="p">();</span> <span class="p">}</span>
+    <span class="n">integer</span> <span class="n">numEqns</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">dimX</span><span class="p">();</span> <span class="p">}</span>
 
     <span class="n">string</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">title</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pMF</span><span class="o">-&gt;</span><span class="n">title</span><span class="p">();</span> <span class="p">}</span>
 
@@ -558,7 +531,7 @@
 
 <span class="c">    virtual</span>
 <span class="c">    real_type</span>
-<span class="c">    evalFk( dvec_t const &amp; x, int_type k ) const {</span>
+<span class="c">    evalFk( dvec_t const &amp; x, integer k ) const {</span>
 <span class="c">      dvec_t g(n);</span>
 <span class="c">      evalF( x, g );</span>
 <span class="c">      return g(k);</span>
@@ -571,7 +544,7 @@
 <span class="c">    }</span>
 
 <span class="c">    virtual</span>
-<span class="c">    int_type</span>
+<span class="c">    integer</span>
 <span class="c">    jacobianNnz() const</span>
 <span class="c">    { return pMF-&gt;hessianNnz(); }</span>
 
@@ -586,23 +559,23 @@
 <span class="c">    { pMF-&gt;hessianPattern(i,j); }</span>
 
 <span class="c">    virtual</span>
-<span class="c">    int_type</span>
+<span class="c">    integer</span>
 <span class="c">    numExactSolution() const</span>
 <span class="c">    { return pMF-&gt;numExactSolution(); }</span>
 
 <span class="c">    virtual</span>
 <span class="c">    void</span>
-<span class="c">    getExactSolution( dvec_t &amp; x, int_type idx ) const</span>
+<span class="c">    getExactSolution( dvec_t &amp; x, integer idx ) const</span>
 <span class="c">    { pMF-&gt;getExactSolution(x,idx); }</span>
 
 <span class="c">    virtual</span>
-<span class="c">    int_type</span>
+<span class="c">    integer</span>
 <span class="c">    numInitialPoint() const</span>
 <span class="c">    { return pMF-&gt;numInitialPoint(); }</span>
 
 <span class="c">    virtual</span>
 <span class="c">    void</span>
-<span class="c">    getInitialPoint( dvec_t &amp; x, int_type idx ) const</span>
+<span class="c">    getInitialPoint( dvec_t &amp; x, integer idx ) const</span>
 <span class="c">    { pMF-&gt;getInitialPoint(x,idx); }</span>
 
 <span class="c">    virtual</span>
@@ -615,7 +588,7 @@
 <span class="c">    boundingBox( dvec_t &amp; L, dvec_t &amp; U ) const</span>
 <span class="c">    { pMF-&gt;boundingBox(L,U); }</span>
 
-<span class="c">    int_type numEqns( void ) const { return pMF-&gt;dimX(); }</span>
+<span class="c">    integer numEqns( void ) const { return pMF-&gt;dimX(); }</span>
 
 <span class="c">    string const &amp; title(void) const { return pMF-&gt;title(); }</span>
 
@@ -623,7 +596,7 @@
 <span class="cp">#endif</span>
 
   <span class="k">extern</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">nonlinearSystem</span><span class="o">*&gt;</span> <span class="n">theProblems</span><span class="p">;</span>
-  <span class="k">extern</span> <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="n">int_type</span><span class="o">&gt;</span>     <span class="n">theProblemsMap</span><span class="p">;</span>
+  <span class="k">extern</span> <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="n">integer</span><span class="o">&gt;</span>      <span class="n">theProblemsMap</span><span class="p">;</span>
   <span class="kt">void</span> <span class="nf">initProblems</span><span class="p">();</span>
 
 <span class="p">}</span>

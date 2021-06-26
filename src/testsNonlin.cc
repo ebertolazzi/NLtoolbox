@@ -3,12 +3,12 @@
 
 namespace NLproblem {
 
-  typedef struct { int_type lo, hi; } stack_node;
+  typedef struct { integer lo, hi; } stack_node;
 
   static
   inline
   bool
-  GT( int_type i, int_type j, int_type i1, int_type j1 )
+  GT( integer i, integer j, integer i1, integer j1 )
   //{ return j==j1 ? i>i1 : j>j1; }
   { return i==i1 ? j>j1 : i>i1; }
 
@@ -18,8 +18,8 @@ namespace NLproblem {
     ivec_t & I,
     ivec_t & J,
     dvec_t & A,
-    int_type total_elems,
-    int_type MAX_THRESH = 4
+    integer total_elems,
+    integer MAX_THRESH = 4
   ) {
 
     using ::std::swap;
@@ -28,8 +28,8 @@ namespace NLproblem {
     if ( total_elems <= MAX_THRESH ) goto insert_sort;
 
     {
-      int_type lo = 0;
-      int_type hi = total_elems - 1;
+      integer lo = 0;
+      integer hi = total_elems - 1;
 
       stack_node stack[128];
       stack_node *top = stack;
@@ -41,13 +41,13 @@ namespace NLproblem {
          * probability of picking a pathological pivot value and     *
         \* skips a comparison for both the LEFT_PTR and RIGHT_PTR.   */
 
-        int_type & I_hi  = I(hi);
-        int_type & I_lo  = I(lo);
-        int_type & I_mid = I( (hi + lo) / 2 );
+        integer & I_hi  = I(hi);
+        integer & I_lo  = I(lo);
+        integer & I_mid = I( (hi + lo) / 2 );
 
-        int_type & J_hi  = J(hi);
-        int_type & J_lo  = J(lo);
-        int_type & J_mid = J( (hi + lo) / 2 );
+        integer & J_hi  = J(hi);
+        integer & J_lo  = J(lo);
+        integer & J_mid = J( (hi + lo) / 2 );
 
         real_type & A_hi  = A(hi);
         real_type & A_lo  = A(lo);
@@ -69,10 +69,10 @@ namespace NLproblem {
           }
         }
 
-        int_type IPivot    = I_mid;
-        int_type JPivot    = J_mid;
-        int_type left_ptr  = lo + 1;
-        int_type right_ptr = hi - 1;
+        integer IPivot    = I_mid;
+        integer JPivot    = J_mid;
+        integer left_ptr  = lo + 1;
+        integer right_ptr = hi - 1;
 
         /* Here's the famous ``collapse the walls'' section of quicksort. *\
          * Gotta like those tight inner loops!  They are the main reason  *
@@ -132,8 +132,8 @@ namespace NLproblem {
 
   insert_sort:
 
-    for ( int_type i = 1; i < total_elems; ++i ) {
-      for ( int_type j = i; j > 0; --j ) {
+    for ( integer i = 1; i < total_elems; ++i ) {
+      for ( integer j = i; j > 0; --j ) {
         if ( GT( I(j), J(j), I(j-1), J(j-1) ) ) break;
         swap( I(j), I(j-1) );
         swap( J(j), J(j-1) );
@@ -142,14 +142,14 @@ namespace NLproblem {
     }
   }
 
-  int_type
+  integer
   nonlinearSystem::fill_CSR(
     dvec_t const & x,
     ivec_t       & R,
     ivec_t       & J,
     dvec_t       & values
   ) const {
-    int_type const nnz = jacobianNnz();
+    integer const nnz = jacobianNnz();
     ivec_t I( nnz );
     J.resize( nnz );
     values.resize( nnz );
@@ -159,8 +159,8 @@ namespace NLproblem {
     QuickSortIJ( I, J, values, nnz );
     R.resize( numEqns()+1 );
     R.setZero();
-    for ( int_type i = 0; i < nnz;       ++i ) ++R(I(i)+1);
-    for ( int_type i = 1; i < numEqns(); ++i ) R(i+1) += R(i);
+    for ( integer i = 0; i < nnz;       ++i ) ++R(I(i)+1);
+    for ( integer i = 1; i < numEqns(); ++i ) R(i+1) += R(i);
     return nnz;
   };
 
@@ -287,7 +287,7 @@ namespace NLproblem {
   #include "tests/ZeroJacobianFunction.cxx"
 
   std::vector<nonlinearSystem*> theProblems;
-  std::map<string,int_type>     theProblemsMap;
+  std::map<string,integer>      theProblemsMap;
 
   void
   initProblems() {
@@ -811,10 +811,9 @@ namespace NLproblem {
     theProblems.push_back( new ZeroJacobianFunction(50) );
     theProblems.push_back( new ZeroJacobianFunction(101) );
 
-    for ( int_type i = 0; i < int_type( theProblemsMap.size() ); ++i ) {
-      theProblemsMap[theProblems[i]->title()] = i;
-    }
-
+    integer n = 0;
+    for ( auto & m : theProblems )
+      theProblemsMap[m->title()] = n++;
   }
 
 }

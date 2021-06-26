@@ -13,25 +13,16 @@
  | - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \*/
 
-static
-inline
-string
-ini_msg_SSTnonlinearityTerm( int item ) {
-  char msg[1000];
-  sprintf(msg,"SST nonlinearity term, N.%d", item );
-  return string(msg);
-}
-
 class SSTnonlinearityTerm : public nonlinearSystem {
-  int_type  const idx;
+  integer   const idx;
   real_type const SCALE;
   real_type sst1;
 
 public:
 
-  SSTnonlinearityTerm( int_type idx_in )
+  SSTnonlinearityTerm( integer idx_in )
   : nonlinearSystem(
-      ini_msg_SSTnonlinearityTerm(idx_in),
+      fmt::format( "SST nonlinearity term, N.{}", idx_in ),
       "@article{Sincovec:1975,\n"
       "  author  = {Sincovec, Richard F. and Madsen, Niel K.},\n"
       "  title   = {Software for Nonlinear Partial Differential Equations},\n"
@@ -47,9 +38,10 @@ public:
   , idx(idx_in)
   , SCALE(1e7)
   {
-    NONLIN_ASSERT( idx == 0 || idx == 1,
-                   "SSTnonlinearityTerm, idx = " << idx_in <<
-                   " must be 0 or 1" );
+    UTILS_ASSERT(
+      idx == 0 || idx == 1,
+      "SSTnonlinearityTerm, idx = {} must be 0 or 1", idx_in
+    );
     switch ( idx ) {
       case 0: sst1 = 360;  break;
       case 1: sst1 = 3250; break;
@@ -57,7 +49,7 @@ public:
   }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -69,24 +61,24 @@ public:
     f(1) = 272.4438*x(0)-0.100016e-3*x(1)+3.67E-16*x(0)*x(1)-3.57E-15*x(1)*x(2);
     f(2) = -1.6E-8*x(2)+0.7e-2*x(3)+4.1283E-12*x(0)*x(3)-3.57E-15*x(1)*x(2)+800.0+sst1;
     f(3) = -0.7000016e-2*x(3)+3.57E-15*x(1)*x(2)-4.1283E-12*x(0)*x(3)+800.0;
-    for ( int_type i = 0; i < n; ++i ) f(i) /= SCALE;
+    for ( integer i = 0; i < n; ++i ) f(i) /= SCALE;
   }
 
-  int_type
+  integer
   jacobianNnz() const override
   { return n*n; }
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; ++i )
-      for ( int_type j = 0; j < n; ++j )
+    integer kk = 0;
+    for ( integer i = 0; i < n; ++i )
+      for ( integer j = 0; j < n; ++j )
         { ii(kk) = i; jj(kk) = j; ++kk; }
   }
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     jac(kk++) = -272.443800016-3.67E-16*x(1)-4.13E-12*x(3);
     jac(kk++) = 0.0001-3.67E-16*x(0);
     jac(kk++) = 0.0;
@@ -107,11 +99,11 @@ public:
     jac(kk++) = 3.57E-15*x(1);
     jac(kk++) = -0.7000016e-2-4.1283E-12*x(0);
 
-    for ( int_type i = 0; i < n*n; ++i ) jac(i) /= SCALE;
+    for ( integer i = 0; i < n*n; ++i ) jac(i) /= SCALE;
   }
 
   void
-  getExactSolution( dvec_t & x, int_type ns ) const override {
+  getExactSolution( dvec_t & x, integer ns ) const override {
     switch ( ns ) {
       case 0:
         x(0) = 1.264224341494800168746220557617102243320e6;
@@ -128,26 +120,26 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 2; }
 
   void
-  getInitialPoint( dvec_t & x, int_type ) const override {
+  getInitialPoint( dvec_t & x, integer ) const override {
     x(0) = 1E9;
     x(1) = 1E9;
     x(2) = 1E13;
     x(3) = 1E7;
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 1; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
-    for ( int_type i = 0; i < n; ++i )
-      NONLIN_ASSERT( x(i) > 0, "Bad range" );
+    for ( integer i = 0; i < n; ++i )
+      UTILS_ASSERT0( x(i) > 0, "Bad range" );
   }
 
   void

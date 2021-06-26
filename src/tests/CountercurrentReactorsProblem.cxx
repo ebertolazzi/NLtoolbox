@@ -38,7 +38,7 @@ class CountercurrentReactorsProblem1 : public nonlinearSystem {
   real_type const theta;
 public:
  
-  CountercurrentReactorsProblem1( int_type neq )
+  CountercurrentReactorsProblem1( integer neq )
   : nonlinearSystem(
       "Countercurrent Reactors Problem N.1",
       COUNTERCURRENT_BIBTEX,
@@ -49,7 +49,7 @@ public:
   { checkMinEquations(neq,4); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const {
+  evalFk( dvec_t const & x, integer k ) const {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -57,7 +57,7 @@ public:
 
   void
   evalF( dvec_t const & x, dvec_t & f ) const {
-    for ( int_type i = 0; i < n; i += 2 ) {
+    for ( integer i = 0; i < n; i += 2 ) {
       real_type xm2, xm1, xp2, xp3;
       if ( i == 0 ) {
         xm2 = 1;
@@ -80,10 +80,10 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 2 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 2 ) {
       if ( i > 0   ) kk += 2;
       if ( i < n-3 ) kk += 2;
       kk += 4;
@@ -93,8 +93,8 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 2 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 2 ) {
       if ( i > 0 ) {
         ii(kk) = i;   jj(kk) = i-2; ++kk;
         ii(kk) = i+1; jj(kk) = i-1; ++kk;
@@ -112,8 +112,8 @@ public:
 
   void
   jacobian( dvec_t const & x, dvec_t & jac ) const {
-    int_type kk = 0;
-    for ( int_type i = 0; i < n; i += 2 ) {
+    integer kk = 0;
+    for ( integer i = 0; i < n; i += 2 ) {
       if ( i > 0 ) {
         jac(kk++) = alpha;
         jac(kk++) = alpha-1;
@@ -131,16 +131,16 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const {
+  getExactSolution( dvec_t & x, integer ) const {
   }
 
   void
-  getInitialPoint( dvec_t & x, int_type istart ) const {
-    for ( int_type i = 0; i < n; ++i ) {
+  getInitialPoint( dvec_t & x, integer istart ) const {
+    for ( integer i = 0; i < n; ++i ) {
       switch ( i % 8 ) {
         case 0:         x(i) = 0.1; break;
         case 1: case 7: x(i) = 0.2; break;
@@ -150,19 +150,19 @@ public:
       }
     }
     switch ( istart ) {
-    case 1: for ( int_type i = 0; i < n; ++i ) x(i) *= 10;  break;
-    case 2: for ( int_type i = 0; i < n; ++i ) x(i) *= 100; break;
+    case 1: for ( integer i = 0; i < n; ++i ) x(i) *= 10;  break;
+    case 2: for ( integer i = 0; i < n; ++i ) x(i) *= 100; break;
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const
   { return 3; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 1000000, "x range" );
+    //  UTILS_ASSERT( abs(x(i)) < 1000000, "x range" );
   }
 
 };
@@ -175,7 +175,7 @@ class CountercurrentReactorsProblem2 : public nonlinearSystem {
   real_type const theta;
 public:
  
-  CountercurrentReactorsProblem2( int_type neq )
+  CountercurrentReactorsProblem2( integer neq )
   : nonlinearSystem(
       "Countercurrent Reactors Problem N.2",
       COUNTERCURRENT_BIBTEX,
@@ -188,7 +188,7 @@ public:
   { checkMinEquations(neq,6); }
 
   real_type
-  evalFk( dvec_t const & x, int_type k ) const override {
+  evalFk( dvec_t const & x, integer k ) const override {
     dvec_t f(n);
     evalF( x, f );
     return f(k);
@@ -200,7 +200,7 @@ public:
     f(1) = B0*x(0) - (1-x(0))*x(3) - A1 - theta*A1*x(1);
     f(2) = A1*x(0) - (1-x(0))*x(4) - x(2) - theta*x(2)*x(3);
 
-    for ( int_type i = 3; i < n; ++i ) {
+    for ( integer i = 3; i < n; ++i ) {
       real_type xp2 = 1;
       if ( i+2 < n ) xp2 = x(i+2);
       else if ( i+2 == n ) xp2 = 0;
@@ -208,10 +208,10 @@ public:
     }
   }
 
-  int_type
+  integer
   jacobianNnz() const override {
-    int_type kk = 10;
-    for ( int_type i = 3; i < n; ++i ) {
+    integer kk = 10;
+    for ( integer i = 3; i < n; ++i ) {
       kk += 4;
       if ( i+2 < n ) ++kk;
     }
@@ -220,7 +220,7 @@ public:
 
   void
   jacobianPattern( ivec_t & ii, ivec_t & jj ) const override {
-    int_type kk = 0;
+    integer kk = 0;
     #define SETIJ(I,J) { ii(kk) = I; jj(kk) = J; ++kk; }
 
     SETIJ(0,0);
@@ -236,7 +236,7 @@ public:
     SETIJ(2,3);
     SETIJ(2,4);
 
-    for ( int_type i = 3; i < n; ++i ) {
+    for ( integer i = 3; i < n; ++i ) {
       SETIJ(i,i-2);
       SETIJ(i,i-1);
       SETIJ(i,i);
@@ -262,9 +262,9 @@ public:
     jac(8) =    - theta*x(2);
     jac(9) = x(0)-1;
 
-    int_type kk = 10;
+    integer kk = 10;
 
-    for ( int_type i = 3; i < n; ++i ) {
+    for ( integer i = 3; i < n; ++i ) {
       real_type xp2 = 1;
       if      ( i+2 <  n ) xp2 = x(i+2);
       else if ( i+2 == n ) xp2 = 0;
@@ -276,17 +276,17 @@ public:
     }
   }
 
-  int_type
+  integer
   numExactSolution() const override
   { return 0; }
 
   void
-  getExactSolution( dvec_t & x, int_type ) const override
+  getExactSolution( dvec_t & x, integer ) const override
   { }
 
   void
-  getInitialPoint( dvec_t & x, int_type istart ) const override {
-    for ( int_type i = 0; i < n; ++i ) {
+  getInitialPoint( dvec_t & x, integer istart ) const override {
+    for ( integer i = 0; i < n; ++i ) {
       switch ( i % 8 ) {
         case 0: x(i) = 0.1; break;
         case 1: x(i) = 0.2; break;
@@ -299,19 +299,19 @@ public:
       }
     }
     switch ( istart ) {
-    case 1: for ( int_type i = 0; i < n; ++i ) x(i) *= 10;  break;
-    case 2: for ( int_type i = 0; i < n; ++i ) x(i) *= 100; break;
+    case 1: for ( integer i = 0; i < n; ++i ) x(i) *= 10;  break;
+    case 2: for ( integer i = 0; i < n; ++i ) x(i) *= 100; break;
     }
   }
 
-  int_type
+  integer
   numInitialPoint() const override
   { return 3; }
 
   void
   checkIfAdmissible( dvec_t const & x ) const override {
     //for (  i = 0; i < n; ++i )
-    //  NONLIN_ASSERT( abs(x(i)) < 10000, "x range" );
+    //  UTILS_ASSERT( abs(x(i)) < 10000, "x range" );
   }
 
 };
